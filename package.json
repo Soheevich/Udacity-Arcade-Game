@@ -1,0 +1,32 @@
+{
+  "name": "udacity-arcade-game",
+  "version": "1.0.0",
+  "description": "Learning project for Udacity",
+  "main": "app.js",
+  "scripts": {
+    "start": "gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Soheevich/Udacity-Arcade-Game.git"
+  },
+  "author": "Andrei Filyaev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Soheevich/Udacity-Arcade-Game/issues"
+  },
+  "homepage": "https://github.com/Soheevich/Udacity-Arcade-Game#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.9.0",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^4.1.0",
+    "gulp-babel": "^7.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
+    "pump": "^3.0.0"
+  },
+  "dependencies": {}
+}

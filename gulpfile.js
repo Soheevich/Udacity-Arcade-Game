@@ -15,7 +15,7 @@ const concat = require('gulp-concat');
 
 gulp.task('compress', (cb) => {
   pump(
-    [gulp.src(['./src/resources.js', './src/app.js', './src/engine.js']),
+    [gulp.src(['src/scripts/resources.js', 'src/scripts/app.js', 'src/scripts/engine.js']),
       concat('app.js'),
       babel({ presets: ['env'] }),
       // uglify({ output: { quote_style: 1 } }),

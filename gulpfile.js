@@ -5,10 +5,18 @@ const rename = require('gulp-rename');
 const pump = require('pump');
 // const uglify = require('gulp-uglify');
 const babel = require('gulp-babel');
+const concat = require('gulp-concat');
+
+// gulp.task('scripts', function () {
+//   return gulp.src(['./src/resources.js', './src/app.js', './src/engine.js'])
+//     .pipe(concat('all.js'))
+//     .pipe(gulp.dest('./dist/'));
+// });
 
 gulp.task('compress', (cb) => {
   pump(
-    [gulp.src('src/scripts/app.js'),
+    [gulp.src(['./src/resources.js', './src/app.js', './src/engine.js']),
+      concat('app.js'),
       babel({ presets: ['env'] }),
       // uglify({ output: { quote_style: 1 } }),
       rename({ suffix: '-min' }),

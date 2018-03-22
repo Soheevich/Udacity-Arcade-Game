@@ -6,12 +6,12 @@ function Enemy(y) {
   // a helper we've provided to easily load images
   this.x = this.random();
   this.y = y;
-  this.speed = this.random(1.8, 0.8);
+  this.speed = this.random(1.8, 0.5);
   this.sprite = 'build/images/enemy-bug.png';
 }
 
 Enemy.prototype = {
-  random(max = -50, min = -400) {
+  random(max = -80, min = -300) {
     return Math.floor(Math.random() * (max - min)) + min;
   },
   // Update the enemy's position, required method for game
@@ -22,7 +22,7 @@ Enemy.prototype = {
     // all computers.
 
     this.x = this.x > 600 ? (
-      this.speed = this.random(1.8, 0.8),
+      this.speed = this.random(1.8, 0.5),
       this.random() * this.speed) :
       this.x + (dt * 500 * this.speed);
   },
@@ -113,9 +113,12 @@ const char = 'build/images/char-boy.png';
 const enemy1 = new Enemy(63);
 const enemy2 = new Enemy(146);
 const enemy3 = new Enemy(229);
+const enemy4 = new Enemy(63);
+const enemy5 = new Enemy(146);
+const enemy6 = new Enemy(229);
 const player = new Player(char);
 
-const allEnemies = [enemy1, enemy2, enemy3];
+const allEnemies = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6];
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

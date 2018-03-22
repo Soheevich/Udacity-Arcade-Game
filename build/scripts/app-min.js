@@ -123,14 +123,14 @@ function Enemy(y) {
   // a helper we've provided to easily load images
   this.x = this.random();
   this.y = y;
-  this.speed = this.random(1.8, 0.8);
+  this.speed = this.random(1.8, 0.5);
   this.sprite = 'build/images/enemy-bug.png';
 }
 
 Enemy.prototype = {
   random: function random() {
-    var max = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : -50;
-    var min = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : -400;
+    var max = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : -80;
+    var min = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : -300;
 
     return Math.floor(Math.random() * (max - min)) + min;
   },
@@ -142,7 +142,7 @@ Enemy.prototype = {
     // which will ensure the game runs at the same speed for
     // all computers.
 
-    this.x = this.x > 600 ? (this.speed = this.random(1.8, 0.8), this.random() * this.speed) : this.x + dt * 500 * this.speed;
+    this.x = this.x > 600 ? (this.speed = this.random(1.8, 0.5), this.random() * this.speed) : this.x + dt * 500 * this.speed;
   },
 
 
@@ -233,9 +233,12 @@ var char = 'build/images/char-boy.png';
 var enemy1 = new Enemy(63);
 var enemy2 = new Enemy(146);
 var enemy3 = new Enemy(229);
+var enemy4 = new Enemy(63);
+var enemy5 = new Enemy(146);
+var enemy6 = new Enemy(229);
 var player = new Player(char);
 
-var allEnemies = [enemy1, enemy2, enemy3];
+var allEnemies = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6];
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

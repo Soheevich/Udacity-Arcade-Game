@@ -15,22 +15,13 @@
    * an array of strings pointing to image files or a string for a single
    * image. It will then call our private image loading function accordingly.
    */
-  function load(urlOrArr) {
-    if (urlOrArr instanceof Array) {
-      /* If the developer passed in an array of images
-       * loop through each value and call our image
-       * loader on that image file
-       */
-      urlOrArr.forEach((url) => {
-        privateLoad(url);
-      });
-    } else {
-      /* The developer did not pass an array to this function,
-       * assume the value is a string and call our image loader
-       * directly.
-       */
-      privateLoad(urlOrArr);
-    }
+  function load(imgArr) {
+    /* loop through each value and call our image
+     * loader on that image file
+     */
+    imgArr.forEach((url) => {
+      privateLoad(url);
+    });
   }
 
   /* This is our private image loader function, it is
@@ -47,7 +38,7 @@
     /* This URL has not been previously loaded and is not present
      * within our cache; we'll need to load this image.
      */
-    const img = new Image();
+    const img = document.createElement('img');
     img.onload = function onload() {
       /* Once our image has properly loaded, add it to our cache
        * so that we can simply return this image if the developer
@@ -86,12 +77,12 @@
    */
   function isReady() {
     let ready = true;
-    for (const k in resourceCache) {
-      if (resourceCache.hasOwnProperty(k) &&
-        !resourceCache[k]) {
+    Object.keys(resourceCache).forEach((key) => {
+      if (resourceCache.hasOwnProperty(key) && !resourceCache[key]) {
         ready = false;
       }
-    }
+    });
+
     return ready;
   }
 

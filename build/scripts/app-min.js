@@ -17,53 +17,63 @@
    * an array of strings pointing to image files or a string for a single
    * image. It will then call our private image loading function accordingly.
    */
-  function load(imgArr) {
-    /* loop through each value and call our image
-     * loader on that image file
-     */
-    imgArr.forEach(function (url) {
-      privateLoad(url);
-    });
+  function load(urlOrArr) {
+    if (urlOrArr instanceof Array) {
+      /* If the developer passed in an array of images
+       * loop through each value and call our image
+       * loader on that image file
+       */
+      urlOrArr.forEach(function (url) {
+        _load(url);
+      });
+    } else {
+      /* The developer did not pass an array to this function,
+       * assume the value is a string and call our image loader
+       * directly.
+       */
+      _load(urlOrArr);
+    }
   }
 
   /* This is our private image loader function, it is
    * called by the public image loader function.
    */
-  function privateLoad(url) {
+  function _load(url) {
     if (resourceCache[url]) {
       /* If this URL has been previously loaded it will exist within
        * our resourceCache array. Just return that image rather
        * re-loading the image.
        */
       return resourceCache[url];
+    } else {
+      /* This URL has not been previously loaded and is not present
+       * within our cache; we'll need to load this image.
+       */
+      var img = new Image();
+      img.onload = function () {
+        /* Once our image has properly loaded, add it to our cache
+         * so that we can simply return this image if the developer
+         * attempts to load this file in the future.
+         */
+        resourceCache[url] = img;
+
+        /* Once the image is actually loaded and properly cached,
+         * call all of the onReady() callbacks we have defined.
+         */
+        if (isReady()) {
+          readyCallbacks.forEach(function (func) {
+            func();
+          });
+        }
+      };
+
+      /* Set the initial cache value to false, this will change when
+       * the image's onload event handler is called. Finally, point
+       * the image's src attribute to the passed in URL.
+       */
+      resourceCache[url] = false;
+      img.src = url;
     }
-    /* This URL has not been previously loaded and is not present
-     * within our cache; we'll need to load this image.
-     */
-    var img = document.createElement('img');
-    img.onload = function onload() {
-      /* Once our image has properly loaded, add it to our cache
-       * so that we can simply return this image if the developer
-       * attempts to load this file in the future.
-       */
-      resourceCache[url] = img;
-
-      /* Once the image is actually loaded and properly cached,
-       * call all of the onReady() callbacks we have defined.
-       */
-      if (isReady()) {
-        readyCallbacks.forEach(function (func) {
-          func();
-        });
-      }
-    };
-
-    /* Set the initial cache value to false, this will change when
-     * the image's onload event handler is called. Finally, point
-     * the image's src attribute to the passed in URL.
-     */
-    resourceCache[url] = false;
-    img.src = url;
   }
 
   /* This is used by developers to grab references to images they know
@@ -79,12 +89,11 @@
    */
   function isReady() {
     var ready = true;
-    Object.keys(resourceCache).forEach(function (key) {
-      if (resourceCache.hasOwnProperty(key) && !resourceCache[key]) {
+    for (var k in resourceCache) {
+      if (resourceCache.hasOwnProperty(k) && !resourceCache[k]) {
         ready = false;
       }
-    });
-
+    }
     return ready;
   }
 
@@ -108,25 +117,25 @@
 /* eslint-env browser */
 
 // Enemies our player must avoid
-var Enemy = function enemy() {
+var Enemy = function Enemy() {
   // Variables applied to each of our instances go here,
   // we've provided one for you to get started
 
   // The image/sprite for our enemies, this uses
   // a helper we've provided to easily load images
-  this.sprite = 'images/enemy-bug.png';
+  this.sprite = 'build/images/enemy-bug.png';
 };
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function update(dt) {
+Enemy.prototype.update = function (dt) {
   // You should multiply any movement by the dt parameter
   // which will ensure the game runs at the same speed for
   // all computers.
 };
 
 // Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function render() {
+Enemy.prototype.render = function () {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
@@ -152,6 +161,13 @@ document.addEventListener('keyup', function (e) {
 
   player.handleInput(allowedKeys[e.keyCode]);
 });
+
+var enemy1 = new Enemy();
+var enemy2 = new Enemy();
+var player = new Enemy();
+
+var allEnemies = [enemy1, enemy2];
+
 /* eslint-env browser */
 
 /* Engine.js
@@ -165,7 +181,7 @@ document.addEventListener('keyup', function (e) {
  * drawn but that is not the case. What's really happening is the entire "scene"
  * is being drawn over and over, presenting the illusion of animation.
  *
- * This engine makes the canvas' context (ctx) object globally available to make 
+ * This engine makes the canvas' context (ctx) object globally available to make
  * writing app.js a little simpler to work with.
  */
 
@@ -245,7 +261,7 @@ var Engine = function IIFE() {
    */
   function updateEntities(dt) {
     allEnemies.forEach(function (enemy) {
-      enemy.update(dt);
+      return enemy.update(dt);
     });
     player.update();
   }
@@ -260,14 +276,17 @@ var Engine = function IIFE() {
     /* This array holds the relative URL to the image used
      * for that particular row of the game level.
      */
-    var rowImages = ['images/water-block.png', // Top row is water
-    'images/stone-block.png', // Row 1 of 3 of stone
-    'images/stone-block.png', // Row 2 of 3 of stone
-    'images/stone-block.png', // Row 3 of 3 of stone
-    'images/grass-block.png', // Row 1 of 2 of grass
-    'images/grass-block.png'];
+    var rowImages = ['build/images/water-block.png', // Top row is water
+    'build/images/stone-block.png', // Row 1 of 3 of stone
+    'build/images/stone-block.png', // Row 2 of 3 of stone
+    'build/images/stone-block.png', // Row 3 of 3 of stone
+    'build/images/grass-block.png', // Row 1 of 2 of grass
+    'build/images/grass-block.png' // Row 2 of 2 of grass
+    ];
     var numRows = 6;
     var numCols = 5;
+    var row = void 0;
+    var col = void 0;
 
     // Before drawing, clear existing canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -276,8 +295,8 @@ var Engine = function IIFE() {
      * and, using the rowImages array, draw the correct image for that
      * portion of the "grid"
      */
-    for (var row = 0; row < numRows; row += 1) {
-      for (var col = 0; col < numCols; col += 1) {
+    for (row = 0; row < numRows; row += 1) {
+      for (col = 0; col < numCols; col += 1) {
         /* The drawImage function of the canvas' context element
          * requires 3 parameters: the image to draw, the x coordinate
          * to start drawing and the y coordinate to start drawing.
@@ -301,7 +320,7 @@ var Engine = function IIFE() {
      * the render function you have defined.
      */
     allEnemies.forEach(function (enemy) {
-      enemy.render();
+      return enemy.render();
     });
 
     player.render();
@@ -319,12 +338,9 @@ var Engine = function IIFE() {
    * draw our game level. Then set init as the callback method, so that when
    * all of these images are properly loaded our game will start.
    */
-  Resources.load(['images/stone-block.png', 'images/water-block.png', 'images/grass-block.png', 'images/enemy-bug.png', 'images/char-boy.png']);
+  Resources.load(['build/images/stone-block.png', 'build/images/water-block.png', 'build/images/grass-block.png', 'build/images/enemy-bug.png', 'build/images/char-boy.png']);
   Resources.onReady(init);
 
-  /* Assign the canvas' context object to the global variable (the window
-   * object when run in a browser) so that developers can use it more easily
-   * from within their app.js files.
-   */
+  // Assign the canvas' context object to the window object
   window.ctx = ctx;
 }();

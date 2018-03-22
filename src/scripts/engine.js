@@ -11,7 +11,7 @@
  * drawn but that is not the case. What's really happening is the entire "scene"
  * is being drawn over and over, presenting the illusion of animation.
  *
- * This engine makes the canvas' context (ctx) object globally available to make 
+ * This engine makes the canvas' context (ctx) object globally available to make
  * writing app.js a little simpler to work with.
  */
 
@@ -90,9 +90,7 @@ const Engine = (function IIFE() {
    * render methods.
    */
   function updateEntities(dt) {
-    allEnemies.forEach((enemy) => {
-      enemy.update(dt);
-    });
+    allEnemies.forEach(enemy => enemy.update(dt));
     player.update();
   }
 
@@ -107,25 +105,27 @@ const Engine = (function IIFE() {
      * for that particular row of the game level.
      */
     const rowImages = [
-      'images/water-block.png', // Top row is water
-      'images/stone-block.png', // Row 1 of 3 of stone
-      'images/stone-block.png', // Row 2 of 3 of stone
-      'images/stone-block.png', // Row 3 of 3 of stone
-      'images/grass-block.png', // Row 1 of 2 of grass
-      'images/grass-block.png', // Row 2 of 2 of grass
+      'build/images/water-block.png', // Top row is water
+      'build/images/stone-block.png', // Row 1 of 3 of stone
+      'build/images/stone-block.png', // Row 2 of 3 of stone
+      'build/images/stone-block.png', // Row 3 of 3 of stone
+      'build/images/grass-block.png', // Row 1 of 2 of grass
+      'build/images/grass-block.png' // Row 2 of 2 of grass
     ];
     let numRows = 6;
     let numCols = 5;
+    let row;
+    let col;
 
     // Before drawing, clear existing canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     /* Loop through the number of rows and columns we've defined above
      * and, using the rowImages array, draw the correct image for that
      * portion of the "grid"
      */
-    for (let row = 0; row < numRows; row += 1) {
-      for (let col = 0; col < numCols; col += 1) {
+    for (row = 0; row < numRows; row += 1) {
+      for (col = 0; col < numCols; col += 1) {
         /* The drawImage function of the canvas' context element
          * requires 3 parameters: the image to draw, the x coordinate
          * to start drawing and the y coordinate to start drawing.
@@ -148,9 +148,7 @@ const Engine = (function IIFE() {
     /* Loop through all of the objects within the allEnemies array and call
      * the render function you have defined.
      */
-    allEnemies.forEach((enemy) => {
-      enemy.render();
-    });
+    allEnemies.forEach(enemy => enemy.render());
 
     player.render();
   }
@@ -168,17 +166,14 @@ const Engine = (function IIFE() {
    * all of these images are properly loaded our game will start.
    */
   Resources.load([
-    'images/stone-block.png',
-    'images/water-block.png',
-    'images/grass-block.png',
-    'images/enemy-bug.png',
-    'images/char-boy.png',
+    'build/images/stone-block.png',
+    'build/images/water-block.png',
+    'build/images/grass-block.png',
+    'build/images/enemy-bug.png',
+    'build/images/char-boy.png'
   ]);
   Resources.onReady(init);
 
-  /* Assign the canvas' context object to the global variable (the window
-   * object when run in a browser) so that developers can use it more easily
-   * from within their app.js files.
-   */
+  // Assign the canvas' context object to the window object
   window.ctx = ctx;
 }());

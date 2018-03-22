@@ -24,21 +24,21 @@
        * loader on that image file
        */
       urlOrArr.forEach(function (url) {
-        _load(url);
+        privateLoad(url);
       });
     } else {
       /* The developer did not pass an array to this function,
        * assume the value is a string and call our image loader
        * directly.
        */
-      _load(urlOrArr);
+      privateLoad(urlOrArr);
     }
   }
 
   /* This is our private image loader function, it is
    * called by the public image loader function.
    */
-  function _load(url) {
+  function privateLoad(url) {
     if (resourceCache[url]) {
       /* If this URL has been previously loaded it will exist within
        * our resourceCache array. Just return that image rather
@@ -50,7 +50,7 @@
      * within our cache; we'll need to load this image.
      */
     var img = new Image();
-    img.onload = function () {
+    img.onload = function onload() {
       /* Once our image has properly loaded, add it to our cache
        * so that we can simply return this image if the developer
        * attempts to load this file in the future.
@@ -113,7 +113,6 @@
     isReady: isReady
   };
 })();
-
 /* eslint-env browser */
 
 // Enemies our player must avoid

@@ -7,12 +7,6 @@ const pump = require('pump');
 const babel = require('gulp-babel');
 const concat = require('gulp-concat');
 
-// gulp.task('scripts', function () {
-//   return gulp.src(['./src/resources.js', './src/app.js', './src/engine.js'])
-//     .pipe(concat('all.js'))
-//     .pipe(gulp.dest('./dist/'));
-// });
-
 gulp.task('compress', (cb) => {
   pump(
     [gulp.src(['src/scripts/resources.js', 'src/scripts/app.js', 'src/scripts/engine.js']),

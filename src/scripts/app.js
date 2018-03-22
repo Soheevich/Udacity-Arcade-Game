@@ -1,26 +1,37 @@
 /* eslint-env browser */
 
 // Enemies our player must avoid
-function Enemy(x, y) {
+function Enemy(y, speed = 1) {
   // The image/sprite for our enemies, this uses
   // a helper we've provided to easily load images
-  this.x = x;
+  this.x = this.random();
   this.y = y;
+  this.speed = speed;
   this.sprite = 'build/images/enemy-bug.png';
 }
 
 Enemy.prototype = {
+  random() {
+    return Math.floor(Math.random() * 300) - 400;
+  },
   // Update the enemy's position, required method for game
   // Parameter: dt, a time delta between ticks
   update(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+
+    this.x = this.x > 600 ? this.random() * this.speed : this.x + (dt * 200 * this.speed);
   },
 
   // Draw the enemy on the screen, required method for game
   render() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+  },
+
+  reset() {
+    this.x = this.random();
+    console.log(this.x);
   },
 };
 
@@ -83,7 +94,11 @@ Player.prototype = {
         }
         break;
     }
-    console.log(this.x, this.y);
+  },
+
+  reset() {
+    this.x = 202;
+    this.y = 395;
   },
 };
 
@@ -92,9 +107,9 @@ Player.prototype = {
 // Place the player object in a variable called player
 const char = 'build/images/char-boy.png';
 
-const enemy1 = new Enemy(0, 63);
-const enemy2 = new Enemy(0, 146);
-const enemy3 = new Enemy(0, 229);
+const enemy1 = new Enemy(63);
+const enemy2 = new Enemy(146);
+const enemy3 = new Enemy(229);
 const player = new Player(char);
 
 const allEnemies = [enemy1, enemy2, enemy3];

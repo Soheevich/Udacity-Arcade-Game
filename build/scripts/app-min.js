@@ -118,27 +118,40 @@
 /* eslint-env browser */
 
 // Enemies our player must avoid
-function Enemy(x, y) {
+function Enemy(y) {
+  var speed = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
   // The image/sprite for our enemies, this uses
   // a helper we've provided to easily load images
-  this.x = x;
+  this.x = this.random();
   this.y = y;
+  this.speed = speed;
   this.sprite = 'build/images/enemy-bug.png';
 }
 
 Enemy.prototype = {
+  random: function random() {
+    return Math.floor(Math.random() * 300) - 400;
+  },
+
   // Update the enemy's position, required method for game
   // Parameter: dt, a time delta between ticks
   update: function update(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+
+    this.x = this.x > 600 ? this.random() * this.speed : this.x + dt * 200 * this.speed;
   },
 
 
   // Draw the enemy on the screen, required method for game
   render: function render() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+  },
+  reset: function reset() {
+    this.x = this.random();
+    console.log(this.x);
   }
 };
 
@@ -204,7 +217,10 @@ Player.prototype = {
         }
         break;
     }
-    console.log(this.x, this.y);
+  },
+  reset: function reset() {
+    this.x = 202;
+    this.y = 395;
   }
 };
 
@@ -213,9 +229,9 @@ Player.prototype = {
 // Place the player object in a variable called player
 var char = 'build/images/char-boy.png';
 
-var enemy1 = new Enemy(0, 63);
-var enemy2 = new Enemy(0, 146);
-var enemy3 = new Enemy(0, 229);
+var enemy1 = new Enemy(63);
+var enemy2 = new Enemy(146);
+var enemy3 = new Enemy(229);
 var player = new Player(char);
 
 var allEnemies = [enemy1, enemy2, enemy3];
@@ -303,6 +319,14 @@ var Engine = function IIFE() {
     main();
   }
 
+  function globalReset() {
+    alert('reset');
+    player.reset();
+    allEnemies.forEach(function (enemy) {
+      return enemy.reset();
+    });
+  }
+
   /* This function is called by main (our game loop) and itself calls all
    * of the functions which may need to update entity's data. Based on how
    * you implement your collision detection (when two entities occupy the
@@ -312,9 +336,22 @@ var Engine = function IIFE() {
    * functionality this way (you could just implement collision detection
    * on the entities themselves within your app.js file).
    */
+  function checkCollisions() {
+    var playerX = player.x;
+    var playerY = player.y;
+
+    allEnemies.forEach(function (enemy) {
+      if (enemy.y === playerY)
+        // (playerX - 110 > enemy.x && playerX < enemy.x + 110))
+        {
+          globalReset();
+        }
+    });
+  }
+
   function update(dt) {
     updateEntities(dt);
-    // checkCollisions();
+    checkCollisions();
   }
 
   /* This is called by the update function and loops through all of the

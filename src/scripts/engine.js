@@ -68,6 +68,12 @@ const Engine = (function IIFE() {
     main();
   }
 
+  function globalReset() {
+    alert('reset');
+    player.reset();
+    allEnemies.forEach(enemy => enemy.reset());
+  }
+
   /* This function is called by main (our game loop) and itself calls all
    * of the functions which may need to update entity's data. Based on how
    * you implement your collision detection (when two entities occupy the
@@ -77,9 +83,22 @@ const Engine = (function IIFE() {
    * functionality this way (you could just implement collision detection
    * on the entities themselves within your app.js file).
    */
+  function checkCollisions() {
+    const playerX = player.x;
+    const playerY = player.y;
+
+    allEnemies.forEach((enemy) => {
+      if (enemy.y === playerY)
+        // (playerX - 110 > enemy.x && playerX < enemy.x + 110))
+       {
+        globalReset();
+      }
+    });
+  }
+
   function update(dt) {
     updateEntities(dt);
-    // checkCollisions();
+    checkCollisions();
   }
 
   /* This is called by the update function and loops through all of the

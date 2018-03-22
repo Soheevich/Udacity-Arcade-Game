@@ -168,20 +168,40 @@ Player.prototype = {
   },
 
 
+  // Audio
+  cardFlipAudio: function cardFlipAudio() {
+    var audio = document.querySelector('audio');
+    audio.currentTime = 0;
+    audio.play();
+  },
+
+
   // ------------------------------
   handleInput: function handleInput(direction) {
     switch (direction) {
       case 'left':
-        if (this.x > 0) this.x -= 101;
+        if (this.x > 0) {
+          this.x -= 101;
+          this.cardFlipAudio();
+        }
         break;
       case 'up':
-        if (this.y > -20) this.y -= 83;
+        if (this.y > -20) {
+          this.y -= 83;
+          this.cardFlipAudio();
+        }
         break;
       case 'right':
-        if (this.x < 404) this.x += 101;
+        if (this.x < 404) {
+          this.x += 101;
+          this.cardFlipAudio();
+        }
         break;
       default:
-        if (this.y < 395) this.y += 83;
+        if (this.y < 395) {
+          this.y += 83;
+          this.cardFlipAudio();
+        }
         break;
     }
     console.log(this.x, this.y);
@@ -241,7 +261,7 @@ var Engine = function IIFE() {
 
   canvas.width = 505;
   canvas.height = 606;
-  document.body.appendChild(canvas);
+  document.querySelector('main').appendChild(canvas);
 
   /* This function serves as the kickoff point for the game loop itself
    * and handles properly calling the update and render methods.

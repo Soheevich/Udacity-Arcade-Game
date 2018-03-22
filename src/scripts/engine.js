@@ -26,7 +26,7 @@ const Engine = (function IIFE() {
 
   canvas.width = 505;
   canvas.height = 606;
-  document.body.appendChild(canvas);
+  document.querySelector('main').appendChild(canvas);
 
   /* This function serves as the kickoff point for the game loop itself
    * and handles properly calling the update and render methods.

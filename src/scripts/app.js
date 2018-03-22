@@ -48,20 +48,39 @@ Player.prototype = {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   },
 
+  // Audio
+  cardFlipAudio() {
+    const audio = document.querySelector('audio');
+    audio.currentTime = 0;
+    audio.play();
+  },
+
   // ------------------------------
   handleInput(direction) {
     switch (direction) {
       case 'left':
-        if (this.x > 0) this.x -= 101;
+        if (this.x > 0) {
+          this.x -= 101;
+          this.cardFlipAudio();
+        }
         break;
       case 'up':
-        if (this.y > -20) this.y -= 83;
+        if (this.y > -20) {
+          this.y -= 83;
+          this.cardFlipAudio();
+        }
         break;
       case 'right':
-        if (this.x < 404) this.x += 101;
+        if (this.x < 404) {
+          this.x += 101;
+          this.cardFlipAudio();
+        }
         break;
       default:
-        if (this.y < 395) this.y += 83;
+        if (this.y < 395) {
+          this.y += 83;
+          this.cardFlipAudio();
+        }
         break;
     }
     console.log(this.x, this.y);

@@ -15,20 +15,18 @@
  * writing app.js a little simpler to work with.
  */
 
-const Engine = (function IIFE(global) {
+const Engine = (function IIFE() {
   /* Predefine the variables we'll be using within this scope,
    * create the canvas element, grab the 2D context for that canvas
    * set the canvas elements height/width and add it to the DOM.
    */
-  const doc = global.document;
-  const win = global.window;
-  const canvas = doc.createElement('canvas');
+  const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
   let lastTime;
 
   canvas.width = 505;
   canvas.height = 606;
-  doc.body.appendChild(canvas);
+  document.body.appendChild(canvas);
 
   /* This function serves as the kickoff point for the game loop itself
    * and handles properly calling the update and render methods.
@@ -57,7 +55,7 @@ const Engine = (function IIFE(global) {
     /* Use the browser's requestAnimationFrame function to call this
      * function again as soon as the browser is able to draw another frame.
      */
-    win.requestAnimationFrame(main);
+    window.requestAnimationFrame(main);
   }
 
   /* This function does some initial setup that should only occur once,
@@ -182,5 +180,5 @@ const Engine = (function IIFE(global) {
    * object when run in a browser) so that developers can use it more easily
    * from within their app.js files.
    */
-  global.ctx = ctx;
-}(this));
+  window.ctx = ctx;
+}());

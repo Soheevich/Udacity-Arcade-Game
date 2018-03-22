@@ -114,12 +114,15 @@
     isReady: isReady
   };
 })();
+
 /* eslint-env browser */
 
 // Enemies our player must avoid
-function Enemy() {
+function Enemy(x, y) {
   // The image/sprite for our enemies, this uses
   // a helper we've provided to easily load images
+  this.x = x;
+  this.y = y;
   this.sprite = 'build/images/enemy-bug.png';
 }
 
@@ -144,6 +147,8 @@ Enemy.prototype = {
 // a handleInput() method.
 
 function Player(chosenChar) {
+  this.x = 202;
+  this.y = 395;
   this.sprite = chosenChar;
 }
 
@@ -160,6 +165,26 @@ Player.prototype = {
   // Draw the enemy on the screen, required method for game
   render: function render() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+  },
+
+
+  // ------------------------------
+  handleInput: function handleInput(direction) {
+    switch (direction) {
+      case 'left':
+        if (this.x > 0) this.x -= 101;
+        break;
+      case 'up':
+        if (this.y > -20) this.y -= 83;
+        break;
+      case 'right':
+        if (this.x < 404) this.x += 101;
+        break;
+      default:
+        if (this.y < 395) this.y += 83;
+        break;
+    }
+    console.log(this.x, this.y);
   }
 };
 
@@ -168,11 +193,12 @@ Player.prototype = {
 // Place the player object in a variable called player
 var char = 'build/images/char-boy.png';
 
-var enemy1 = new Enemy();
-var enemy2 = new Enemy();
+var enemy1 = new Enemy(0, 63);
+var enemy2 = new Enemy(0, 146);
+var enemy3 = new Enemy(0, 229);
 var player = new Player(char);
 
-var allEnemies = [enemy1, enemy2];
+var allEnemies = [enemy1, enemy2, enemy3];
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -184,7 +210,7 @@ document.addEventListener('keyup', function (e) {
     40: 'down'
   };
 
-  player.handleInput(allowedKeys[e.keyCode]);
+  if (allowedKeys[e.keyCode]) player.handleInput(allowedKeys[e.keyCode]);
 });
 
 /* eslint-env browser */

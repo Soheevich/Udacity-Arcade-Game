@@ -112,8 +112,8 @@ const Engine = (function IIFE() {
       'build/images/grass-block.png', // Row 1 of 2 of grass
       'build/images/grass-block.png' // Row 2 of 2 of grass
     ];
-    let numRows = 6;
-    let numCols = 5;
+    const numRows = 6;
+    const numCols = 5;
     let row;
     let col;
 
@@ -170,7 +170,7 @@ const Engine = (function IIFE() {
     'build/images/water-block.png',
     'build/images/grass-block.png',
     'build/images/enemy-bug.png',
-    'build/images/char-boy.png'
+    'build/images/char-boy.png',
   ]);
   Resources.onReady(init);
 

@@ -21,57 +21,53 @@
        * loop through each value and call our image
        * loader on that image file
        */
-      urlOrArr.forEach(function (url) {
-        _load(url);
-      });
+      urlOrArr.forEach(url => privateLoad(url));
     } else {
       /* The developer did not pass an array to this function,
        * assume the value is a string and call our image loader
        * directly.
        */
-      _load(urlOrArr);
+      privateLoad(urlOrArr);
     }
   }
 
   /* This is our private image loader function, it is
    * called by the public image loader function.
    */
-  function _load(url) {
+  function privateLoad(url) {
     if (resourceCache[url]) {
       /* If this URL has been previously loaded it will exist within
        * our resourceCache array. Just return that image rather
        * re-loading the image.
        */
       return resourceCache[url];
-    } else {
-      /* This URL has not been previously loaded and is not present
-       * within our cache; we'll need to load this image.
-       */
-      var img = new Image();
-      img.onload = function () {
-        /* Once our image has properly loaded, add it to our cache
-         * so that we can simply return this image if the developer
-         * attempts to load this file in the future.
-         */
-        resourceCache[url] = img;
-
-        /* Once the image is actually loaded and properly cached,
-         * call all of the onReady() callbacks we have defined.
-         */
-        if (isReady()) {
-          readyCallbacks.forEach(function (func) {
-            func();
-          });
-        }
-      };
-
-      /* Set the initial cache value to false, this will change when
-       * the image's onload event handler is called. Finally, point
-       * the image's src attribute to the passed in URL.
-       */
-      resourceCache[url] = false;
-      img.src = url;
     }
+    /* This URL has not been previously loaded and is not present
+     * within our cache; we'll need to load this image.
+     */
+    const img = document.createElement('img');
+    img.onload = function onload() {
+      /* Once our image has properly loaded, add it to our cache
+       * so that we can simply return this image if the developer
+       * attempts to load this file in the future.
+       */
+      resourceCache[url] = img;
+
+      /* Once the image is actually loaded and properly cached,
+       * call all of the onReady() callbacks we have defined.
+       */
+      if (isReady()) {
+        readyCallbacks.forEach(func => func());
+      }
+    };
+
+    /* Set the initial cache value to false, this will change when
+     * the image's onload event handler is called. Finally, point
+     * the image's src attribute to the passed in URL.
+     */
+    resourceCache[url] = false;
+    img.src = url;
+
   }
 
   /* This is used by developers to grab references to images they know
@@ -86,13 +82,13 @@
    * for loading have in fact been properly loaded.
    */
   function isReady() {
-    var ready = true;
-    for (var k in resourceCache) {
-      if (resourceCache.hasOwnProperty(k) &&
-        !resourceCache[k]) {
+    let ready = true;
+    Object.keys(resourceCache).forEach((key) => {
+      if (resourceCache.hasOwnProperty(key) && !resourceCache[key]) {
         ready = false;
       }
-    }
+    });
+
     return ready;
   }
 
@@ -107,9 +103,9 @@
    * developers by creating a global Resources object.
    */
   window.Resources = {
-    load: load,
-    get: get,
-    onReady: onReady,
-    isReady: isReady
+    load,
+    get,
+    onReady,
+    isReady,
   };
-})();
+}());

@@ -119,19 +119,20 @@
 
 // Enemies our player must avoid
 function Enemy(y) {
-  var speed = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-
   // The image/sprite for our enemies, this uses
   // a helper we've provided to easily load images
   this.x = this.random();
   this.y = y;
-  this.speed = speed;
+  this.speed = this.random(1.8, 0.8);
   this.sprite = 'build/images/enemy-bug.png';
 }
 
 Enemy.prototype = {
   random: function random() {
-    return Math.floor(Math.random() * 300) - 400;
+    var max = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : -50;
+    var min = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : -400;
+
+    return Math.floor(Math.random() * (max - min)) + min;
   },
 
   // Update the enemy's position, required method for game
@@ -141,7 +142,7 @@ Enemy.prototype = {
     // which will ensure the game runs at the same speed for
     // all computers.
 
-    this.x = this.x > 600 ? this.random() * this.speed : this.x + dt * 200 * this.speed;
+    this.x = this.x > 600 ? (this.speed = this.random(1.8, 0.8), this.random() * this.speed) : this.x + dt * 500 * this.speed;
   },
 
 
@@ -248,7 +249,6 @@ document.addEventListener('keyup', function (e) {
 
   if (allowedKeys[e.keyCode]) player.handleInput(allowedKeys[e.keyCode]);
 });
-
 /* eslint-env browser */
 
 /* Engine.js
@@ -341,11 +341,9 @@ var Engine = function IIFE() {
     var playerY = player.y;
 
     allEnemies.forEach(function (enemy) {
-      if (enemy.y === playerY)
-        // (playerX - 110 > enemy.x && playerX < enemy.x + 110))
-        {
-          globalReset();
-        }
+      if (enemy.y === playerY && playerX < enemy.x + 80 && playerX + 80 > enemy.x) {
+        globalReset();
+      }
     });
   }
 

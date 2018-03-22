@@ -88,9 +88,7 @@ const Engine = (function IIFE() {
     const playerY = player.y;
 
     allEnemies.forEach((enemy) => {
-      if (enemy.y === playerY)
-        // (playerX - 110 > enemy.x && playerX < enemy.x + 110))
-       {
+      if (enemy.y === playerY && (playerX < (enemy.x + 80) && (playerX + 80) > enemy.x)) {
         globalReset();
       }
     });

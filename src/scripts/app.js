@@ -1,18 +1,18 @@
 /* eslint-env browser */
 
 // Enemies our player must avoid
-function Enemy(y, speed = 1) {
+function Enemy(y) {
   // The image/sprite for our enemies, this uses
   // a helper we've provided to easily load images
   this.x = this.random();
   this.y = y;
-  this.speed = speed;
+  this.speed = this.random(1.8, 0.8);
   this.sprite = 'build/images/enemy-bug.png';
 }
 
 Enemy.prototype = {
-  random() {
-    return Math.floor(Math.random() * 300) - 400;
+  random(max = -50, min = -400) {
+    return Math.floor(Math.random() * (max - min)) + min;
   },
   // Update the enemy's position, required method for game
   // Parameter: dt, a time delta between ticks
@@ -21,7 +21,10 @@ Enemy.prototype = {
     // which will ensure the game runs at the same speed for
     // all computers.
 
-    this.x = this.x > 600 ? this.random() * this.speed : this.x + (dt * 200 * this.speed);
+    this.x = this.x > 600 ? (
+      this.speed = this.random(1.8, 0.8),
+      this.random() * this.speed) :
+      this.x + (dt * 500 * this.speed);
   },
 
   // Draw the enemy on the screen, required method for game

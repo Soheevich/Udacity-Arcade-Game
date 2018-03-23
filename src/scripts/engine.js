@@ -71,7 +71,10 @@ const Engine = (function IIFE() {
   function globalReset() {
     alert('reset');
     player.reset();
-    allEnemies.forEach(enemy => enemy.reset());
+    allEnemies.forEach((enemy) => {
+      enemy.reset();
+      enemy.render();
+    });
   }
 
   /* This function is called by main (our game loop) and itself calls all
@@ -187,7 +190,12 @@ const Engine = (function IIFE() {
     'build/images/water-block.png',
     'build/images/grass-block.png',
     'build/images/enemy-bug.png',
+    'build/images/enemy-bug-fast.png',
     'build/images/char-boy.png',
+    'build/images/char-cat-girl.png',
+    'build/images/char-horn-girl.png',
+    'build/images/char-pink-girl.png',
+    'build/images/char-princess-girl.png',
   ]);
   Resources.onReady(init);
 

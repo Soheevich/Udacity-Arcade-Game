@@ -67,7 +67,6 @@
      */
     resourceCache[url] = false;
     img.src = url;
-
   }
 
   /* This is used by developers to grab references to images they know

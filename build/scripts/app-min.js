@@ -39,7 +39,6 @@
     });
   }
 
-<<<<<<< HEAD
   // Creating a new promise to wait until an image is loaded
   var checkImage = function checkImage(url) {
     return new Promise(function (resolve) {
@@ -52,22 +51,6 @@
     });
   };
 
-||||||| merged common ancestors
-=======
-  // Creating a new promise to wait until an image is loaded
-  var checkImage = function checkImage(url) {
-    return new Promise(function (resolve) {
-      var img = document.createElement('img');
-      img.onload = function () {
-        return resolve(img);
-      };
-      // img.onerror = () => resolve(img);
-
-      img.src = url;
-    });
-  };
-
->>>>>>> f45e0080070257f66be5739128f4e8303879284b
   /* This is our private image loader function, it is
    * called by the public image loader function.
    */
@@ -79,7 +62,6 @@
        */
       return resourceCache[url];
     }
-<<<<<<< HEAD
 
     // Once our image has properly loaded, add it to our cache
     // so that we can simply return this image if the developer
@@ -87,43 +69,6 @@
     return checkImage(url).then(function (img) {
       resourceCache[url] = img;
     });
-||||||| merged common ancestors
-    /* This URL has not been previously loaded and is not present
-     * within our cache; we'll need to load this image.
-     */
-    var img = document.createElement('img');
-    img.onload = function onload() {
-      /* Once our image has properly loaded, add it to our cache
-       * so that we can simply return this image if the developer
-       * attempts to load this file in the future.
-       */
-      resourceCache[url] = img;
-
-      /* Once the image is actually loaded and properly cached,
-       * call all of the onReady() callbacks we have defined.
-       */
-      if (isReady()) {
-        readyCallbacks.forEach(function (func) {
-          return func();
-        });
-      }
-    };
-
-    /* Set the initial cache value to false, this will change when
-     * the image's onload event handler is called. Finally, point
-     * the image's src attribute to the passed in URL.
-     */
-    resourceCache[url] = false;
-    img.src = url;
-=======
-
-    // Once our image has properly loaded, add it to our cache
-    // so that we can simply return this image if the developer
-    // attempts to load this file in the future.
-    return checkImage(url).then(function (img) {
-      resourceCache[url] = img;
-    });
->>>>>>> f45e0080070257f66be5739128f4e8303879284b
   }
 
   /* This is used by developers to grab references to images they know

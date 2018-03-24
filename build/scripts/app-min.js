@@ -18,7 +18,7 @@
    * image. It will then call our private image loading function accordingly.
    */
   function load(urlOrArr) {
-    if (urlOrArr instanceof Array) {
+    if (Array.isArray(urlOrArr)) {
       /* If the developer passed in an array of images
        * loop through each value and call our image
        * loader on that image file
@@ -110,8 +110,8 @@
   window.Resources = {
     load: load,
     get: get,
-    onReady: onReady,
-    isReady: isReady
+    onReady: onReady
+    // isReady,
   };
 })();
 
@@ -245,7 +245,7 @@ var enemy1 = new Enemy(63);
 var enemy2 = new Enemy(146);
 var enemy3 = new Enemy(229);
 var enemy4 = new Enemy(63, 1.5);
-var player = new Player(4);
+var player = new Player(0);
 
 var allEnemies = [enemy1, enemy2, enemy3, enemy4];
 
@@ -263,6 +263,7 @@ document.addEventListener('keyup', function (e) {
     player.handleInput(allowedKeys[e.keyCode]);
   }
 });
+
 /* eslint-env browser */
 
 /* Engine.js
@@ -396,8 +397,7 @@ var Engine = function IIFE() {
     'build/images/stone-block.png', // Row 2 of 3 of stone
     'build/images/stone-block.png', // Row 3 of 3 of stone
     'build/images/grass-block.png', // Row 1 of 2 of grass
-    'build/images/grass-block.png' // Row 2 of 2 of grass
-    ];
+    'build/images/grass-block.png'];
     var numRows = 6;
     var numCols = 5;
     var row = void 0;

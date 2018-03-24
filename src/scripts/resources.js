@@ -16,7 +16,7 @@
    * image. It will then call our private image loading function accordingly.
    */
   function load(urlOrArr) {
-    if (urlOrArr instanceof Array) {
+    if (Array.isArray(urlOrArr)) {
       /* If the developer passed in an array of images
        * loop through each value and call our image
        * loader on that image file
@@ -105,6 +105,6 @@
     load,
     get,
     onReady,
-    isReady,
+    // isReady,
   };
 }());

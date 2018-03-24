@@ -130,7 +130,7 @@ const Engine = (function IIFE() {
       'build/images/stone-block.png', // Row 2 of 3 of stone
       'build/images/stone-block.png', // Row 3 of 3 of stone
       'build/images/grass-block.png', // Row 1 of 2 of grass
-      'build/images/grass-block.png' // Row 2 of 2 of grass
+      'build/images/grass-block.png', // Row 2 of 2 of grass
     ];
     const numRows = 6;
     const numCols = 5;

@@ -126,7 +126,7 @@ const enemy1 = new Enemy(63);
 const enemy2 = new Enemy(146);
 const enemy3 = new Enemy(229);
 const enemy4 = new Enemy(63, 1.5);
-const player = new Player(4);
+const player = new Player(0);
 
 const allEnemies = [enemy1, enemy2, enemy3, enemy4];
 

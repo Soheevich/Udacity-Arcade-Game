@@ -8,7 +8,7 @@ function Enemy(y, speed = 1) {
   this.y = y;
   this.speed = speed;
   this.sprite = speed === 1 ? 'build/images/enemy-bug.png' : 'build/images/enemy-bug-fast.png';
-  this.rows = [63, 146, 229];
+  this.rows = [63, 146, 229, 312];
 }
 
 Enemy.prototype = {
@@ -25,7 +25,7 @@ Enemy.prototype = {
     if (this.x > 600) {
       this.x = this.random() * this.speed;
       if (this.speed > 1) {
-        this.y = this.rows[Math.floor(Math.random() * 3)];
+        this.y = this.rows[Math.floor(Math.random() * 4)];
       }
     } else {
       this.x = this.x + (dt * 300 * this.speed);
@@ -125,10 +125,11 @@ Player.prototype = {
 const enemy1 = new Enemy(63);
 const enemy2 = new Enemy(146);
 const enemy3 = new Enemy(229);
-const enemy4 = new Enemy(63, 1.5);
+const enemy4 = new Enemy(312);
+const enemy5 = new Enemy(63, 1.5);
 const player = new Player(0);
 
-const allEnemies = [enemy1, enemy2, enemy3, enemy4];
+const allEnemies = [enemy1, enemy2, enemy3, enemy4, enemy5];
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

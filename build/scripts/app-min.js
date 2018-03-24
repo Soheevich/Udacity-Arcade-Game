@@ -122,7 +122,7 @@ function Enemy(y) {
   this.y = y;
   this.speed = speed;
   this.sprite = speed === 1 ? 'build/images/enemy-bug.png' : 'build/images/enemy-bug-fast.png';
-  this.rows = [63, 146, 229];
+  this.rows = [63, 146, 229, 312];
 }
 
 Enemy.prototype = {
@@ -143,7 +143,7 @@ Enemy.prototype = {
     if (this.x > 600) {
       this.x = this.random() * this.speed;
       if (this.speed > 1) {
-        this.y = this.rows[Math.floor(Math.random() * 3)];
+        this.y = this.rows[Math.floor(Math.random() * 4)];
       }
     } else {
       this.x = this.x + dt * 300 * this.speed;
@@ -239,10 +239,11 @@ Player.prototype = {
 var enemy1 = new Enemy(63);
 var enemy2 = new Enemy(146);
 var enemy3 = new Enemy(229);
-var enemy4 = new Enemy(63, 1.5);
+var enemy4 = new Enemy(312);
+var enemy5 = new Enemy(63, 1.5);
 var player = new Player(0);
 
-var allEnemies = [enemy1, enemy2, enemy3, enemy4];
+var allEnemies = [enemy1, enemy2, enemy3, enemy4, enemy5];
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -393,7 +394,7 @@ var Engine = function IIFE() {
     'build/images/stone-block.png', // Row 1 of 3 of stone
     'build/images/stone-block.png', // Row 2 of 3 of stone
     'build/images/stone-block.png', // Row 3 of 3 of stone
-    'build/images/grass-block.png', // Row 1 of 2 of grass
+    'build/images/stone-block.png', // Row 1 of 2 of grass
     'build/images/grass-block.png'];
     var numRows = 6;
     var numCols = 5;

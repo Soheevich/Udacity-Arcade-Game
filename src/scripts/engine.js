@@ -196,6 +196,14 @@ const Engine = (function IIFE() {
     'build/images/char-horn-girl.png',
     'build/images/char-pink-girl.png',
     'build/images/char-princess-girl.png',
+    'build/images/gem-blue.png',
+    'build/images/gem-green.png',
+    'build/images/gem-orange.png',
+    'build/images/Heart.png',
+    'build/images/Key.png',
+    'build/images/Rock.png',
+    'build/images/Selector.png',
+    'build/images/Star.png',
   ]);
   Resources.onReady(init);
 

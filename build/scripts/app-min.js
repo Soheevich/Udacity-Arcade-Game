@@ -17,22 +17,18 @@
    * an array of strings pointing to image files or a string for a single
    * image. It will then call our private image loading function accordingly.
    */
-  function load(urlOrArr) {
-    if (Array.isArray(urlOrArr)) {
-      /* If the developer passed in an array of images
-       * loop through each value and call our image
-       * loader on that image file
-       */
-      urlOrArr.forEach(function (url) {
-        return privateLoad(url);
-      });
-    } else {
-      /* The developer did not pass an array to this function,
-       * assume the value is a string and call our image loader
-       * directly.
-       */
-      privateLoad(urlOrArr);
+  function load() {
+    for (var _len = arguments.length, urls = Array(_len), _key = 0; _key < _len; _key++) {
+      urls[_key] = arguments[_key];
     }
+
+    /* If the developer passed in an array of images or single image
+     * loop through each value and call our image
+     * loader on that image file
+     */
+    urls.forEach(function (url) {
+      return privateLoad(url);
+    });
   }
 
   /* This is our private image loader function, it is
@@ -114,7 +110,6 @@
     // isReady,
   };
 })();
-
 /* eslint-env browser */
 
 // Enemies our player must avoid
@@ -282,6 +277,8 @@ document.addEventListener('keyup', function (e) {
  */
 
 var Engine = function IIFE() {
+  var _Resources;
+
   /* Predefine the variables we'll be using within this scope,
    * create the canvas element, grab the 2D context for that canvas
    * set the canvas elements height/width and add it to the DOM.
@@ -453,7 +450,7 @@ var Engine = function IIFE() {
    * draw our game level. Then set init as the callback method, so that when
    * all of these images are properly loaded our game will start.
    */
-  Resources.load(['build/images/stone-block.png', 'build/images/water-block.png', 'build/images/grass-block.png', 'build/images/enemy-bug.png', 'build/images/enemy-bug-fast.png', 'build/images/char-boy.png', 'build/images/char-cat-girl.png', 'build/images/char-horn-girl.png', 'build/images/char-pink-girl.png', 'build/images/char-princess-girl.png', 'build/images/gem-blue.png', 'build/images/gem-green.png', 'build/images/gem-orange.png', 'build/images/Heart.png', 'build/images/Key.png', 'build/images/Rock.png', 'build/images/Selector.png', 'build/images/Star.png']);
+  (_Resources = Resources).load.apply(_Resources, ['build/images/stone-block.png', 'build/images/water-block.png', 'build/images/grass-block.png', 'build/images/enemy-bug.png', 'build/images/enemy-bug-fast.png', 'build/images/char-boy.png', 'build/images/char-cat-girl.png', 'build/images/char-horn-girl.png', 'build/images/char-pink-girl.png', 'build/images/char-princess-girl.png', 'build/images/gem-blue.png', 'build/images/gem-green.png', 'build/images/gem-orange.png', 'build/images/Heart.png', 'build/images/Key.png', 'build/images/Rock.png', 'build/images/Selector.png', 'build/images/Star.png']);
   Resources.onReady(init);
 
   // Assign the canvas' context object to the window object

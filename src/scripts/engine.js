@@ -185,7 +185,7 @@ const Engine = (function IIFE() {
    * draw our game level. Then set init as the callback method, so that when
    * all of these images are properly loaded our game will start.
    */
-  Resources.load([
+  Resources.load(...[
     'build/images/stone-block.png',
     'build/images/water-block.png',
     'build/images/grass-block.png',

@@ -39,7 +39,6 @@ Enemy.prototype = {
 
   reset() {
     this.x = this.random();
-    console.log(this.x);
   },
 };
 

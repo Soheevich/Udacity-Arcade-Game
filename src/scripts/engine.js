@@ -69,12 +69,11 @@ const Engine = (function IIFE() {
   }
 
   function globalReset() {
-    alert('reset');
     player.reset();
     allEnemies.forEach((enemy) => {
       enemy.reset();
-      enemy.render();
     });
+    window.requestAnimationFrame(main);
   }
 
   /* This function is called by main (our game loop) and itself calls all

@@ -8,7 +8,7 @@
  */
 (function IIFE() {
   const resourceCache = {};
-  const loading = [];
+  const promises = [];
   const readyCallbacks = [];
 
   /* This is the publicly accessible image loading function. It accepts
@@ -17,11 +17,27 @@
    */
   function load(...urls) {
     /* If the developer passed in an array of images or single image
-     * loop through each value and call our image
-     * loader on that image file
+     * loop through each value and call our image loader on that image file
+     * Then push returned promise to the promises array
      */
-    urls.forEach(url => privateLoad(url));
+    urls.forEach(url => promises.push(privateLoad(url)));
+
+    // This function determines if all of the images that have been requested
+    // for loading have in fact been properly loaded.
+    Promise.all(promises).then(() => {
+      readyCallbacks.forEach(func => func());
+    });
   }
+
+  // Creating a new promise to wait until an image is loaded
+  const checkImage = url =>
+    new Promise((resolve) => {
+      const img = document.createElement('img');
+      img.onload = () => resolve(img);
+      // img.onerror = () => resolve(img);
+
+      img.src = url;
+    });
 
   /* This is our private image loader function, it is
    * called by the public image loader function.
@@ -34,31 +50,14 @@
        */
       return resourceCache[url];
     }
-    /* This URL has not been previously loaded and is not present
-     * within our cache; we'll need to load this image.
-     */
-    const img = document.createElement('img');
-    img.onload = function onload() {
-      /* Once our image has properly loaded, add it to our cache
-       * so that we can simply return this image if the developer
-       * attempts to load this file in the future.
-       */
-      resourceCache[url] = img;
 
-      /* Once the image is actually loaded and properly cached,
-       * call all of the onReady() callbacks we have defined.
-       */
-      if (isReady()) {
-        readyCallbacks.forEach(func => func());
-      }
-    };
-
-    /* Set the initial cache value to false, this will change when
-     * the image's onload event handler is called. Finally, point
-     * the image's src attribute to the passed in URL.
-     */
-    resourceCache[url] = false;
-    img.src = url;
+    // Once our image has properly loaded, add it to our cache
+    // so that we can simply return this image if the developer
+    // attempts to load this file in the future.
+    return checkImage(url)
+      .then((img) => {
+        resourceCache[url] = img;
+      });
   }
 
   /* This is used by developers to grab references to images they know
@@ -67,20 +66,6 @@
    */
   function get(url) {
     return resourceCache[url];
-  }
-
-  /* This function determines if all of the images that have been requested
-   * for loading have in fact been properly loaded.
-   */
-  function isReady() {
-    let ready = true;
-    Object.keys(resourceCache).forEach((key) => {
-      if (resourceCache.hasOwnProperty(key) && !resourceCache[key]) {
-        ready = false;
-      }
-    });
-
-    return ready;
   }
 
   /* This function will add a function to the callback stack that is called

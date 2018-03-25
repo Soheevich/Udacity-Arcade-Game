@@ -4,7 +4,7 @@
 function Enemy(y) {
   // The image/sprite for our enemies, this uses
   // a helper we've provided to easily load images
-  this.x = this.random();
+  this.x = this.random(-600, -80);
   this.y = y;
   this.speed = 1;
   this.sprite = 'build/images/enemy-bug.png';
@@ -12,8 +12,8 @@ function Enemy(y) {
 }
 
 Enemy.prototype = {
-  random(max = -600, min = -80) {
-    return (Math.trunc(Math.random() * (max - min) * 10) / 10) + min;
+  random(max, min) {
+    return (Math.random() * (max - min)) + min;
   },
   // Update the enemy's position, required method for game
   // Parameter: dt, a time delta between ticks
@@ -22,14 +22,10 @@ Enemy.prototype = {
     // which will ensure the game runs at the same speed for
     // all computers.
 
-    if (this.x > 600) {
-      this.x = this.random() * this.speed;
-      if (this.speed > 1) {
-        this.y = this.rows[Math.floor(Math.random() * 4)];
-      }
-    } else {
-      this.x = this.x + (dt * 300 * this.speed);
-    }
+    this.x = this.x > 600 ? (
+      this.speed = this.random(2, 1),
+      this.random(-600, -80) * this.speed) :
+      this.x + (dt * 200 * this.speed);
   },
 
   // Draw the enemy on the screen, required method for game
@@ -38,7 +34,7 @@ Enemy.prototype = {
   },
 
   reset() {
-    this.x = this.random();
+    this.x = this.random(-600, -80);
   },
 };
 
@@ -60,26 +56,21 @@ function Player(index = 0) {
 }
 
 Player.prototype = {
-  // Update the enemy's position, required method for game
   // Parameter: dt, a time delta between ticks
   update(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-
   },
 
-  // Draw the enemy on the screen, required method for game
+  // Draw the player on the screen, required method for game
   render() {
     engine.ctx.drawImage(resources.get(this.sprite), this.x, this.y);
   },
 
   // Audio
-  cardFlipAudio() {
-    const audio = document.querySelector('audio');
-    audio.currentTime = 0;
-    audio.play();
-  },
+  // cardFlipAudio() {
+  //   const audio = document.querySelector('audio');
+  //   audio.currentTime = 0;
+  //   audio.play();
+  // },
 
   // Player movement method
   handleInput(direction) {
@@ -87,25 +78,25 @@ Player.prototype = {
       case 'left':
         if (this.x > 0) {
           this.x -= 101;
-          this.cardFlipAudio();
+          // this.cardFlipAudio();
         }
         break;
       case 'up':
         if (this.y > -20) {
           this.y -= 83;
-          this.cardFlipAudio();
+          // this.cardFlipAudio();
         }
         break;
       case 'right':
         if (this.x < 404) {
           this.x += 101;
-          this.cardFlipAudio();
+          // this.cardFlipAudio();
         }
         break;
       default:
         if (this.y < 395) {
           this.y += 83;
-          this.cardFlipAudio();
+          // this.cardFlipAudio();
         }
         break;
     }
@@ -117,10 +108,7 @@ Player.prototype = {
   },
 };
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
-
+// Instantiation of all objects
 const enemy1 = new Enemy(63);
 const enemy2 = new Enemy(146);
 const enemy3 = new Enemy(229);

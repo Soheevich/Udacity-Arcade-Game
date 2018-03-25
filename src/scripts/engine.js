@@ -128,7 +128,7 @@ const Engine = (function IIFE() {
       'build/images/stone-block.png', // Row 1 of 3 of stone
       'build/images/stone-block.png', // Row 2 of 3 of stone
       'build/images/stone-block.png', // Row 3 of 3 of stone
-      'build/images/stone-block.png', // Row 1 of 2 of grass
+      'build/images/stone-block.png', // Row 1 of 2 of stone
       'build/images/grass-block.png', // Row 2 of 2 of grass
     ];
     const numRows = 6;
@@ -152,7 +152,7 @@ const Engine = (function IIFE() {
          * so that we get the benefits of caching these images, since
          * we're using them over and over.
          */
-        ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+        ctx.drawImage(resources.get(rowImages[row]), col * 101, row * 83);
       }
     }
 
@@ -184,7 +184,7 @@ const Engine = (function IIFE() {
    * draw our game level. Then set init as the callback method, so that when
    * all of these images are properly loaded our game will start.
    */
-  Resources.load(...[
+  resources.load(...[
     'build/images/stone-block.png',
     'build/images/water-block.png',
     'build/images/grass-block.png',
@@ -204,7 +204,7 @@ const Engine = (function IIFE() {
     'build/images/Selector.png',
     'build/images/Star.png',
   ]);
-  Resources.onReady(init);
+  resources.onReady(init);
 
   // Assign the canvas' context object to the window object
   window.ctx = ctx;

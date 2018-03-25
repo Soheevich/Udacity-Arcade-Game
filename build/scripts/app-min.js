@@ -8,93 +8,94 @@
  * a simple "caching" layer so it will reuse cached images if you attempt
  * to load the same image multiple times.
  */
-(function IIFE() {
+var resources = function IIFE() {
   var resourceCache = {};
   var promises = [];
   var readyCallbacks = [];
 
-  /* This is the publicly accessible image loading function. It accepts
-   * an array of strings pointing to image files or a string for a single
-   * image. It will then call our private image loading function accordingly.
-   */
-  function load() {
-    for (var _len = arguments.length, urls = Array(_len), _key = 0; _key < _len; _key++) {
-      urls[_key] = arguments[_key];
-    }
-
-    /* If the developer passed in an array of images or single image
-     * loop through each value and call our image loader on that image file
-     * Then push returned promise to the promises array
+  return {
+    /* This is the publicly accessible image loading function. It accepts
+     * an array of strings pointing to image files or a string for a single
+     * image. It will then call our private image loading function accordingly.
      */
-    urls.forEach(function (url) {
-      return promises.push(privateLoad(url));
-    });
+    load: function load() {
+      var _this = this;
 
-    // This function determines if all of the images that have been requested
-    // for loading have in fact been properly loaded.
-    Promise.all(promises).then(function () {
-      readyCallbacks.forEach(function (func) {
-        return func();
-      });
-    });
-  }
+      for (var _len = arguments.length, urls = Array(_len), _key = 0; _key < _len; _key++) {
+        urls[_key] = arguments[_key];
+      }
 
-  // Creating a new promise to wait until an image is loaded
-  var checkImage = function checkImage(url) {
-    return new Promise(function (resolve) {
-      var img = document.createElement('img');
-      img.src = url;
-      img.onload = function () {
-        return resolve(img);
-      };
-      // img.onerror = () => resolve(img);
-    });
-  };
-
-  /* This is our private image loader function, it is
-   * called by the public image loader function.
-   */
-  function privateLoad(url) {
-    if (resourceCache[url]) {
-      /* If this URL has been previously loaded it will exist within
-       * our resourceCache array. Just return that image rather
-       * re-loading the image.
+      /* If the developer passed in an array of images or single image
+       * loop through each value and call our image loader on that image file
+       * Then push returned promise to the promises array
        */
+      urls.forEach(function (url) {
+        return promises.push(_this.privateLoad(url));
+      });
+
+      // This function determines if all of the images that have been requested
+      // for loading have in fact been properly loaded.
+      Promise.all(promises).then(function () {
+        readyCallbacks.forEach(function (func) {
+          return func();
+        });
+      });
+    },
+
+
+    // Creating a new promise to wait until an image is loaded
+    checkImage: function checkImage(url) {
+      return new Promise(function (resolve) {
+        var img = document.createElement('img');
+        img.src = url;
+        img.onload = function () {
+          return resolve(img);
+        };
+        // img.onerror = () => resolve(img);
+      });
+    },
+
+
+    /* This is our private image loader function, it is
+     * called by the public image loader function.
+     */
+    privateLoad: function privateLoad(url) {
+      if (resourceCache[url]) {
+        /* If this URL has been previously loaded it will exist within
+         * our resourceCache array. Just return that image rather
+         * re-loading the image.
+         */
+        return resourceCache[url];
+      }
+
+      /* Once our image has properly loaded, add it to our cache
+       * so that we can simply return this image if the developer
+       * attempts to load this file in the future.
+       */
+      return this.checkImage(url).then(function (img) {
+        resourceCache[url] = img;
+      });
+    },
+
+
+    /* This is used by developers to grab references to images they know
+     * have been previously loaded. If an image is cached, this functions
+     * the same as calling load() on that URL.
+     */
+    get: function get(url) {
       return resourceCache[url];
+    },
+
+
+    /* This function will add a function to the callback stack that is called
+     * when all requested images are properly loaded.
+     */
+    onReady: function onReady(func) {
+      readyCallbacks.push(func);
     }
-
-    // Once our image has properly loaded, add it to our cache
-    // so that we can simply return this image if the developer
-    // attempts to load this file in the future.
-    return checkImage(url).then(function (img) {
-      resourceCache[url] = img;
-    });
-  }
-
-  /* This is used by developers to grab references to images they know
-   * have been previously loaded. If an image is cached, this functions
-   * the same as calling load() on that URL.
-   */
-  function get(url) {
-    return resourceCache[url];
-  }
-
-  /* This function will add a function to the callback stack that is called
-   * when all requested images are properly loaded.
-   */
-  function onReady(func) {
-    readyCallbacks.push(func);
-  }
-
-  /* This object defines the publicly accessible functions available to
-   * developers by creating a global Resources object.
-   */
-  window.Resources = {
-    load: load,
-    get: get,
-    onReady: onReady
   };
-})();
+}();
+
 /* eslint-env browser */
 
 // Enemies our player must avoid
@@ -138,7 +139,7 @@ Enemy.prototype = {
 
   // Draw the enemy on the screen, required method for game
   render: function render() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.drawImage(resources.get(this.sprite), this.x, this.y);
   },
   reset: function reset() {
     this.x = this.random();
@@ -169,7 +170,7 @@ Player.prototype = {
 
   // Draw the enemy on the screen, required method for game
   render: function render() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.drawImage(resources.get(this.sprite), this.x, this.y);
   },
 
 
@@ -262,8 +263,6 @@ document.addEventListener('keyup', function (e) {
  */
 
 var Engine = function IIFE() {
-  var _Resources;
-
   /* Predefine the variables we'll be using within this scope,
    * create the canvas element, grab the 2D context for that canvas
    * set the canvas elements height/width and add it to the DOM.
@@ -377,7 +376,7 @@ var Engine = function IIFE() {
     'build/images/stone-block.png', // Row 1 of 3 of stone
     'build/images/stone-block.png', // Row 2 of 3 of stone
     'build/images/stone-block.png', // Row 3 of 3 of stone
-    'build/images/stone-block.png', // Row 1 of 2 of grass
+    'build/images/stone-block.png', // Row 1 of 2 of stone
     'build/images/grass-block.png'];
     var numRows = 6;
     var numCols = 5;
@@ -400,7 +399,7 @@ var Engine = function IIFE() {
          * so that we get the benefits of caching these images, since
          * we're using them over and over.
          */
-        ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+        ctx.drawImage(resources.get(rowImages[row]), col * 101, row * 83);
       }
     }
 
@@ -434,8 +433,8 @@ var Engine = function IIFE() {
    * draw our game level. Then set init as the callback method, so that when
    * all of these images are properly loaded our game will start.
    */
-  (_Resources = Resources).load.apply(_Resources, ['build/images/stone-block.png', 'build/images/water-block.png', 'build/images/grass-block.png', 'build/images/enemy-bug.png', 'build/images/enemy-bug-fast.png', 'build/images/char-boy.png', 'build/images/char-cat-girl.png', 'build/images/char-horn-girl.png', 'build/images/char-pink-girl.png', 'build/images/char-princess-girl.png', 'build/images/gem-blue.png', 'build/images/gem-green.png', 'build/images/gem-orange.png', 'build/images/Heart.png', 'build/images/Key.png', 'build/images/Rock.png', 'build/images/Selector.png', 'build/images/Star.png']);
-  Resources.onReady(init);
+  resources.load.apply(resources, ['build/images/stone-block.png', 'build/images/water-block.png', 'build/images/grass-block.png', 'build/images/enemy-bug.png', 'build/images/enemy-bug-fast.png', 'build/images/char-boy.png', 'build/images/char-cat-girl.png', 'build/images/char-horn-girl.png', 'build/images/char-pink-girl.png', 'build/images/char-princess-girl.png', 'build/images/gem-blue.png', 'build/images/gem-green.png', 'build/images/gem-orange.png', 'build/images/Heart.png', 'build/images/Key.png', 'build/images/Rock.png', 'build/images/Selector.png', 'build/images/Star.png']);
+  resources.onReady(init);
 
   // Assign the canvas' context object to the window object
   window.ctx = ctx;

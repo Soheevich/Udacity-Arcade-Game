@@ -310,7 +310,7 @@ var engine = function IIFE() {
     var playerY = player.y;
 
     allEnemies.forEach(function (enemy) {
-      if (enemy.y === playerY && playerX < enemy.x + 80 && playerX + 80 > enemy.x) {
+      if (enemy.y === playerY && playerX < enemy.x + 50 && playerX + 50 > enemy.x) {
         player.reset();
       }
     });

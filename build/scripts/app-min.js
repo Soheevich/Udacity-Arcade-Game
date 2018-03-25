@@ -100,14 +100,12 @@ var resources = function IIFE() {
 
 // Enemies our player must avoid
 function Enemy(y) {
-  var speed = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-
   // The image/sprite for our enemies, this uses
   // a helper we've provided to easily load images
   this.x = this.random();
   this.y = y;
-  this.speed = speed;
-  this.sprite = speed === 1 ? 'build/images/enemy-bug.png' : 'build/images/enemy-bug-fast.png';
+  this.speed = 1;
+  this.sprite = 'build/images/enemy-bug.png';
   this.rows = [63, 146, 229, 312];
 }
 
@@ -139,7 +137,7 @@ Enemy.prototype = {
 
   // Draw the enemy on the screen, required method for game
   render: function render() {
-    ctx.drawImage(resources.get(this.sprite), this.x, this.y);
+    engine.ctx.drawImage(resources.get(this.sprite), this.x, this.y);
   },
   reset: function reset() {
     this.x = this.random();
@@ -150,7 +148,9 @@ Enemy.prototype = {
 // This class requires an update(), render() and
 // a handleInput() method.
 
-function Player(index) {
+function Player() {
+  var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+
   var characters = ['build/images/char-boy.png', 'build/images/char-cat-girl.png', 'build/images/char-horn-girl.png', 'build/images/char-pink-girl.png', 'build/images/char-princess-girl.png'];
   this.x = 202;
   this.y = 395;
@@ -170,7 +170,7 @@ Player.prototype = {
 
   // Draw the enemy on the screen, required method for game
   render: function render() {
-    ctx.drawImage(resources.get(this.sprite), this.x, this.y);
+    engine.ctx.drawImage(resources.get(this.sprite), this.x, this.y);
   },
 
 
@@ -182,7 +182,7 @@ Player.prototype = {
   },
 
 
-  // ------------------------------
+  // Player movement method
   handleInput: function handleInput(direction) {
     switch (direction) {
       case 'left':
@@ -224,11 +224,9 @@ Player.prototype = {
 var enemy1 = new Enemy(63);
 var enemy2 = new Enemy(146);
 var enemy3 = new Enemy(229);
-var enemy4 = new Enemy(312);
-var enemy5 = new Enemy(63, 1.5);
-var player = new Player(0);
+var player = new Player();
 
-var allEnemies = [enemy1, enemy2, enemy3, enemy4, enemy5];
+var allEnemies = [enemy1, enemy2, enemy3];
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -262,7 +260,7 @@ document.addEventListener('keyup', function (e) {
  * writing app.js a little simpler to work with.
  */
 
-var Engine = function IIFE() {
+var engine = function IIFE() {
   /* Predefine the variables we'll be using within this scope,
    * create the canvas element, grab the 2D context for that canvas
    * set the canvas elements height/width and add it to the DOM.
@@ -315,14 +313,6 @@ var Engine = function IIFE() {
     main();
   }
 
-  function globalReset() {
-    player.reset();
-    allEnemies.forEach(function (enemy) {
-      enemy.reset();
-    });
-    window.requestAnimationFrame(main);
-  }
-
   /* This function is called by main (our game loop) and itself calls all
    * of the functions which may need to update entity's data. Based on how
    * you implement your collision detection (when two entities occupy the
@@ -338,7 +328,7 @@ var Engine = function IIFE() {
 
     allEnemies.forEach(function (enemy) {
       if (enemy.y === playerY && playerX < enemy.x + 80 && playerX + 80 > enemy.x) {
-        globalReset();
+        player.reset();
       }
     });
   }
@@ -376,7 +366,7 @@ var Engine = function IIFE() {
     'build/images/stone-block.png', // Row 1 of 3 of stone
     'build/images/stone-block.png', // Row 2 of 3 of stone
     'build/images/stone-block.png', // Row 3 of 3 of stone
-    'build/images/stone-block.png', // Row 1 of 2 of stone
+    'build/images/grass-block.png', // Row 1 of 2 of grass
     'build/images/grass-block.png'];
     var numRows = 6;
     var numCols = 5;
@@ -436,6 +426,10 @@ var Engine = function IIFE() {
   resources.load.apply(resources, ['build/images/stone-block.png', 'build/images/water-block.png', 'build/images/grass-block.png', 'build/images/enemy-bug.png', 'build/images/enemy-bug-fast.png', 'build/images/char-boy.png', 'build/images/char-cat-girl.png', 'build/images/char-horn-girl.png', 'build/images/char-pink-girl.png', 'build/images/char-princess-girl.png', 'build/images/gem-blue.png', 'build/images/gem-green.png', 'build/images/gem-orange.png', 'build/images/Heart.png', 'build/images/Key.png', 'build/images/Rock.png', 'build/images/Selector.png', 'build/images/Star.png']);
   resources.onReady(init);
 
-  // Assign the canvas' context object to the window object
-  window.ctx = ctx;
+  // Return the canvas' context object to use it by app module
+  return {
+    get ctx() {
+      return ctx;
+    }
+  };
 }();

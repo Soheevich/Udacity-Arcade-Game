@@ -1,13 +1,13 @@
 /* eslint-env browser */
 
 // Enemies our player must avoid
-function Enemy(y, speed = 1) {
+function Enemy(y) {
   // The image/sprite for our enemies, this uses
   // a helper we've provided to easily load images
   this.x = this.random();
   this.y = y;
-  this.speed = speed;
-  this.sprite = speed === 1 ? 'build/images/enemy-bug.png' : 'build/images/enemy-bug-fast.png';
+  this.speed = 1;
+  this.sprite = 'build/images/enemy-bug.png';
   this.rows = [63, 146, 229, 312];
 }
 
@@ -34,7 +34,7 @@ Enemy.prototype = {
 
   // Draw the enemy on the screen, required method for game
   render() {
-    ctx.drawImage(resources.get(this.sprite), this.x, this.y);
+    engine.ctx.drawImage(resources.get(this.sprite), this.x, this.y);
   },
 
   reset() {
@@ -46,7 +46,7 @@ Enemy.prototype = {
 // This class requires an update(), render() and
 // a handleInput() method.
 
-function Player(index) {
+function Player(index = 0) {
   const characters = [
     'build/images/char-boy.png',
     'build/images/char-cat-girl.png',
@@ -71,7 +71,7 @@ Player.prototype = {
 
   // Draw the enemy on the screen, required method for game
   render() {
-    ctx.drawImage(resources.get(this.sprite), this.x, this.y);
+    engine.ctx.drawImage(resources.get(this.sprite), this.x, this.y);
   },
 
   // Audio
@@ -81,7 +81,7 @@ Player.prototype = {
     audio.play();
   },
 
-  // ------------------------------
+  // Player movement method
   handleInput(direction) {
     switch (direction) {
       case 'left':
@@ -124,11 +124,9 @@ Player.prototype = {
 const enemy1 = new Enemy(63);
 const enemy2 = new Enemy(146);
 const enemy3 = new Enemy(229);
-const enemy4 = new Enemy(312);
-const enemy5 = new Enemy(63, 1.5);
-const player = new Player(0);
+const player = new Player();
 
-const allEnemies = [enemy1, enemy2, enemy3, enemy4, enemy5];
+const allEnemies = [enemy1, enemy2, enemy3];
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

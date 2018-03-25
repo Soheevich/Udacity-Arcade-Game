@@ -15,7 +15,7 @@
  * writing app.js a little simpler to work with.
  */
 
-const Engine = (function IIFE() {
+const engine = (function IIFE() {
   /* Predefine the variables we'll be using within this scope,
    * create the canvas element, grab the 2D context for that canvas
    * set the canvas elements height/width and add it to the DOM.
@@ -68,14 +68,6 @@ const Engine = (function IIFE() {
     main();
   }
 
-  function globalReset() {
-    player.reset();
-    allEnemies.forEach((enemy) => {
-      enemy.reset();
-    });
-    window.requestAnimationFrame(main);
-  }
-
   /* This function is called by main (our game loop) and itself calls all
    * of the functions which may need to update entity's data. Based on how
    * you implement your collision detection (when two entities occupy the
@@ -91,7 +83,7 @@ const Engine = (function IIFE() {
 
     allEnemies.forEach((enemy) => {
       if (enemy.y === playerY && (playerX < (enemy.x + 80) && (playerX + 80) > enemy.x)) {
-        globalReset();
+        player.reset();
       }
     });
   }
@@ -128,7 +120,7 @@ const Engine = (function IIFE() {
       'build/images/stone-block.png', // Row 1 of 3 of stone
       'build/images/stone-block.png', // Row 2 of 3 of stone
       'build/images/stone-block.png', // Row 3 of 3 of stone
-      'build/images/stone-block.png', // Row 1 of 2 of stone
+      'build/images/grass-block.png', // Row 1 of 2 of grass
       'build/images/grass-block.png', // Row 2 of 2 of grass
     ];
     const numRows = 6;
@@ -206,6 +198,10 @@ const Engine = (function IIFE() {
   ]);
   resources.onReady(init);
 
-  // Assign the canvas' context object to the window object
-  window.ctx = ctx;
+  // Return the canvas' context object to use it by app module
+  return {
+    get ctx() {
+      return ctx;
+    },
+  };
 }());

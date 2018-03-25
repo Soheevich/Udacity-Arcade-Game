@@ -103,7 +103,7 @@ function Enemy(y) {
   // The image/sprite for our enemies, this uses
   // a helper we've provided to easily load images
   this.x = this.random(-800, -80);
-  this.y = [40, 80, 120, 160, 200][y];
+  this.y = [40, 80, 120, 160, 200, 280, 320, 360, 400, 440][y];
   this.speed = y === 1 ? 1.5 : 1;
   this.sprite = 'build/images/enemy-bug.png';
 }
@@ -202,7 +202,7 @@ Player.prototype = {
 };
 
 // Instantiation of all objects
-var rowsWithEnemies = 5;
+var rowsWithEnemies = 10;
 var allEnemies = [];
 
 for (var i = 0; i < rowsWithEnemies; i += 1) {

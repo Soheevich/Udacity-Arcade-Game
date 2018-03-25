@@ -102,9 +102,9 @@ var resources = function IIFE() {
 function Enemy(y) {
   // The image/sprite for our enemies, this uses
   // a helper we've provided to easily load images
-  this.x = this.random(-600, -80);
+  this.x = this.random(-800, -80);
   this.y = [40, 80, 120, 160, 200][y];
-  this.speed = 1;
+  this.speed = y === 1 ? 1.5 : 1;
   this.sprite = 'build/images/enemy-bug.png';
 }
 
@@ -120,7 +120,7 @@ Enemy.prototype = {
     // which will ensure the game runs at the same speed for
     // all computers.
 
-    this.x = this.x > 550 ? (this.speed = this.random(2, 1), this.random(-600, -80) * this.speed) : this.x + dt * 200 * this.speed;
+    this.x = this.x > 550 ? this.random(-800, -80) * this.speed : this.x + dt * 200 * this.speed;
   },
 
 
@@ -202,14 +202,15 @@ Player.prototype = {
 };
 
 // Instantiation of all objects
-var enemy1 = new Enemy(0);
-var enemy2 = new Enemy(1);
-var enemy3 = new Enemy(2);
-var enemy4 = new Enemy(3);
-var enemy5 = new Enemy(4);
-var player = new Player();
+var rowsWithEnemies = 5;
+var allEnemies = [];
 
-var allEnemies = [enemy1, enemy2, enemy3, enemy4, enemy5];
+for (var i = 0; i < rowsWithEnemies; i += 1) {
+  allEnemies.push(new Enemy(i));
+  allEnemies.push(new Enemy(i));
+}
+console.log(allEnemies);
+var player = new Player();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

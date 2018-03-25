@@ -24,8 +24,8 @@ const engine = (function IIFE() {
   const ctx = canvas.getContext('2d');
   let lastTime;
 
-  canvas.width = 505;
-  canvas.height = 606;
+  canvas.width = 550;
+  canvas.height = 330;
   document.querySelector('main').appendChild(canvas);
 
   /* This function serves as the kickoff point for the game loop itself
@@ -117,26 +117,25 @@ const engine = (function IIFE() {
      */
     const rowImages = [
       'build/images/water-block.png', // Top row is water
-      'build/images/stone-block.png', // Row 1 of 3 of stone
-      'build/images/stone-block.png', // Row 2 of 3 of stone
-      'build/images/stone-block.png', // Row 3 of 3 of stone
-      'build/images/grass-block.png', // Row 1 of 2 of grass
-      'build/images/grass-block.png', // Row 2 of 2 of grass
+      'build/images/stone-block.png', // Row 1 of 5 of stone
+      'build/images/stone-block.png', // Row 2 of 5 of stone
+      'build/images/stone-block.png', // Row 3 of 5 of stone
+      'build/images/stone-block.png', // Row 4 of 5 of stone
+      'build/images/stone-block.png', // Row 5 of 5 of stone
+      'build/images/grass-block.png', // Row 1 of 1 of grass
     ];
-    const numRows = 6;
-    const numCols = 5;
-    let row;
-    let col;
+    const numRows = 7;
+    const numCols = 11;
 
     // Before drawing, clear existing canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     /* Loop through the number of rows and columns we've defined above
      * and, using the rowImages array, draw the correct image for that
      * portion of the "grid"
      */
-    for (row = 0; row < numRows; row += 1) {
-      for (col = 0; col < numCols; col += 1) {
+    for (let row = 0; row < numRows; row += 1) {
+      for (let col = 0; col < numCols; col += 1) {
         /* The drawImage function of the canvas' context element
          * requires 3 parameters: the image to draw, the x coordinate
          * to start drawing and the y coordinate to start drawing.
@@ -144,7 +143,7 @@ const engine = (function IIFE() {
          * so that we get the benefits of caching these images, since
          * we're using them over and over.
          */
-        ctx.drawImage(resources.get(rowImages[row]), col * 101, row * 83);
+        ctx.drawImage(resources.get(rowImages[row]), col * 50, row * 40);
       }
     }
 

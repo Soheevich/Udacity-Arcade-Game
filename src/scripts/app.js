@@ -5,10 +5,9 @@ function Enemy(y) {
   // The image/sprite for our enemies, this uses
   // a helper we've provided to easily load images
   this.x = this.random(-600, -80);
-  this.y = y;
+  this.y = [40, 80, 120, 160, 200][y];
   this.speed = 1;
   this.sprite = 'build/images/enemy-bug.png';
-  this.rows = [63, 146, 229, 312];
 }
 
 Enemy.prototype = {
@@ -22,7 +21,7 @@ Enemy.prototype = {
     // which will ensure the game runs at the same speed for
     // all computers.
 
-    this.x = this.x > 600 ? (
+    this.x = this.x > 550 ? (
       this.speed = this.random(2, 1),
       this.random(-600, -80) * this.speed) :
       this.x + (dt * 200 * this.speed);
@@ -50,8 +49,8 @@ function Player(index = 0) {
     'build/images/char-pink-girl.png',
     'build/images/char-princess-girl.png',
   ];
-  this.x = 202;
-  this.y = 395;
+  this.x = 250;
+  this.y = 240;
   this.sprite = characters[index];
 }
 
@@ -66,55 +65,58 @@ Player.prototype = {
   },
 
   // Audio
-  // cardFlipAudio() {
-  //   const audio = document.querySelector('audio');
-  //   audio.currentTime = 0;
-  //   audio.play();
-  // },
+  cardFlipAudio() {
+    const audio = document.querySelector('audio');
+    audio.currentTime = 0;
+    audio.play();
+  },
 
   // Player movement method
   handleInput(direction) {
     switch (direction) {
       case 'left':
         if (this.x > 0) {
-          this.x -= 101;
-          // this.cardFlipAudio();
+          this.x -= 50;
+          this.cardFlipAudio();
         }
         break;
       case 'up':
-        if (this.y > -20) {
-          this.y -= 83;
-          // this.cardFlipAudio();
+        if (this.y > 0) {
+          this.y -= 40;
+          this.cardFlipAudio();
         }
         break;
       case 'right':
-        if (this.x < 404) {
-          this.x += 101;
-          // this.cardFlipAudio();
+        if (this.x < 500) {
+          this.x += 50;
+          this.cardFlipAudio();
+        }
+        break;
+      case 'down':
+        if (this.y < 240) {
+          this.y += 40;
+          this.cardFlipAudio();
         }
         break;
       default:
-        if (this.y < 395) {
-          this.y += 83;
-          // this.cardFlipAudio();
-        }
-        break;
     }
   },
 
   reset() {
-    this.x = 202;
-    this.y = 395;
+    this.x = 250;
+    this.y = 240;
   },
 };
 
 // Instantiation of all objects
-const enemy1 = new Enemy(63);
-const enemy2 = new Enemy(146);
-const enemy3 = new Enemy(229);
+const enemy1 = new Enemy(0);
+const enemy2 = new Enemy(1);
+const enemy3 = new Enemy(2);
+const enemy4 = new Enemy(3);
+const enemy5 = new Enemy(4);
 const player = new Player();
 
-const allEnemies = [enemy1, enemy2, enemy3];
+const allEnemies = [enemy1, enemy2, enemy3, enemy4, enemy5];
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

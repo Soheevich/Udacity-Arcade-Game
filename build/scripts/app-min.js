@@ -103,10 +103,9 @@ function Enemy(y) {
   // The image/sprite for our enemies, this uses
   // a helper we've provided to easily load images
   this.x = this.random(-600, -80);
-  this.y = y;
+  this.y = [40, 80, 120, 160, 200][y];
   this.speed = 1;
   this.sprite = 'build/images/enemy-bug.png';
-  this.rows = [63, 146, 229, 312];
 }
 
 Enemy.prototype = {
@@ -121,7 +120,7 @@ Enemy.prototype = {
     // which will ensure the game runs at the same speed for
     // all computers.
 
-    this.x = this.x > 600 ? (this.speed = this.random(2, 1), this.random(-600, -80) * this.speed) : this.x + dt * 200 * this.speed;
+    this.x = this.x > 550 ? (this.speed = this.random(2, 1), this.random(-600, -80) * this.speed) : this.x + dt * 200 * this.speed;
   },
 
 
@@ -142,8 +141,8 @@ function Player() {
   var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 
   var characters = ['build/images/char-boy.png', 'build/images/char-cat-girl.png', 'build/images/char-horn-girl.png', 'build/images/char-pink-girl.png', 'build/images/char-princess-girl.png'];
-  this.x = 202;
-  this.y = 395;
+  this.x = 250;
+  this.y = 240;
   this.sprite = characters[index];
 }
 
@@ -159,54 +158,58 @@ Player.prototype = {
 
 
   // Audio
-  // cardFlipAudio() {
-  //   const audio = document.querySelector('audio');
-  //   audio.currentTime = 0;
-  //   audio.play();
-  // },
+  cardFlipAudio: function cardFlipAudio() {
+    var audio = document.querySelector('audio');
+    audio.currentTime = 0;
+    audio.play();
+  },
+
 
   // Player movement method
   handleInput: function handleInput(direction) {
     switch (direction) {
       case 'left':
         if (this.x > 0) {
-          this.x -= 101;
-          // this.cardFlipAudio();
+          this.x -= 50;
+          this.cardFlipAudio();
         }
         break;
       case 'up':
-        if (this.y > -20) {
-          this.y -= 83;
-          // this.cardFlipAudio();
+        if (this.y > 0) {
+          this.y -= 40;
+          this.cardFlipAudio();
         }
         break;
       case 'right':
-        if (this.x < 404) {
-          this.x += 101;
-          // this.cardFlipAudio();
+        if (this.x < 500) {
+          this.x += 50;
+          this.cardFlipAudio();
+        }
+        break;
+      case 'down':
+        if (this.y < 240) {
+          this.y += 40;
+          this.cardFlipAudio();
         }
         break;
       default:
-        if (this.y < 395) {
-          this.y += 83;
-          // this.cardFlipAudio();
-        }
-        break;
     }
   },
   reset: function reset() {
-    this.x = 202;
-    this.y = 395;
+    this.x = 250;
+    this.y = 240;
   }
 };
 
 // Instantiation of all objects
-var enemy1 = new Enemy(63);
-var enemy2 = new Enemy(146);
-var enemy3 = new Enemy(229);
+var enemy1 = new Enemy(0);
+var enemy2 = new Enemy(1);
+var enemy3 = new Enemy(2);
+var enemy4 = new Enemy(3);
+var enemy5 = new Enemy(4);
 var player = new Player();
 
-var allEnemies = [enemy1, enemy2, enemy3];
+var allEnemies = [enemy1, enemy2, enemy3, enemy4, enemy5];
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -249,8 +252,8 @@ var engine = function IIFE() {
   var ctx = canvas.getContext('2d');
   var lastTime = void 0;
 
-  canvas.width = 505;
-  canvas.height = 606;
+  canvas.width = 550;
+  canvas.height = 330;
   document.querySelector('main').appendChild(canvas);
 
   /* This function serves as the kickoff point for the game loop itself
@@ -343,15 +346,14 @@ var engine = function IIFE() {
      * for that particular row of the game level.
      */
     var rowImages = ['build/images/water-block.png', // Top row is water
-    'build/images/stone-block.png', // Row 1 of 3 of stone
-    'build/images/stone-block.png', // Row 2 of 3 of stone
-    'build/images/stone-block.png', // Row 3 of 3 of stone
-    'build/images/grass-block.png', // Row 1 of 2 of grass
+    'build/images/stone-block.png', // Row 1 of 5 of stone
+    'build/images/stone-block.png', // Row 2 of 5 of stone
+    'build/images/stone-block.png', // Row 3 of 5 of stone
+    'build/images/stone-block.png', // Row 4 of 5 of stone
+    'build/images/stone-block.png', // Row 5 of 5 of stone
     'build/images/grass-block.png'];
-    var numRows = 6;
-    var numCols = 5;
-    var row = void 0;
-    var col = void 0;
+    var numRows = 7;
+    var numCols = 11;
 
     // Before drawing, clear existing canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -360,8 +362,8 @@ var engine = function IIFE() {
      * and, using the rowImages array, draw the correct image for that
      * portion of the "grid"
      */
-    for (row = 0; row < numRows; row += 1) {
-      for (col = 0; col < numCols; col += 1) {
+    for (var row = 0; row < numRows; row += 1) {
+      for (var col = 0; col < numCols; col += 1) {
         /* The drawImage function of the canvas' context element
          * requires 3 parameters: the image to draw, the x coordinate
          * to start drawing and the y coordinate to start drawing.
@@ -369,7 +371,7 @@ var engine = function IIFE() {
          * so that we get the benefits of caching these images, since
          * we're using them over and over.
          */
-        ctx.drawImage(resources.get(rowImages[row]), col * 101, row * 83);
+        ctx.drawImage(resources.get(rowImages[row]), col * 50, row * 40);
       }
     }
 

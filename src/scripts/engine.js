@@ -24,8 +24,8 @@ const engine = (function IIFE() {
   const ctx = canvas.getContext('2d');
   let lastTime;
 
-  canvas.width = 550;
-  canvas.height = 330;
+  canvas.width = 750;
+  canvas.height = 570;
   document.querySelector('main').appendChild(canvas);
 
   /* This function serves as the kickoff point for the game loop itself
@@ -116,16 +116,22 @@ const engine = (function IIFE() {
      * for that particular row of the game level.
      */
     const rowImages = [
-      'build/images/water-block.png', // Top row is water
-      'build/images/stone-block.png', // Row 1 of 5 of stone
-      'build/images/stone-block.png', // Row 2 of 5 of stone
-      'build/images/stone-block.png', // Row 3 of 5 of stone
-      'build/images/stone-block.png', // Row 4 of 5 of stone
-      'build/images/stone-block.png', // Row 5 of 5 of stone
-      'build/images/grass-block.png', // Row 1 of 1 of grass
+      'build/images/grass-block.png',
+      'build/images/water-block.png',
+      'build/images/water-block.png',
+      'build/images/water-block.png',
+      'build/images/water-block.png',
+      'build/images/water-block.png',
+      'build/images/grass-block.png',
+      'build/images/stone-block.png',
+      'build/images/stone-block.png',
+      'build/images/stone-block.png',
+      'build/images/stone-block.png',
+      'build/images/stone-block.png',
+      'build/images/grass-block.png',
     ];
-    const numRows = 7;
-    const numCols = 11;
+    const numRows = rowImages.length;
+    const numCols = 15;
 
     // Before drawing, clear existing canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);

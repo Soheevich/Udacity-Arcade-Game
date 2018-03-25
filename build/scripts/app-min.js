@@ -120,7 +120,7 @@ Enemy.prototype = {
     // which will ensure the game runs at the same speed for
     // all computers.
 
-    this.x = this.x > 550 ? this.random(-800, -80) * this.speed : this.x + dt * 200 * this.speed;
+    this.x = this.x > 800 ? this.random(-800, -80) * this.speed : this.x + dt * 200 * this.speed;
   },
 
 
@@ -141,8 +141,8 @@ function Player() {
   var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 
   var characters = ['build/images/char-boy.png', 'build/images/char-cat-girl.png', 'build/images/char-horn-girl.png', 'build/images/char-pink-girl.png', 'build/images/char-princess-girl.png'];
-  this.x = 250;
-  this.y = 240;
+  this.x = 350;
+  this.y = 480;
   this.sprite = characters[index];
 }
 
@@ -181,13 +181,13 @@ Player.prototype = {
         }
         break;
       case 'right':
-        if (this.x < 500) {
+        if (this.x < 700) {
           this.x += 50;
           this.cardFlipAudio();
         }
         break;
       case 'down':
-        if (this.y < 240) {
+        if (this.y < 480) {
           this.y += 40;
           this.cardFlipAudio();
         }
@@ -196,8 +196,8 @@ Player.prototype = {
     }
   },
   reset: function reset() {
-    this.x = 250;
-    this.y = 240;
+    this.x = 350;
+    this.y = 480;
   }
 };
 
@@ -253,8 +253,8 @@ var engine = function IIFE() {
   var ctx = canvas.getContext('2d');
   var lastTime = void 0;
 
-  canvas.width = 550;
-  canvas.height = 330;
+  canvas.width = 750;
+  canvas.height = 570;
   document.querySelector('main').appendChild(canvas);
 
   /* This function serves as the kickoff point for the game loop itself
@@ -346,15 +346,9 @@ var engine = function IIFE() {
     /* This array holds the relative URL to the image used
      * for that particular row of the game level.
      */
-    var rowImages = ['build/images/water-block.png', // Top row is water
-    'build/images/stone-block.png', // Row 1 of 5 of stone
-    'build/images/stone-block.png', // Row 2 of 5 of stone
-    'build/images/stone-block.png', // Row 3 of 5 of stone
-    'build/images/stone-block.png', // Row 4 of 5 of stone
-    'build/images/stone-block.png', // Row 5 of 5 of stone
-    'build/images/grass-block.png'];
-    var numRows = 7;
-    var numCols = 11;
+    var rowImages = ['build/images/grass-block.png', 'build/images/water-block.png', 'build/images/water-block.png', 'build/images/water-block.png', 'build/images/water-block.png', 'build/images/water-block.png', 'build/images/grass-block.png', 'build/images/stone-block.png', 'build/images/stone-block.png', 'build/images/stone-block.png', 'build/images/stone-block.png', 'build/images/stone-block.png', 'build/images/grass-block.png'];
+    var numRows = rowImages.length;
+    var numCols = 15;
 
     // Before drawing, clear existing canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);

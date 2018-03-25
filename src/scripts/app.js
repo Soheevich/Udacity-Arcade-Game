@@ -21,7 +21,7 @@ Enemy.prototype = {
     // which will ensure the game runs at the same speed for
     // all computers.
 
-    this.x = this.x > 550 ?
+    this.x = this.x > 800 ?
       this.random(-800, -80) * this.speed :
       this.x + (dt * 200 * this.speed);
   },
@@ -48,8 +48,8 @@ function Player(index = 0) {
     'build/images/char-pink-girl.png',
     'build/images/char-princess-girl.png',
   ];
-  this.x = 250;
-  this.y = 240;
+  this.x = 350;
+  this.y = 480;
   this.sprite = characters[index];
 }
 
@@ -86,13 +86,13 @@ Player.prototype = {
         }
         break;
       case 'right':
-        if (this.x < 500) {
+        if (this.x < 700) {
           this.x += 50;
           this.cardFlipAudio();
         }
         break;
       case 'down':
-        if (this.y < 240) {
+        if (this.y < 480) {
           this.y += 40;
           this.cardFlipAudio();
         }
@@ -102,8 +102,8 @@ Player.prototype = {
   },
 
   reset() {
-    this.x = 250;
-    this.y = 240;
+    this.x = 350;
+    this.y = 480;
   },
 };
 

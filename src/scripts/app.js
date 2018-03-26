@@ -1,58 +1,79 @@
 /* eslint-env browser */
 
-// Enemies our player must avoid
-function Enemy(y, place) {
-  // The image/sprite for our enemies, this uses
-  // a helper we've provided to easily load images
-  this.x = place === 'second' ? -250 : -50;
+/* TODO:
+  добавить мерцание перса при контакте с врагом, перед тем как он переместится
+
+*/
+
+// The super class for every moving object
+function MovingObject(y, place, objectType) {
   this.y = [40, 80, 120, 160, 200, 280, 320, 360, 400, 440][y];
   this.speed = y === 6 ? 4.5 : 3;
-  this.sprite = 'build/images/enemy-bug.png';
-  this.first = place !== 'second' ? true : false;
+  this.place = place;
+  this.objectType = objectType;
 }
 
-Enemy.prototype = {
-  // Update the enemy's position, required method for game
+MovingObject.prototype = {
+  // Translate current position of the object, it will be used by objects behind
+  savePosition(x) {
+    firstPositionsOfObjects[this.objectType] = x;
+  },
+
+  // Update the object's position
   update() {
-    if (this.first) {
-      firstEnemyCurrentPositionX = this.x;
+    const firstObjectPosition = firstPositionsOfObjects[this.objectType];
+    if (this.place === 'first') {
+      this.savePosition(this.x);
 
       this.x = this.x > 800 ?
         -50 :
         this.x + this.speed;
-    } else if (firstEnemyCurrentPositionX > this.x || this.x > 750) {
-      this.x = firstEnemyCurrentPositionX - 200;
+    } else if (firstObjectPosition > this.x || this.x > 750) {
+      this.x = firstObjectPosition - 200;
     } else {
       this.x += this.speed;
     }
   },
 
-  // Draw the enemy on the screen, required method for game
+  // Draw the object on the screen
   render() {
     engine.ctx.drawImage(resources.get(this.sprite), this.x, this.y);
   },
 };
 
-// Constructor for enemies moving from right to left
-function EnemyToLeft(y, place) {
-  // The image/sprite for our enemies, this uses
-  // a helper we've provided to easily load images
-  Enemy.apply(this, [y, place]);
-  this.x = place === 'second' ? 950 : 750;
+
+// Enemies our player must avoid
+function Enemy(y, place, objectType) {
+  MovingObject.apply(this, [y, place, objectType]);
+  this.x = place === 'second' ? -250 : -50;
+  this.sprite = 'build/images/enemy-bug.png';
 }
 
-EnemyToLeft.prototype = Object.create(Enemy.prototype);
+Enemy.prototype = Object.create(MovingObject.prototype);
+Enemy.prototype.constructor = Enemy;
+
+// Constructor for enemies moving from right to left (opposite direction)
+function EnemyToLeft(y, place, objectType) {
+  // The image/sprite for our enemies, this uses
+  // a helper we've provided to easily load images
+  MovingObject.apply(this, [y, place, objectType]);
+  this.x = place === 'second' ? 950 : 750;
+  this.sprite = 'build/images/enemy-bug.png';
+}
+
+EnemyToLeft.prototype = Object.create(MovingObject.prototype);
 EnemyToLeft.prototype.constructor = EnemyToLeft;
 EnemyToLeft.prototype.update = function update() {
+  const firstObjectPosition = firstPositionsOfObjects[this.objectType];
   // Update the enemy's position, required method for game
   if (this.first) {
-    firstEnemyToLeftCurrentPositionX = this.x;
+    this.savePosition(this.x);
 
     this.x = this.x < -50 ?
       750 :
       this.x - this.speed;
-  } else if (firstEnemyToLeftCurrentPositionX < this.x || this.x < -50) {
-    this.x = firstEnemyToLeftCurrentPositionX + 200;
+  } else if (firstObjectPosition < this.x || this.x < -50) {
+    this.x = firstObjectPosition + 200;
   } else {
     this.x -= this.speed;
   }
@@ -76,6 +97,9 @@ EnemyToLeft.prototype.render = function render() {
 
   engine.ctx.restore();
 };
+
+// Logs on water
+
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -148,17 +172,16 @@ Player.prototype = {
 // Instantiation of all objects
 const rowsWithEnemies = 10;
 const allEnemies = [];
-let firstEnemyCurrentPositionX;
-let firstEnemyToLeftCurrentPositionX;
+const firstPositionsOfObjects = {};
 
 // Create two enemies per row
 for (let i = 0; i < rowsWithEnemies; i += 1) {
   if (i % 2 === 0) {
-    allEnemies.push(new Enemy(i));
-    allEnemies.push(new Enemy(i, 'second'));
+    allEnemies.push(new Enemy(i, 'first', 'Enemy'));
+    allEnemies.push(new Enemy(i, 'second', 'Enemy'));
   } else {
-    allEnemies.push(new EnemyToLeft(i));
-    allEnemies.push(new EnemyToLeft(i, 'second'));
+    allEnemies.push(new EnemyToLeft(i, 'first', 'EnemyToLeft'));
+    allEnemies.push(new EnemyToLeft(i, 'second', 'EnemyToLeft'));
   }
 }
 // console.log(allEnemies);

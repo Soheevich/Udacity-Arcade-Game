@@ -99,13 +99,15 @@ var resources = function IIFE() {
 /* eslint-env browser */
 
 // Enemies our player must avoid
-function Enemy(y) {
+function Enemy(y, place) {
   // The image/sprite for our enemies, this uses
   // a helper we've provided to easily load images
-  this.x = this.random(-800, -80);
+  // this.x = this.random(-800, -80);
+  this.x = place === 'second' ? -250 : -50;
   this.y = [40, 80, 120, 160, 200, 280, 320, 360, 400, 440][y];
   this.speed = y === 6 ? 4.5 : 3;
   this.sprite = 'build/images/enemy-bug.png';
+  this.first = place !== 'second' ? true : false;
 }
 
 Enemy.prototype = {
@@ -120,7 +122,15 @@ Enemy.prototype = {
     // which will ensure the game runs at the same speed for
     // all computers.
 
-    this.x = this.x > 800 ? this.random(-800, -80) * this.speed : this.x + this.speed; //
+    if (this.first) {
+      firstEnemyCurrentPositionX = this.x;
+
+      this.x = this.x > 800 ? -50 : this.x + this.speed;
+    } else if (firstEnemyCurrentPositionX > this.x || this.x > 750) {
+      this.x = firstEnemyCurrentPositionX - 200;
+    } else {
+      this.x += this.speed;
+    }
   },
 
 
@@ -203,11 +213,12 @@ Player.prototype = {
 // Instantiation of all objects
 var rowsWithEnemies = 10;
 var allEnemies = [];
+var firstEnemyCurrentPositionX = void 0;
 
 // Create two enemies per row
 for (var i = 0; i < rowsWithEnemies; i += 1) {
   allEnemies.push(new Enemy(i));
-  allEnemies.push(new Enemy(i));
+  allEnemies.push(new Enemy(i, 'second'));
 }
 // console.log(allEnemies);
 var player = new Player();

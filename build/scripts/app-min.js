@@ -99,7 +99,7 @@ var resources = function IIFE() {
 /* eslint-env browser */
 
 // Enemies our player must avoid
-function Enemy(y, place) {
+function Enemy(y, place, direction) {
   // The image/sprite for our enemies, this uses
   // a helper we've provided to easily load images
   // this.x = this.random(-800, -80);
@@ -137,9 +137,6 @@ Enemy.prototype = {
   // Draw the enemy on the screen, required method for game
   render: function render() {
     engine.ctx.drawImage(resources.get(this.sprite), this.x, this.y);
-  },
-  reset: function reset() {
-    this.x = this.random(-600, -80);
   }
 };
 
@@ -261,6 +258,7 @@ var engine = function IIFE() {
    * set the canvas elements height/width and add it to the DOM.
    */
   var canvas = document.createElement('canvas');
+  canvas.className = 'canvas';
   var ctx = canvas.getContext('2d');
   var stop = false;
   var frameCount = 0;
@@ -354,7 +352,10 @@ var engine = function IIFE() {
    */
   function init() {
     reset();
-    startAnimating(60);
+    render();
+    document.querySelector('button').addEventListener('click', function () {
+      startAnimating(60);
+    });
   }
 
   /* This is called by the update function and loops through all of the
@@ -427,7 +428,8 @@ var engine = function IIFE() {
    * draw our game level. Then set init as the callback method, so that when
    * all of these images are properly loaded our game will start.
    */
-  resources.load.apply(resources, ['build/images/stone-block.png', 'build/images/water-block.png', 'build/images/grass-block.png', 'build/images/enemy-bug.png', 'build/images/char-boy.png']);
+  resources.load.apply(resources, ['build/images/stone-block.png', 'build/images/water-block.png', 'build/images/grass-block.png', 'build/images/enemy-bug.png', 'build/images/char-boy.png', 'build/images/char-cat-girl.png', 'build/images/char-horn-girl.png', 'build/images/char-pink-girl.png', 'build/images/char-princess-girl.png']);
+
   resources.onReady(init);
 
   // Return the canvas' context object to use it by app module

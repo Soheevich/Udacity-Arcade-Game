@@ -1,7 +1,7 @@
 /* eslint-env browser */
 
 // Enemies our player must avoid
-function Enemy(y, place) {
+function Enemy(y, place, direction) {
   // The image/sprite for our enemies, this uses
   // a helper we've provided to easily load images
   // this.x = this.random(-800, -80);
@@ -39,10 +39,6 @@ Enemy.prototype = {
   // Draw the enemy on the screen, required method for game
   render() {
     engine.ctx.drawImage(resources.get(this.sprite), this.x, this.y);
-  },
-
-  reset() {
-    this.x = this.random(-600, -80);
   },
 };
 

@@ -10,6 +10,25 @@ html, body {
 }
 
 main {
-  text-align: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
   font-family: 'Courier New', Courier, monospace;
+}
+
+.canvas {
+  display: block;
+  margin: 0 auto;
+}
+
+button {
+  margin: 0 auto;
+  padding: 0.5em;
 }

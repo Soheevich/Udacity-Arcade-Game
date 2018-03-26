@@ -21,6 +21,7 @@ const engine = (function IIFE() {
    * set the canvas elements height/width and add it to the DOM.
    */
   const canvas = document.createElement('canvas');
+  canvas.className = 'canvas';
   const ctx = canvas.getContext('2d');
   let stop = false;
   let frameCount = 0;
@@ -114,7 +115,10 @@ const engine = (function IIFE() {
    */
   function init() {
     reset();
-    startAnimating(60);
+    render();
+    document.querySelector('button').addEventListener('click', () => {
+      startAnimating(60);
+    });
   }
 
   /* This is called by the update function and loops through all of the
@@ -203,10 +207,10 @@ const engine = (function IIFE() {
     'build/images/grass-block.png',
     'build/images/enemy-bug.png',
     'build/images/char-boy.png',
-    // 'build/images/char-cat-girl.png',
-    // 'build/images/char-horn-girl.png',
-    // 'build/images/char-pink-girl.png',
-    // 'build/images/char-princess-girl.png',
+    'build/images/char-cat-girl.png',
+    'build/images/char-horn-girl.png',
+    'build/images/char-pink-girl.png',
+    'build/images/char-princess-girl.png',
     // 'build/images/gem-blue.png',
     // 'build/images/gem-green.png',
     // 'build/images/gem-orange.png',
@@ -216,6 +220,7 @@ const engine = (function IIFE() {
     // 'build/images/Selector.png',
     // 'build/images/Star.png',
   ]);
+
   resources.onReady(init);
 
   // Return the canvas' context object to use it by app module

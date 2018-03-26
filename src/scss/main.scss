@@ -13,6 +13,18 @@ html, body {
 }
 
 main {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   font-family: 'Courier New', Courier, monospace;
+}
+
+.canvas {
+  display: block;
+  margin: 0 auto;
+}
+
+button {
+  margin: 0 auto;
+  padding: 0.5em;
 }

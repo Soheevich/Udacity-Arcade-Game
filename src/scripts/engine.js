@@ -56,16 +56,27 @@ const engine = (function IIFE() {
     const playerX = player.x;
     const playerY = player.y;
 
-    allEnemies.forEach((enemy) => {
-      if (enemy.y === playerY && (playerX < (enemy.x + 50) && (playerX + 50) > enemy.x)) {
+    if (playerY >= 280 && playerY <= 440) {
+      allEnemies.forEach((enemy) => {
+        if (enemy.y === playerY && (playerX < (enemy.x + 50) && (playerX + 50) > enemy.x)) {
+          player.reset();
+        }
+      });
+    } else if (playerY >= 40 && playerY <= 200) {
+      let playerIsOnLog = false;
+
+      allLogs.forEach((log) => {
+        if (log.y === playerY && (playerX < (log.x + 50) && (playerX + 50) > log.x)) {
+          playerIsOnLog = true;
+          // player.update();
+        }
+      });
+
+      if (!playerIsOnLog) {
         player.reset();
       }
-    });
-    allLogs.forEach((log) => {
-      if (log.y === playerY && (playerX < (log.x + 50) && (playerX + 50) > log.x)) {
-        player.reset();
-      }
-    });
+    }
+
   }
 
   /* This function serves as the kickoff point for the game loop itself

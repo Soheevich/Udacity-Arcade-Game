@@ -247,12 +247,15 @@ function Player(index = 0) {
     'build/images/char-princess-girl.png',
   ];
   this.x = 350;
-  this.y = 480;
+  // this.y = 480;
+  this.y = 240;
   this.sprite = characters[index];
 }
 
 Player.prototype = {
-  update() {},
+  update(x) {
+    // this.x += x;
+  },
 
   // Draw the player on the screen, required method for game
   render() {
@@ -299,7 +302,8 @@ Player.prototype = {
 
   reset() {
     this.x = 350;
-    this.y = 480;
+    // this.y = 480;
+    this.y = 240;
   },
 };
 

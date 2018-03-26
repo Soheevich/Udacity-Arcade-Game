@@ -323,12 +323,15 @@ function Player() {
 
   var characters = ['build/images/char-boy.png', 'build/images/char-cat-girl.png', 'build/images/char-horn-girl.png', 'build/images/char-pink-girl.png', 'build/images/char-princess-girl.png'];
   this.x = 350;
-  this.y = 480;
+  // this.y = 480;
+  this.y = 240;
   this.sprite = characters[index];
 }
 
 Player.prototype = {
-  update: function update() {},
+  update: function update(x) {
+    // this.x += x;
+  },
 
 
   // Draw the player on the screen, required method for game
@@ -377,7 +380,8 @@ Player.prototype = {
   },
   reset: function reset() {
     this.x = 350;
-    this.y = 480;
+    // this.y = 480;
+    this.y = 240;
   }
 };
 
@@ -491,16 +495,26 @@ var engine = function IIFE() {
     var playerX = player.x;
     var playerY = player.y;
 
-    allEnemies.forEach(function (enemy) {
-      if (enemy.y === playerY && playerX < enemy.x + 50 && playerX + 50 > enemy.x) {
+    if (playerY >= 280 && playerY <= 440) {
+      allEnemies.forEach(function (enemy) {
+        if (enemy.y === playerY && playerX < enemy.x + 50 && playerX + 50 > enemy.x) {
+          player.reset();
+        }
+      });
+    } else if (playerY >= 40 && playerY <= 200) {
+      var playerIsOnLog = false;
+
+      allLogs.forEach(function (log) {
+        if (log.y === playerY && playerX < log.x + 50 && playerX + 50 > log.x) {
+          playerIsOnLog = true;
+          // player.update();
+        }
+      });
+
+      if (!playerIsOnLog) {
         player.reset();
       }
-    });
-    allLogs.forEach(function (log) {
-      if (log.y === playerY && playerX < log.x + 50 && playerX + 50 > log.x) {
-        player.reset();
-      }
-    });
+    }
   }
 
   /* This function serves as the kickoff point for the game loop itself

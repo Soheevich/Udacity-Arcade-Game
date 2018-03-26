@@ -115,10 +115,18 @@ MovingObject.prototype = {
       this.savePosition(this.x);
 
       this.x = this.x > 800 ? -50 : this.x + this.speed;
-    } else if (firstObjectPosition > this.x || this.x > 750) {
-      this.x = firstObjectPosition - 200;
-    } else {
-      this.x += this.speed;
+    } else if (this.place === 'second') {
+      if (firstObjectPosition > this.x || this.x > 750) {
+        this.x = firstObjectPosition - 200;
+      } else {
+        this.x += this.speed;
+      }
+    } else if (this.place === 'third') {
+      if (firstObjectPosition > this.x || this.x > 750) {
+        this.x = firstObjectPosition - 400;
+      } else {
+        this.x += this.speed;
+      }
     }
   },
 
@@ -132,8 +140,15 @@ MovingObject.prototype = {
 // Enemies our player must avoid
 function Enemy(y, place, objectType) {
   MovingObject.apply(this, [y, place, objectType]);
-  this.x = place === 'second' ? -250 : -50;
   this.sprite = 'build/images/enemy-bug.png';
+
+  if (place === 'first') {
+    this.x = -50;
+  } else if (place === 'second') {
+    this.x = -250;
+  } else if (place === 'third') {
+    this.x = -450;
+  }
 }
 
 Enemy.prototype = Object.create(MovingObject.prototype);
@@ -141,11 +156,16 @@ Enemy.prototype.constructor = Enemy;
 
 // Constructor for enemies moving from right to left (opposite direction)
 function EnemyToLeft(y, place, objectType) {
-  // The image/sprite for our enemies, this uses
-  // a helper we've provided to easily load images
   MovingObject.apply(this, [y, place, objectType]);
-  this.x = place === 'second' ? 950 : 750;
   this.sprite = 'build/images/enemy-bug.png';
+
+  if (place === 'first') {
+    this.x = 750;
+  } else if (place === 'second') {
+    this.x = 950;
+  } else if (place === 'third') {
+    this.x = 1150;
+  }
 }
 
 EnemyToLeft.prototype = Object.create(MovingObject.prototype);
@@ -153,14 +173,22 @@ EnemyToLeft.prototype.constructor = EnemyToLeft;
 EnemyToLeft.prototype.update = function update() {
   var firstObjectPosition = firstPositionsOfObjects[this.objectType];
   // Update the enemy's position, required method for game
-  if (this.first) {
+  if (this.place === 'first') {
     this.savePosition(this.x);
 
     this.x = this.x < -50 ? 750 : this.x - this.speed;
-  } else if (firstObjectPosition < this.x || this.x < -50) {
-    this.x = firstObjectPosition + 200;
-  } else {
-    this.x -= this.speed;
+  } else if (this.place === 'second') {
+    if (firstObjectPosition < this.x || this.x < -50) {
+      this.x = firstObjectPosition + 200;
+    } else {
+      this.x -= this.speed;
+    }
+  } else if (this.place === 'third') {
+    if (firstObjectPosition < this.x || this.x < -50) {
+      this.x = firstObjectPosition + 400;
+    } else {
+      this.x -= this.speed;
+    }
   }
 };
 
@@ -257,14 +285,16 @@ var rowsWithEnemies = 10;
 var allEnemies = [];
 var firstPositionsOfObjects = {};
 
-// Create two enemies per row
+// Create three enemies per row
 for (var i = 0; i < rowsWithEnemies; i += 1) {
   if (i % 2 === 0) {
     allEnemies.push(new Enemy(i, 'first', 'Enemy'));
     allEnemies.push(new Enemy(i, 'second', 'Enemy'));
+    allEnemies.push(new Enemy(i, 'third', 'Enemy'));
   } else {
     allEnemies.push(new EnemyToLeft(i, 'first', 'EnemyToLeft'));
     allEnemies.push(new EnemyToLeft(i, 'second', 'EnemyToLeft'));
+    allEnemies.push(new EnemyToLeft(i, 'third', 'EnemyToLeft'));
   }
 }
 // console.log(allEnemies);

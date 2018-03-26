@@ -202,7 +202,11 @@ const engine = (function IIFE() {
          * so that we get the benefits of caching these images, since
          * we're using them over and over.
          */
-        ctx.drawImage(resources.get(rowImages[row]), col * 50, row * 40);
+        if (row === 0 && col === 7) {
+          ctx.drawImage(resources.get('build/images/Selector.png'), col * 50, row * 40);
+        } else {
+          ctx.drawImage(resources.get(rowImages[row]), col * 50, row * 40);
+        }
       }
     }
 
@@ -237,14 +241,14 @@ const engine = (function IIFE() {
     'build/images/char-pink-girl.png',
     'build/images/char-princess-girl.png',
     'build/images/log.png',
-    // 'build/images/gem-blue.png',
-    // 'build/images/gem-green.png',
-    // 'build/images/gem-orange.png',
-    // 'build/images/Heart.png',
-    // 'build/images/Key.png',
-    // 'build/images/Rock.png',
-    // 'build/images/Selector.png',
-    // 'build/images/Star.png',
+    'build/images/gem-blue.png',
+    'build/images/gem-green.png',
+    'build/images/gem-orange.png',
+    'build/images/Heart.png',
+    'build/images/Key.png',
+    'build/images/Rock.png',
+    'build/images/Selector.png',
+    'build/images/Star.png',
   ]);
 
   resources.onReady(init);

@@ -149,6 +149,8 @@ function Log(y, place, objectType) {
     this.x = -100;
   } else if (place === 'third') {
     this.x = -150;
+  } else if (place === 'fourth') {
+    this.x = -200;
   }
 }
 
@@ -172,6 +174,12 @@ Log.prototype.update = function update() {
     } else {
       this.x += this.speed;
     }
+  } else if (this.place === 'fourth') {
+    if (firstObjectPosition > this.x || this.x > 750) {
+      this.x = firstObjectPosition - 150;
+    } else {
+      this.x += this.speed;
+    }
   }
 };
 
@@ -187,6 +195,10 @@ function LogToLeft(y, place, objectType) {
     this.x = 800;
   } else if (place === 'third') {
     this.x = 850;
+  } else if (place === 'fourth') {
+    this.x = 900;
+  } else if (place === 'fifth') {
+    this.x = 950;
   }
 }
 
@@ -208,6 +220,18 @@ LogToLeft.prototype.update = function update() {
   } else if (this.place === 'third') {
     if (firstObjectPosition < this.x || this.x < -50) {
       this.x = firstObjectPosition + 100;
+    } else {
+      this.x -= this.speed;
+    }
+  } else if (this.place === 'fourth') {
+    if (firstObjectPosition < this.x || this.x < -50) {
+      this.x = firstObjectPosition + 150;
+    } else {
+      this.x -= this.speed;
+    }
+  } else if (this.place === 'fifth') {
+    if (firstObjectPosition < this.x || this.x < -50) {
+      this.x = firstObjectPosition + 200;
     } else {
       this.x -= this.speed;
     }
@@ -601,7 +625,9 @@ var engine = function IIFE() {
     allEnemies.forEach(function (enemy) {
       return enemy.render();
     });
-
+    allLogs.forEach(function (log) {
+      return log.render();
+    });
     player.render();
   }
 

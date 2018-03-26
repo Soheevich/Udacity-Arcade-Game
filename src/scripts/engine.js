@@ -198,7 +198,7 @@ const engine = (function IIFE() {
      * the render function you have defined.
      */
     allEnemies.forEach(enemy => enemy.render());
-
+    allLogs.forEach(log => log.render());
     player.render();
   }
 

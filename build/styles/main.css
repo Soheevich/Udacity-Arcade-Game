@@ -32,3 +32,10 @@ button {
   margin: 0 auto;
   padding: 0.5em;
 }
+
+.flippedEnemy {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  -webkit-filter: FlipH;
+  filter: FlipH;
+}

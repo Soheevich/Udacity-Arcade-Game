@@ -143,6 +143,25 @@ EnemyToLeft.prototype.update = function update() {
   }
 };
 
+EnemyToLeft.prototype.render = function render() {
+  // this function was taken from
+  // https://stackoverflow.com/questions/3129099/how-to-flip-images-horizontally-with-html5
+  var img = resources.get(this.sprite);
+  var width = img.width;
+  var height = img.height;
+
+  engine.ctx.save();
+  // Set the origin to the center of the image
+  engine.ctx.translate(this.x + width / 2, this.y + height / 2);
+
+  engine.ctx.scale(-1, 1);
+
+  // Draw the image
+  engine.ctx.drawImage(img, -width / 2, -height / 2);
+
+  engine.ctx.restore();
+};
+
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
@@ -242,7 +261,6 @@ document.addEventListener('keyup', function (e) {
     player.handleInput(allowedKeys[e.keyCode]);
   }
 });
-
 /* eslint-env browser */
 
 /* Engine.js

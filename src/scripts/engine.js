@@ -24,9 +24,9 @@ const engine = (function IIFE() {
   canvas.className = 'canvas';
   const ctx = canvas.getContext('2d');
   let stop = false;
-  let frameCount = 0;
+  // let frameCount = 0;
   let fpsInterval;
-  let startTime;
+  // let startTime;
   let now;
   let then;
   let elapsed;
@@ -93,18 +93,13 @@ const engine = (function IIFE() {
       updateEntities();
       checkCollisions();
       render();
-
-      // TESTING...Report #seconds since start and achieved fps.
-      // let sinceStart = now - startTime;
-      // let currentFps = Math.round(1000 / (sinceStart / ++frameCount) * 100) / 100;
-      // document.querySelector('.frameCount').textContent ='Elapsed time= ' + Math.round(sinceStart / 1000 * 100) / 100 + ' secs @ ' + currentFps + ' fps.';
     }
   }
 
   function startAnimating(fps) {
     fpsInterval = 1000 / fps;
     then = window.performance.now();
-    startTime = then;
+    // startTime = then;
     // console.log(startTime);
     animate();
   }

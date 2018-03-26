@@ -89,10 +89,9 @@ var resources = function IIFE() {
 /* eslint-env browser */
 
 // Enemies our player must avoid
-function Enemy(y, place, direction) {
+function Enemy(y, place) {
   // The image/sprite for our enemies, this uses
   // a helper we've provided to easily load images
-  // this.x = this.random(-800, -80);
   this.x = place === 'second' ? -250 : -50;
   this.y = [40, 80, 120, 160, 200, 280, 320, 360, 400, 440][y];
   this.speed = y === 6 ? 4.5 : 3;
@@ -101,18 +100,8 @@ function Enemy(y, place, direction) {
 }
 
 Enemy.prototype = {
-  random: function random(max, min) {
-    return Math.random() * (max - min) + min;
-  },
-
-
   // Update the enemy's position, required method for game
-  // Parameter: dt, a time delta between ticks
   update: function update() {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-
     if (this.first) {
       firstEnemyCurrentPositionX = this.x;
 
@@ -131,10 +120,32 @@ Enemy.prototype = {
   }
 };
 
+// Constructor for enemies moving from right to left
+function EnemyToLeft(y, place) {
+  // The image/sprite for our enemies, this uses
+  // a helper we've provided to easily load images
+  Enemy.apply(this, [y, place]);
+  this.x = place === 'second' ? 950 : 750;
+}
+
+EnemyToLeft.prototype = Object.create(Enemy.prototype);
+EnemyToLeft.prototype.constructor = EnemyToLeft;
+EnemyToLeft.prototype.update = function update() {
+  // Update the enemy's position, required method for game
+  if (this.first) {
+    firstEnemyToLeftCurrentPositionX = this.x;
+
+    this.x = this.x < -50 ? 750 : this.x - this.speed;
+  } else if (firstEnemyToLeftCurrentPositionX < this.x || this.x < -50) {
+    this.x = firstEnemyToLeftCurrentPositionX + 200;
+  } else {
+    this.x -= this.speed;
+  }
+};
+
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-
 function Player() {
   var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 
@@ -202,11 +213,17 @@ Player.prototype = {
 var rowsWithEnemies = 10;
 var allEnemies = [];
 var firstEnemyCurrentPositionX = void 0;
+var firstEnemyToLeftCurrentPositionX = void 0;
 
 // Create two enemies per row
 for (var i = 0; i < rowsWithEnemies; i += 1) {
-  allEnemies.push(new Enemy(i));
-  allEnemies.push(new Enemy(i, 'second'));
+  if (i % 2 === 0) {
+    allEnemies.push(new Enemy(i));
+    allEnemies.push(new Enemy(i, 'second'));
+  } else {
+    allEnemies.push(new EnemyToLeft(i));
+    allEnemies.push(new EnemyToLeft(i, 'second'));
+  }
 }
 // console.log(allEnemies);
 var player = new Player();
@@ -252,9 +269,9 @@ var engine = function IIFE() {
   canvas.className = 'canvas';
   var ctx = canvas.getContext('2d');
   var stop = false;
-  var frameCount = 0;
+  // let frameCount = 0;
   var fpsInterval = void 0;
-  var startTime = void 0;
+  // let startTime;
   var now = void 0;
   var then = void 0;
   var elapsed = void 0;
@@ -321,18 +338,13 @@ var engine = function IIFE() {
       updateEntities();
       checkCollisions();
       render();
-
-      // TESTING...Report #seconds since start and achieved fps.
-      // let sinceStart = now - startTime;
-      // let currentFps = Math.round(1000 / (sinceStart / ++frameCount) * 100) / 100;
-      // document.querySelector('.frameCount').textContent ='Elapsed time= ' + Math.round(sinceStart / 1000 * 100) / 100 + ' secs @ ' + currentFps + ' fps.';
     }
   }
 
   function startAnimating(fps) {
     fpsInterval = 1000 / fps;
     then = window.performance.now();
-    startTime = then;
+    // startTime = then;
     // console.log(startTime);
     animate();
   }

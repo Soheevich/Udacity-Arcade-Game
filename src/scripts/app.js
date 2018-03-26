@@ -1,10 +1,9 @@
 /* eslint-env browser */
 
 // Enemies our player must avoid
-function Enemy(y, place, direction) {
+function Enemy(y, place) {
   // The image/sprite for our enemies, this uses
   // a helper we've provided to easily load images
-  // this.x = this.random(-800, -80);
   this.x = place === 'second' ? -250 : -50;
   this.y = [40, 80, 120, 160, 200, 280, 320, 360, 400, 440][y];
   this.speed = y === 6 ? 4.5 : 3;
@@ -13,17 +12,8 @@ function Enemy(y, place, direction) {
 }
 
 Enemy.prototype = {
-  random(max, min) {
-    return (Math.random() * (max - min)) + min;
-  },
-
   // Update the enemy's position, required method for game
-  // Parameter: dt, a time delta between ticks
   update() {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-
     if (this.first) {
       firstEnemyCurrentPositionX = this.x;
 
@@ -43,10 +33,34 @@ Enemy.prototype = {
   },
 };
 
+// Constructor for enemies moving from right to left
+function EnemyToLeft(y, place) {
+  // The image/sprite for our enemies, this uses
+  // a helper we've provided to easily load images
+  Enemy.apply(this, [y, place]);
+  this.x = place === 'second' ? 950 : 750;
+}
+
+EnemyToLeft.prototype = Object.create(Enemy.prototype);
+EnemyToLeft.prototype.constructor = EnemyToLeft;
+EnemyToLeft.prototype.update = function update() {
+  // Update the enemy's position, required method for game
+  if (this.first) {
+    firstEnemyToLeftCurrentPositionX = this.x;
+
+    this.x = this.x < -50 ?
+      750 :
+      this.x - this.speed;
+  } else if (firstEnemyToLeftCurrentPositionX < this.x || this.x < -50) {
+    this.x = firstEnemyToLeftCurrentPositionX + 200;
+  } else {
+    this.x -= this.speed;
+  }
+};
+
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-
 function Player(index = 0) {
   const characters = [
     'build/images/char-boy.png',
@@ -117,15 +131,20 @@ Player.prototype = {
 const rowsWithEnemies = 10;
 const allEnemies = [];
 let firstEnemyCurrentPositionX;
+let firstEnemyToLeftCurrentPositionX;
 
 // Create two enemies per row
 for (let i = 0; i < rowsWithEnemies; i += 1) {
-  allEnemies.push(new Enemy(i));
-  allEnemies.push(new Enemy(i, 'second'));
+  if (i % 2 === 0) {
+    allEnemies.push(new Enemy(i));
+    allEnemies.push(new Enemy(i, 'second'));
+  } else {
+    allEnemies.push(new EnemyToLeft(i));
+    allEnemies.push(new EnemyToLeft(i, 'second'));
+  }
 }
 // console.log(allEnemies);
 const player = new Player();
-
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

@@ -11,6 +11,28 @@ const resources = (function IIFE() {
   const promises = [];
   const readyCallbacks = [];
 
+  // Creating a new promise to wait until an image is loaded
+  const checkImage =  url =>
+    new Promise((resolve) => {
+      const img = document.createElement('img');
+      img.src = url;
+      img.onload = () => resolve(img);
+      // img.onerror = () => resolve(img);
+    });
+
+  /* This is our private image loader function, it is
+   * called by the public image loader function.
+   */
+  const promiseLoad = url =>
+    /* Once our image has properly loaded, add it to our cache
+     * so that we can simply return this image if the developer
+     * attempts to load this file in the future.
+     */
+    checkImage(url)
+      .then((img) => {
+        resourceCache[url] = img;
+      });
+
   return {
     /* This is the publicly accessible image loading function. It accepts
      * an array of strings pointing to image files or a string for a single
@@ -21,45 +43,13 @@ const resources = (function IIFE() {
        * loop through each value and call our image loader on that image file
        * Then push returned promise to the promises array
        */
-      urls.forEach(url => promises.push(this.privateLoad(url)));
+      urls.forEach(url => promises.push(promiseLoad(url)));
 
       // This function determines if all of the images that have been requested
       // for loading have in fact been properly loaded.
       Promise.all(promises).then(() => {
         readyCallbacks.forEach(func => func());
       });
-    },
-
-    // Creating a new promise to wait until an image is loaded
-    checkImage(url) {
-      return new Promise((resolve) => {
-        const img = document.createElement('img');
-        img.src = url;
-        img.onload = () => resolve(img);
-        // img.onerror = () => resolve(img);
-      });
-    },
-
-    /* This is our private image loader function, it is
-     * called by the public image loader function.
-     */
-    privateLoad(url) {
-      if (resourceCache[url]) {
-        /* If this URL has been previously loaded it will exist within
-         * our resourceCache array. Just return that image rather
-         * re-loading the image.
-         */
-        return resourceCache[url];
-      }
-
-      /* Once our image has properly loaded, add it to our cache
-       * so that we can simply return this image if the developer
-       * attempts to load this file in the future.
-       */
-      return this.checkImage(url)
-        .then((img) => {
-          resourceCache[url] = img;
-        });
     },
 
     /* This is used by developers to grab references to images they know

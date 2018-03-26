@@ -114,11 +114,15 @@ const engine = (function IIFE() {
    * game loop.
    */
   function init() {
+    const button = document.querySelector('button');
     reset();
     render();
-    document.querySelector('button').addEventListener('click', () => {
-      startAnimating(60);
-    });
+    startAnimating(60);
+
+    // button.addEventListener('click', () => {
+    //   alert('works');
+    //   startAnimating(60);
+    // }, { once: true });
   }
 
   /* This is called by the update function and loops through all of the

@@ -13,14 +13,39 @@ var resources = function IIFE() {
   var promises = [];
   var readyCallbacks = [];
 
+  // Creating a new promise to wait until an image is loaded
+  var checkImage = function checkImage(url) {
+    return new Promise(function (resolve) {
+      var img = document.createElement('img');
+      img.src = url;
+      img.onload = function () {
+        return resolve(img);
+      };
+      // img.onerror = () => resolve(img);
+    });
+  };
+
+  /* This is our private image loader function, it is
+   * called by the public image loader function.
+   */
+  var promiseLoad = function promiseLoad(url) {
+    return (
+      /* Once our image has properly loaded, add it to our cache
+       * so that we can simply return this image if the developer
+       * attempts to load this file in the future.
+       */
+      checkImage(url).then(function (img) {
+        resourceCache[url] = img;
+      })
+    );
+  };
+
   return {
     /* This is the publicly accessible image loading function. It accepts
      * an array of strings pointing to image files or a string for a single
      * image. It will then call our private image loading function accordingly.
      */
     load: function load() {
-      var _this = this;
-
       for (var _len = arguments.length, urls = Array(_len), _key = 0; _key < _len; _key++) {
         urls[_key] = arguments[_key];
       }
@@ -30,7 +55,7 @@ var resources = function IIFE() {
        * Then push returned promise to the promises array
        */
       urls.forEach(function (url) {
-        return promises.push(_this.privateLoad(url));
+        return promises.push(promiseLoad(url));
       });
 
       // This function determines if all of the images that have been requested
@@ -39,41 +64,6 @@ var resources = function IIFE() {
         readyCallbacks.forEach(function (func) {
           return func();
         });
-      });
-    },
-
-
-    // Creating a new promise to wait until an image is loaded
-    checkImage: function checkImage(url) {
-      return new Promise(function (resolve) {
-        var img = document.createElement('img');
-        img.src = url;
-        img.onload = function () {
-          return resolve(img);
-        };
-        // img.onerror = () => resolve(img);
-      });
-    },
-
-
-    /* This is our private image loader function, it is
-     * called by the public image loader function.
-     */
-    privateLoad: function privateLoad(url) {
-      if (resourceCache[url]) {
-        /* If this URL has been previously loaded it will exist within
-         * our resourceCache array. Just return that image rather
-         * re-loading the image.
-         */
-        return resourceCache[url];
-      }
-
-      /* Once our image has properly loaded, add it to our cache
-       * so that we can simply return this image if the developer
-       * attempts to load this file in the future.
-       */
-      return this.checkImage(url).then(function (img) {
-        resourceCache[url] = img;
       });
     },
 
@@ -114,6 +104,7 @@ Enemy.prototype = {
   random: function random(max, min) {
     return Math.random() * (max - min) + min;
   },
+
 
   // Update the enemy's position, required method for game
   // Parameter: dt, a time delta between ticks
@@ -351,11 +342,15 @@ var engine = function IIFE() {
    * game loop.
    */
   function init() {
+    var button = document.querySelector('button');
     reset();
     render();
-    document.querySelector('button').addEventListener('click', function () {
-      startAnimating(60);
-    });
+    startAnimating(60);
+
+    // button.addEventListener('click', () => {
+    //   alert('works');
+    //   startAnimating(60);
+    // }, { once: true });
   }
 
   /* This is called by the update function and loops through all of the

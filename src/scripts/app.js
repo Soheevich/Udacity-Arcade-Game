@@ -16,6 +16,7 @@ Enemy.prototype = {
   random(max, min) {
     return (Math.random() * (max - min)) + min;
   },
+
   // Update the enemy's position, required method for game
   // Parameter: dt, a time delta between ticks
   update() {

@@ -58,6 +58,10 @@ const engine = (function IIFE() {
     const playerX = player.x;
     const playerY = player.y;
 
+    // Reset every iteration floating on logs
+    playerIsOnLog = false;
+    logWithPlayer = null;
+
     if (playerY >= 280 && playerY <= 440) {
       allEnemies.forEach((enemy) => {
         if (enemy.y === playerY && (playerX < (enemy.x + 50) && (playerX + 50) > enemy.x)) {
@@ -65,8 +69,6 @@ const engine = (function IIFE() {
         }
       });
     } else if (playerY >= 40 && playerY <= 200) {
-      playerIsOnLog = false;
-      logWithPlayer = null;
 
       allLogs.forEach((log) => {
         if (log.y === playerY && (playerX < (log.x + 50) && (playerX + 50) > log.x)) {

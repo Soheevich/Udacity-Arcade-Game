@@ -7,8 +7,8 @@
 
 // The super class for every moving object
 function MovingObject(y, place, objectType) {
-  this.y = [40, 80, 120, 160, 200, 280, 320, 360, 400, 440][y];
-  this.speed = y === 6 ? 4.5 : 3;
+  this.y = [280, 320, 360, 400, 440][y];
+  this.speed = y === 6 ? 4 : 2;
   this.place = place;
   this.objectType = objectType;
 }
@@ -47,6 +47,88 @@ MovingObject.prototype = {
   render() {
     engine.ctx.drawImage(resources.get(this.sprite), this.x, this.y);
   },
+};
+
+
+// Logs in the water
+function Log(y, place, objectType) {
+  MovingObject.apply(this, [y, place, objectType]);
+  this.y = [40, 80, 120, 160, 200][y];
+  this.sprite = 'build/images/log.png';
+
+  if (place === 'first') {
+    this.x = -50;
+  } else if (place === 'second') {
+    this.x = -100;
+  } else if (place === 'third') {
+    this.x = -150;
+  }
+}
+
+Log.prototype = Object.create(MovingObject.prototype);
+Log.prototype.constructor = Log;
+Log.prototype.update = function update() {
+  const firstObjectPosition = firstPositionsOfObjects[this.objectType];
+  if (this.place === 'first') {
+    this.savePosition(this.x);
+
+    this.x = this.x > 800 ?
+      -50 :
+      this.x + this.speed;
+  } else if (this.place === 'second') {
+    if (firstObjectPosition > this.x || this.x > 750) {
+      this.x = firstObjectPosition - 50;
+    } else {
+      this.x += this.speed;
+    }
+  } else if (this.place === 'third') {
+    if (firstObjectPosition > this.x || this.x > 750) {
+      this.x = firstObjectPosition - 100;
+    } else {
+      this.x += this.speed;
+    }
+  }
+};
+
+// Constructor for enemies moving from right to left (opposite direction)
+function LogToLeft(y, place, objectType) {
+  MovingObject.apply(this, [y, place, objectType]);
+  this.y = [40, 80, 120, 160, 200][y];
+  this.sprite = 'build/images/log.png';
+
+  if (place === 'first') {
+    this.x = 750;
+  } else if (place === 'second') {
+    this.x = 800;
+  } else if (place === 'third') {
+    this.x = 850;
+  }
+}
+
+LogToLeft.prototype = Object.create(MovingObject.prototype);
+LogToLeft.prototype.constructor = LogToLeft;
+LogToLeft.prototype.update = function update() {
+  const firstObjectPosition = firstPositionsOfObjects[this.objectType];
+  // Update the enemy's position, required method for game
+  if (this.place === 'first') {
+    this.savePosition(this.x);
+
+    this.x = this.x < -50 ?
+      750 :
+      this.x - this.speed;
+  } else if (this.place === 'second') {
+    if (firstObjectPosition < this.x || this.x < -50) {
+      this.x = firstObjectPosition + 50;
+    } else {
+      this.x -= this.speed;
+    }
+  } else if (this.place === 'third') {
+    if (firstObjectPosition < this.x || this.x < -50) {
+      this.x = firstObjectPosition + 100;
+    } else {
+      this.x -= this.speed;
+    }
+  }
 };
 
 
@@ -198,8 +280,9 @@ Player.prototype = {
 };
 
 // Instantiation of all objects
-const rowsWithEnemies = 10;
+const rowsWithEnemies = 5;
 const allEnemies = [];
+const allLogs = [];
 const firstPositionsOfObjects = {};
 
 // Create three enemies per row
@@ -214,7 +297,24 @@ for (let i = 0; i < rowsWithEnemies; i += 1) {
     allEnemies.push(new EnemyToLeft(i, 'third', 'EnemyToLeft'));
   }
 }
-// console.log(allEnemies);
+
+// Create three enemies per row
+for (let i = 0; i < rowsWithEnemies; i += 1) {
+  if (i % 2 === 0) {
+    allLogs.push(new Log(i, 'first', 'Log'));
+    allLogs.push(new Log(i, 'second', 'Log'));
+    allLogs.push(new Log(i, 'third', 'Log'));
+    allLogs.push(new Log(i, 'fourth', 'Log'));
+  } else {
+    allLogs.push(new LogToLeft(i, 'first', 'LogToLeft'));
+    allLogs.push(new LogToLeft(i, 'second', 'LogToLeft'));
+    allLogs.push(new LogToLeft(i, 'third', 'LogToLeft'));
+    allLogs.push(new LogToLeft(i, 'fourth', 'LogToLeft'));
+    allLogs.push(new LogToLeft(i, 'fifth', 'LogToLeft'));
+  }
+}
+
+// Create player
 const player = new Player();
 
 // This listens for key presses and sends the keys to your

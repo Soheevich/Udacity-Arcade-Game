@@ -95,8 +95,8 @@ var resources = function IIFE() {
 
 // The super class for every moving object
 function MovingObject(y, place, objectType) {
-  this.y = [40, 80, 120, 160, 200, 280, 320, 360, 400, 440][y];
-  this.speed = y === 6 ? 4.5 : 3;
+  this.y = [280, 320, 360, 400, 440][y];
+  this.speed = y === 6 ? 4 : 2;
   this.place = place;
   this.objectType = objectType;
 }
@@ -134,6 +134,83 @@ MovingObject.prototype = {
   // Draw the object on the screen
   render: function render() {
     engine.ctx.drawImage(resources.get(this.sprite), this.x, this.y);
+  }
+};
+
+// Logs in the water
+function Log(y, place, objectType) {
+  MovingObject.apply(this, [y, place, objectType]);
+  this.y = [40, 80, 120, 160, 200][y];
+  this.sprite = 'build/images/log.png';
+
+  if (place === 'first') {
+    this.x = -50;
+  } else if (place === 'second') {
+    this.x = -100;
+  } else if (place === 'third') {
+    this.x = -150;
+  }
+}
+
+Log.prototype = Object.create(MovingObject.prototype);
+Log.prototype.constructor = Log;
+Log.prototype.update = function update() {
+  var firstObjectPosition = firstPositionsOfObjects[this.objectType];
+  if (this.place === 'first') {
+    this.savePosition(this.x);
+
+    this.x = this.x > 800 ? -50 : this.x + this.speed;
+  } else if (this.place === 'second') {
+    if (firstObjectPosition > this.x || this.x > 750) {
+      this.x = firstObjectPosition - 50;
+    } else {
+      this.x += this.speed;
+    }
+  } else if (this.place === 'third') {
+    if (firstObjectPosition > this.x || this.x > 750) {
+      this.x = firstObjectPosition - 100;
+    } else {
+      this.x += this.speed;
+    }
+  }
+};
+
+// Constructor for enemies moving from right to left (opposite direction)
+function LogToLeft(y, place, objectType) {
+  MovingObject.apply(this, [y, place, objectType]);
+  this.y = [40, 80, 120, 160, 200][y];
+  this.sprite = 'build/images/log.png';
+
+  if (place === 'first') {
+    this.x = 750;
+  } else if (place === 'second') {
+    this.x = 800;
+  } else if (place === 'third') {
+    this.x = 850;
+  }
+}
+
+LogToLeft.prototype = Object.create(MovingObject.prototype);
+LogToLeft.prototype.constructor = LogToLeft;
+LogToLeft.prototype.update = function update() {
+  var firstObjectPosition = firstPositionsOfObjects[this.objectType];
+  // Update the enemy's position, required method for game
+  if (this.place === 'first') {
+    this.savePosition(this.x);
+
+    this.x = this.x < -50 ? 750 : this.x - this.speed;
+  } else if (this.place === 'second') {
+    if (firstObjectPosition < this.x || this.x < -50) {
+      this.x = firstObjectPosition + 50;
+    } else {
+      this.x -= this.speed;
+    }
+  } else if (this.place === 'third') {
+    if (firstObjectPosition < this.x || this.x < -50) {
+      this.x = firstObjectPosition + 100;
+    } else {
+      this.x -= this.speed;
+    }
   }
 };
 
@@ -281,8 +358,9 @@ Player.prototype = {
 };
 
 // Instantiation of all objects
-var rowsWithEnemies = 10;
+var rowsWithEnemies = 5;
 var allEnemies = [];
+var allLogs = [];
 var firstPositionsOfObjects = {};
 
 // Create three enemies per row
@@ -297,7 +375,24 @@ for (var i = 0; i < rowsWithEnemies; i += 1) {
     allEnemies.push(new EnemyToLeft(i, 'third', 'EnemyToLeft'));
   }
 }
-// console.log(allEnemies);
+
+// Create three enemies per row
+for (var _i = 0; _i < rowsWithEnemies; _i += 1) {
+  if (_i % 2 === 0) {
+    allLogs.push(new Log(_i, 'first', 'Log'));
+    allLogs.push(new Log(_i, 'second', 'Log'));
+    allLogs.push(new Log(_i, 'third', 'Log'));
+    allLogs.push(new Log(_i, 'fourth', 'Log'));
+  } else {
+    allLogs.push(new LogToLeft(_i, 'first', 'LogToLeft'));
+    allLogs.push(new LogToLeft(_i, 'second', 'LogToLeft'));
+    allLogs.push(new LogToLeft(_i, 'third', 'LogToLeft'));
+    allLogs.push(new LogToLeft(_i, 'fourth', 'LogToLeft'));
+    allLogs.push(new LogToLeft(_i, 'fifth', 'LogToLeft'));
+  }
+}
+
+// Create player
 var player = new Player();
 
 // This listens for key presses and sends the keys to your
@@ -377,6 +472,11 @@ var engine = function IIFE() {
         player.reset();
       }
     });
+    allLogs.forEach(function (log) {
+      if (log.y === playerY && playerX < log.x + 50 && playerX + 50 > log.x) {
+        player.reset();
+      }
+    });
   }
 
   /* This function serves as the kickoff point for the game loop itself
@@ -447,6 +547,9 @@ var engine = function IIFE() {
     allEnemies.forEach(function (enemy) {
       return enemy.update();
     });
+    allLogs.forEach(function (log) {
+      return log.update();
+    });
     player.update();
   }
 
@@ -506,7 +609,7 @@ var engine = function IIFE() {
    * draw our game level. Then set init as the callback method, so that when
    * all of these images are properly loaded our game will start.
    */
-  resources.load.apply(resources, ['build/images/stone-block.png', 'build/images/water-block.png', 'build/images/grass-block.png', 'build/images/enemy-bug.png', 'build/images/char-boy.png', 'build/images/char-cat-girl.png', 'build/images/char-horn-girl.png', 'build/images/char-pink-girl.png', 'build/images/char-princess-girl.png']);
+  resources.load.apply(resources, ['build/images/stone-block.png', 'build/images/water-block.png', 'build/images/grass-block.png', 'build/images/enemy-bug.png', 'build/images/char-boy.png', 'build/images/char-cat-girl.png', 'build/images/char-horn-girl.png', 'build/images/char-pink-girl.png', 'build/images/char-princess-girl.png', 'build/images/log.png']);
 
   resources.onReady(init);
 

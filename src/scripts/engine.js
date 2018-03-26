@@ -61,6 +61,11 @@ const engine = (function IIFE() {
         player.reset();
       }
     });
+    allLogs.forEach((log) => {
+      if (log.y === playerY && (playerX < (log.x + 50) && (playerX + 50) > log.x)) {
+        player.reset();
+      }
+    });
   }
 
   /* This function serves as the kickoff point for the game loop itself
@@ -129,6 +134,7 @@ const engine = (function IIFE() {
    */
   function updateEntities() {
     allEnemies.forEach(enemy => enemy.update());
+    allLogs.forEach(log => log.update());
     player.update();
   }
 
@@ -210,6 +216,7 @@ const engine = (function IIFE() {
     'build/images/char-horn-girl.png',
     'build/images/char-pink-girl.png',
     'build/images/char-princess-girl.png',
+    'build/images/log.png',
     // 'build/images/gem-blue.png',
     // 'build/images/gem-green.png',
     // 'build/images/gem-orange.png',

@@ -69,7 +69,7 @@ function Log(y, place, objectType) {
 
 Log.prototype = Object.create(MovingObject.prototype);
 Log.prototype.constructor = Log;
-Log.prototype.update = function update() {
+Log.prototype.update = function update(player) {
   const firstObjectPosition = firstPositionsOfObjects[this.objectType];
   if (this.place === 'first') {
     this.savePosition(this.x);
@@ -96,6 +96,11 @@ Log.prototype.update = function update() {
       this.x += this.speed;
     }
   }
+
+  // If player is on the log, move this player with the log
+  if (player && player.x <= 700) {
+    player.update(this.speed);
+  }
 };
 
 // Constructor for enemies moving from right to left (opposite direction)
@@ -119,7 +124,7 @@ function LogToLeft(y, place, objectType) {
 
 LogToLeft.prototype = Object.create(MovingObject.prototype);
 LogToLeft.prototype.constructor = LogToLeft;
-LogToLeft.prototype.update = function update() {
+LogToLeft.prototype.update = function update(player) {
   const firstObjectPosition = firstPositionsOfObjects[this.objectType];
   // Update the enemy's position, required method for game
   if (this.place === 'first') {
@@ -152,6 +157,11 @@ LogToLeft.prototype.update = function update() {
     } else {
       this.x -= this.speed;
     }
+  }
+
+  // If player is on the log, move this player with the log
+  if (player && player.x >= 0) {
+    player.update(-this.speed);
   }
 };
 
@@ -254,7 +264,7 @@ function Player(index = 0) {
 
 Player.prototype = {
   update(x) {
-    // this.x += x;
+    this.x += x;
   },
 
   // Draw the player on the screen, required method for game

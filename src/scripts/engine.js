@@ -24,12 +24,14 @@ const engine = (function IIFE() {
   canvas.className = 'canvas';
   const ctx = canvas.getContext('2d');
   let stop = false;
-  // let frameCount = 0;
   let fpsInterval;
-  // let startTime;
   let now;
   let then;
   let elapsed;
+
+  // If player is on log he should move with this log
+  let playerIsOnLog = false;
+  let logWithPlayer = null;
 
   canvas.width = 750;
   canvas.height = 570;
@@ -63,12 +65,13 @@ const engine = (function IIFE() {
         }
       });
     } else if (playerY >= 40 && playerY <= 200) {
-      let playerIsOnLog = false;
+      playerIsOnLog = false;
+      logWithPlayer = null;
 
       allLogs.forEach((log) => {
         if (log.y === playerY && (playerX < (log.x + 50) && (playerX + 50) > log.x)) {
           playerIsOnLog = true;
-          // player.update();
+          logWithPlayer = log;
         }
       });
 
@@ -76,7 +79,6 @@ const engine = (function IIFE() {
         player.reset();
       }
     }
-
   }
 
   /* This function serves as the kickoff point for the game loop itself
@@ -145,8 +147,13 @@ const engine = (function IIFE() {
    */
   function updateEntities() {
     allEnemies.forEach(enemy => enemy.update());
-    allLogs.forEach(log => log.update());
-    player.update();
+    allLogs.forEach((log) => {
+      if (log === logWithPlayer) {
+        log.update(player);
+      } else {
+        log.update();
+      }
+    });
   }
 
   /* This function initially draws the "game level", it will then call

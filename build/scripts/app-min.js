@@ -156,7 +156,7 @@ function Log(y, place, objectType) {
 
 Log.prototype = Object.create(MovingObject.prototype);
 Log.prototype.constructor = Log;
-Log.prototype.update = function update() {
+Log.prototype.update = function update(player) {
   var firstObjectPosition = firstPositionsOfObjects[this.objectType];
   if (this.place === 'first') {
     this.savePosition(this.x);
@@ -181,6 +181,11 @@ Log.prototype.update = function update() {
       this.x += this.speed;
     }
   }
+
+  // If player is on the log, move this player with the log
+  if (player && player.x <= 700) {
+    player.update(this.speed);
+  }
 };
 
 // Constructor for enemies moving from right to left (opposite direction)
@@ -204,7 +209,7 @@ function LogToLeft(y, place, objectType) {
 
 LogToLeft.prototype = Object.create(MovingObject.prototype);
 LogToLeft.prototype.constructor = LogToLeft;
-LogToLeft.prototype.update = function update() {
+LogToLeft.prototype.update = function update(player) {
   var firstObjectPosition = firstPositionsOfObjects[this.objectType];
   // Update the enemy's position, required method for game
   if (this.place === 'first') {
@@ -235,6 +240,11 @@ LogToLeft.prototype.update = function update() {
     } else {
       this.x -= this.speed;
     }
+  }
+
+  // If player is on the log, move this player with the log
+  if (player && player.x >= 0) {
+    player.update(-this.speed);
   }
 };
 
@@ -330,7 +340,7 @@ function Player() {
 
 Player.prototype = {
   update: function update(x) {
-    // this.x += x;
+    this.x += x;
   },
 
 
@@ -463,12 +473,14 @@ var engine = function IIFE() {
   canvas.className = 'canvas';
   var ctx = canvas.getContext('2d');
   var stop = false;
-  // let frameCount = 0;
   var fpsInterval = void 0;
-  // let startTime;
   var now = void 0;
   var then = void 0;
   var elapsed = void 0;
+
+  // If player is on log he should move with this log
+  var playerIsOnLog = false;
+  var logWithPlayer = null;
 
   canvas.width = 750;
   canvas.height = 570;
@@ -502,12 +514,13 @@ var engine = function IIFE() {
         }
       });
     } else if (playerY >= 40 && playerY <= 200) {
-      var playerIsOnLog = false;
+      playerIsOnLog = false;
+      logWithPlayer = null;
 
       allLogs.forEach(function (log) {
         if (log.y === playerY && playerX < log.x + 50 && playerX + 50 > log.x) {
           playerIsOnLog = true;
-          // player.update();
+          logWithPlayer = log;
         }
       });
 
@@ -586,9 +599,12 @@ var engine = function IIFE() {
       return enemy.update();
     });
     allLogs.forEach(function (log) {
-      return log.update();
+      if (log === logWithPlayer) {
+        log.update(player);
+      } else {
+        log.update();
+      }
     });
-    player.update();
   }
 
   /* This function initially draws the "game level", it will then call

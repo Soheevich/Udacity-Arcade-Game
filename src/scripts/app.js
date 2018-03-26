@@ -6,7 +6,7 @@ function Enemy(y) {
   // a helper we've provided to easily load images
   this.x = this.random(-800, -80);
   this.y = [40, 80, 120, 160, 200, 280, 320, 360, 400, 440][y];
-  this.speed = y === 1 ? 1.5 : 1;
+  this.speed = y === 6 ? 4.5 : 3;
   this.sprite = 'build/images/enemy-bug.png';
 }
 
@@ -16,14 +16,14 @@ Enemy.prototype = {
   },
   // Update the enemy's position, required method for game
   // Parameter: dt, a time delta between ticks
-  update(dt) {
+  update() {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
 
     this.x = this.x > 800 ?
       this.random(-800, -80) * this.speed :
-      this.x + (dt * 200 * this.speed);
+      this.x + this.speed; //
   },
 
   // Draw the enemy on the screen, required method for game
@@ -54,8 +54,7 @@ function Player(index = 0) {
 }
 
 Player.prototype = {
-  // Parameter: dt, a time delta between ticks
-  update(dt) {
+  update() {
   },
 
   // Draw the player on the screen, required method for game
@@ -111,11 +110,12 @@ Player.prototype = {
 const rowsWithEnemies = 10;
 const allEnemies = [];
 
+// Create two enemies per row
 for (let i = 0; i < rowsWithEnemies; i += 1) {
   allEnemies.push(new Enemy(i));
   allEnemies.push(new Enemy(i));
 }
-console.log(allEnemies);
+// console.log(allEnemies);
 const player = new Player();
 
 

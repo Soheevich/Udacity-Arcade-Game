@@ -22,61 +22,35 @@ const engine = (function IIFE() {
    */
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
-  let lastTime;
+  let stop = false;
+  let frameCount = 0;
+  let fpsInterval;
+  let startTime;
+  let now;
+  let then;
+  let elapsed;
 
   canvas.width = 750;
   canvas.height = 570;
   document.querySelector('main').appendChild(canvas);
 
-  /* This function serves as the kickoff point for the game loop itself
-   * and handles properly calling the update and render methods.
-   */
-  function main() {
-    /* Get our time delta information which is required if your game
-     * requires smooth animation. Because everyone's computer processes
-     * instructions at different speeds we need a constant value that
-     * would be the same for everyone (regardless of how fast their
-     * computer is) - hurray time!
-     */
-    const now = Date.now();
-    const dt = (now - lastTime) / 1000.0;
-
-    /* Call our update/render functions, pass along the time delta to
-     * our update function since it may be used for smooth animation.
-     */
-    update(dt);
-    render();
-
-    /* Set our lastTime variable which is used to determine the time delta
-     * for the next time this function is called.
-     */
-    lastTime = now;
-
-    /* Use the browser's requestAnimationFrame function to call this
-     * function again as soon as the browser is able to draw another frame.
-     */
-    window.requestAnimationFrame(main);
-  }
-
-  /* This function does some initial setup that should only occur once,
-   * particularly setting the lastTime variable that is required for the
-   * game loop.
-   */
-  function init() {
-    reset();
-    lastTime = Date.now();
-    main();
+  /* This function does nothing but it could have been a good place to
+  * handle game reset states - maybe a new game menu or a game over screen
+  * those sorts of things. It's only called once by the init() method.
+  */
+  function reset() {
+    // noop
   }
 
   /* This function is called by main (our game loop) and itself calls all
-   * of the functions which may need to update entity's data. Based on how
-   * you implement your collision detection (when two entities occupy the
-   * same space, for instance when your character should die), you may find
-   * the need to add an additional function call here. For now, we've left
-   * it commented out - you may or may not want to implement this
-   * functionality this way (you could just implement collision detection
-   * on the entities themselves within your app.js file).
-   */
+ * of the functions which may need to update entity's data. Based on how
+ * you implement your collision detection (when two entities occupy the
+ * same space, for instance when your character should die), you may find
+ * the need to add an additional function call here. For now, we've left
+ * it commented out - you may or may not want to implement this
+ * functionality this way (you could just implement collision detection
+ * on the entities themselves within your app.js file).
+ */
   function checkCollisions() {
     const playerX = player.x;
     const playerY = player.y;
@@ -88,9 +62,59 @@ const engine = (function IIFE() {
     });
   }
 
-  function update(dt) {
-    updateEntities(dt);
-    checkCollisions();
+  /* This function serves as the kickoff point for the game loop itself
+   * and handles properly calling the update and render methods.
+   */
+  // this function was taken from
+  // https://stackoverflow.com/questions/19764018/controlling-fps-with-requestanimationframe
+  function animate(newtime) {
+    // stop
+    if (stop) {
+      return;
+    }
+
+    // request another frame
+    requestAnimationFrame(animate);
+
+    // calc elapsed time since last loop
+    now = newtime;
+    elapsed = now - then;
+
+    // if enough time has elapsed, draw the next frame
+    if (elapsed > fpsInterval) {
+      // Get ready for next frame by setting then=now, but...
+      // Also, adjust for fpsInterval not being multiple of 16.67
+      then = now - (elapsed % fpsInterval);
+
+      /* Call our update/render functions, pass along the time delta to
+      * our update function since it may be used for smooth animation.
+      */
+      updateEntities();
+      checkCollisions();
+      render();
+
+      // TESTING...Report #seconds since start and achieved fps.
+      // let sinceStart = now - startTime;
+      // let currentFps = Math.round(1000 / (sinceStart / ++frameCount) * 100) / 100;
+      // document.querySelector('.frameCount').textContent ='Elapsed time= ' + Math.round(sinceStart / 1000 * 100) / 100 + ' secs @ ' + currentFps + ' fps.';
+    }
+  }
+
+  function startAnimating(fps) {
+    fpsInterval = 1000 / fps;
+    then = window.performance.now();
+    startTime = then;
+    // console.log(startTime);
+    animate();
+  }
+
+  /* This function does some initial setup that should only occur once,
+   * particularly setting the lastTime variable that is required for the
+   * game loop.
+   */
+  function init() {
+    reset();
+    startAnimating(60);
   }
 
   /* This is called by the update function and loops through all of the
@@ -100,8 +124,8 @@ const engine = (function IIFE() {
    * the data/properties related to the object. Do your drawing in your
    * render methods.
    */
-  function updateEntities(dt) {
-    allEnemies.forEach(enemy => enemy.update(dt));
+  function updateEntities() {
+    allEnemies.forEach(enemy => enemy.update());
     player.update();
   }
 
@@ -167,14 +191,6 @@ const engine = (function IIFE() {
     allEnemies.forEach(enemy => enemy.render());
 
     player.render();
-  }
-
-  /* This function does nothing but it could have been a good place to
-   * handle game reset states - maybe a new game menu or a game over screen
-   * those sorts of things. It's only called once by the init() method.
-   */
-  function reset() {
-    // noop
   }
 
   /* Go ahead and load all of the images we know we're going to need to

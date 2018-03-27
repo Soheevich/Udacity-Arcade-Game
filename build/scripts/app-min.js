@@ -525,6 +525,9 @@ var player = new Player();
   createObject(3, 0, 7, 12); // 3 blue gems
   createObject(2, 1, 7, 12); // 2 green gems
   createObject(1, 2, 7, 12); // 1 orange gem
+
+  // Create heart
+  createObject(1, 3, 1, 6);
 })();
 
 // This listens for key presses and sends the keys to your

@@ -473,7 +473,10 @@ const player = new Player();
   };
 
   // Create gems and randomize their locations
-  createObject(3, 0, 7, 12);
+  createObject(3, 0, 7, 12); // 3 blue gems
+  createObject(2, 1, 7, 12); // 2 green gems
+  createObject(1, 2, 7, 12); // 1 orange gem
+
 }());
 
 

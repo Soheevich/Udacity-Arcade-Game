@@ -225,9 +225,9 @@ const engine = (function IIFE() {
     /* Loop through all of the objects within the allEnemies array and call
      * the render function you have defined.
      */
+    allStaticObjects.forEach(staticObject => staticObject.render());
     allEnemies.forEach(enemy => enemy.render());
     allLogs.forEach(log => log.render());
-    allStaticObjects.forEach(staticObject => staticObject.render());
     player.render();
   }
 

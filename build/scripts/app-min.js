@@ -522,7 +522,9 @@ var player = new Player();
   };
 
   // Create gems and randomize their locations
-  createObject(3, 0, 7, 12);
+  createObject(3, 0, 7, 12); // 3 blue gems
+  createObject(2, 1, 7, 12); // 2 green gems
+  createObject(1, 2, 7, 12); // 1 orange gem
 })();
 
 // This listens for key presses and sends the keys to your
@@ -752,14 +754,14 @@ var engine = function IIFE() {
     /* Loop through all of the objects within the allEnemies array and call
      * the render function you have defined.
      */
+    allStaticObjects.forEach(function (staticObject) {
+      return staticObject.render();
+    });
     allEnemies.forEach(function (enemy) {
       return enemy.render();
     });
     allLogs.forEach(function (log) {
       return log.render();
-    });
-    allStaticObjects.forEach(function (staticObject) {
-      return staticObject.render();
     });
     player.render();
   }

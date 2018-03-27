@@ -99,7 +99,7 @@ Log.prototype.update = function update(player) {
 
   // If player is on the log, move this player with the log
   if (player && player.x <= 700) {
-    player.update(this.x);
+    player.update(this.speed);
   }
 };
 
@@ -161,7 +161,7 @@ LogToLeft.prototype.update = function update(player) {
 
   // If player is on the log, move this player with the log
   if (player && player.x >= 0) {
-    player.update(this.x);
+    player.update(-this.speed);
   }
 };
 
@@ -259,8 +259,20 @@ Player.prototype = {
     this.sprite = name;
   },
 
-  update(x) {
+  setPosition(x) {
     this.x = x;
+  },
+
+  update(x = 0) {
+    this.x += x;
+
+    if (this.y < 40 || this.y > 200) {
+      const remainder = this.x % 50;
+
+      this.x = remainder > 25 ?
+        this.x + (50 - remainder) :
+        this.x - remainder;
+    }
   },
 
   // Draw the player on the screen, required method for game

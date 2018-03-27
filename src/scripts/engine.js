@@ -150,6 +150,7 @@ const engine = (function IIFE() {
    */
   function updateEntities() {
     allEnemies.forEach(enemy => enemy.update());
+
     allLogs.forEach((log) => {
       if (log === logWithPlayer) {
         log.update(player);
@@ -157,6 +158,8 @@ const engine = (function IIFE() {
         log.update();
       }
     });
+
+    player.update();
   }
 
   /* This function initially draws the "game level", it will then call

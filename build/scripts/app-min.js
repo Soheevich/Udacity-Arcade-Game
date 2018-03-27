@@ -184,7 +184,7 @@ Log.prototype.update = function update(player) {
 
   // If player is on the log, move this player with the log
   if (player && player.x <= 700) {
-    player.update(this.x);
+    player.update(this.speed);
   }
 };
 
@@ -244,7 +244,7 @@ LogToLeft.prototype.update = function update(player) {
 
   // If player is on the log, move this player with the log
   if (player && player.x >= 0) {
-    player.update(this.x);
+    player.update(-this.speed);
   }
 };
 
@@ -337,8 +337,19 @@ Player.prototype = {
   updateSprite: function updateSprite(name) {
     this.sprite = name;
   },
-  update: function update(x) {
+  setPosition: function setPosition(x) {
     this.x = x;
+  },
+  update: function update() {
+    var x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+
+    this.x += x;
+
+    if (this.y < 40 || this.y > 200) {
+      var remainder = this.x % 50;
+
+      this.x = remainder > 25 ? this.x + (50 - remainder) : this.x - remainder;
+    }
   },
 
 
@@ -628,6 +639,7 @@ var engine = function IIFE() {
     allEnemies.forEach(function (enemy) {
       return enemy.update();
     });
+
     allLogs.forEach(function (log) {
       if (log === logWithPlayer) {
         log.update(player);
@@ -635,6 +647,8 @@ var engine = function IIFE() {
         log.update();
       }
     });
+
+    player.update();
   }
 
   /* This function initially draws the "game level", it will then call

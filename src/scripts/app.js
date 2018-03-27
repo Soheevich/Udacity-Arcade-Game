@@ -3,9 +3,15 @@
 // The super class for every moving object
 function MovingObject(y, place, objectType) {
   this.y = [280, 320, 360, 400, 440][y];
-  this.speed = y === 6 ? 4 : 2;
   this.place = place;
   this.objectType = objectType;
+  if (y === 1 || y === 4) {
+    this.speed = 4;
+  } else if (y === 0) {
+    this.speed = 1.5;
+  } else {
+    this.speed = 2;
+  }
 }
 
 MovingObject.prototype = {
@@ -244,8 +250,8 @@ EnemyToLeft.prototype.render = function render() {
 // a handleInput() method.
 function Player() {
   this.x = 350;
-  // this.y = 480;
-  this.y = 240;
+  this.y = 480;
+  // this.y = 240;
   this.sprite = 'build/images/char-boy.png';
   this.lives = 3;
   this.scores = 0;
@@ -316,8 +322,8 @@ Player.prototype = {
 
   reset() {
     this.x = 350;
-    // this.y = 480;
-    this.y = 240;
+    this.y = 480;
+    // this.y = 240;
     this.lives -= 1;
 
     if (this.lives < 1) {
@@ -355,7 +361,7 @@ const firstPositionsOfObjects = {};
 
 // Create three enemies per row
 for (let i = 0; i < rowsWithEnemies; i += 1) {
-  if (i % 2 === 0) {
+  if (i % 2 !== 0) {
     allEnemies.push(new Enemy(i, 'first', 'Enemy'));
     allEnemies.push(new Enemy(i, 'second', 'Enemy'));
     allEnemies.push(new Enemy(i, 'third', 'Enemy'));
@@ -369,7 +375,7 @@ for (let i = 0; i < rowsWithEnemies; i += 1) {
 
 // Create three enemies per row
 for (let i = 0; i < rowsWithEnemies; i += 1) {
-  if (i % 2 === 0) {
+  if (i % 2 !== 0) {
     allLogs.push(new Log(i, 'first', 'Log'));
     allLogs.push(new Log(i, 'second', 'Log'));
     allLogs.push(new Log(i, 'third', 'Log'));

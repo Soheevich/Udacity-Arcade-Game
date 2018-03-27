@@ -432,7 +432,6 @@ const player = new Player();
     'build/images/gem-green.png',
     'build/images/gem-orange.png',
     'build/images/Heart.png',
-    'build/images/Selector.png',
     'build/images/Star.png',
   ];
 
@@ -441,7 +440,6 @@ const player = new Player();
     'gem-green',
     'gem-orange',
     'Heart',
-    'Selector',
     'Star',
   ];
 
@@ -452,9 +450,15 @@ const player = new Player();
     return (Math.floor(Math.random() * (max - min)) + min) * size;
   };
 
-  const createObject = (numberOfObjects, objectIndex, minRow, maxRow) => {
+  const createObject = (numberOfObjects, objectIndex, minRow, maxRow, coordinateX, coordinateY) => {
     const name = names[objectIndex];
     const sprite = urls[objectIndex];
+
+    if (coordinateX) {
+      const obj = new StaticObj(coordinateX * 50, coordinateY, sprite, name);
+      allStaticObjects.push(obj);
+      return;
+    }
 
     for (let i = 0; i < numberOfObjects; i += 1) {
       let x = randomFunction(0, 15, 'column');
@@ -477,8 +481,9 @@ const player = new Player();
   createObject(2, 1, 7, 12); // 2 green gems
   createObject(1, 2, 7, 12); // 1 orange gem
 
-  // Create heart
-  createObject(1, 3, 1, 6);
+  // Create heart and star
+  createObject(1, 3, 1, 5);
+  createObject(1, 4, 0, 0, 7, 0);
 }());
 
 

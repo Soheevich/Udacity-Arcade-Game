@@ -38,22 +38,22 @@ const engine = (function IIFE() {
   document.querySelector('main').appendChild(canvas);
 
   /* This function does nothing but it could have been a good place to
-  * handle game reset states - maybe a new game menu or a game over screen
-  * those sorts of things. It's only called once by the init() method.
-  */
+   * handle game reset states - maybe a new game menu or a game over screen
+   * those sorts of things. It's only called once by the init() method.
+   */
   function reset() {
 
   }
 
   /* This function is called by main (our game loop) and itself calls all
- * of the functions which may need to update entity's data. Based on how
- * you implement your collision detection (when two entities occupy the
- * same space, for instance when your character should die), you may find
- * the need to add an additional function call here. For now, we've left
- * it commented out - you may or may not want to implement this
- * functionality this way (you could just implement collision detection
- * on the entities themselves within your app.js file).
- */
+   * of the functions which may need to update entity's data. Based on how
+   * you implement your collision detection (when two entities occupy the
+   * same space, for instance when your character should die), you may find
+   * the need to add an additional function call here. For now, we've left
+   * it commented out - you may or may not want to implement this
+   * functionality this way (you could just implement collision detection
+   * on the entities themselves within your app.js file).
+   */
   function checkCollisions() {
     const playerX = player.x;
     const playerY = player.y;
@@ -61,6 +61,10 @@ const engine = (function IIFE() {
     // Reset every iteration floating on logs
     playerIsOnLog = false;
     logWithPlayer = null;
+
+    // Index of taken interactive object
+    let index = null;
+    let objectName = null;
 
     if (playerY >= 280 && playerY <= 440) {
       allEnemies.forEach((enemy) => {
@@ -80,6 +84,18 @@ const engine = (function IIFE() {
       if (!playerIsOnLog) {
         player.reset();
       }
+    }
+
+    allStaticObjects.forEach((staticObject, i) => {
+      if (staticObject.y === playerY &&
+        (playerX < (staticObject.x + 50) && (playerX + 50) > staticObject.x)) {
+        index = i;
+        objectName = staticObject.name;
+      }
+    });
+
+    if (index !== null) {
+      allStaticObjects.splice(index, 1);
     }
   }
 
@@ -108,8 +124,8 @@ const engine = (function IIFE() {
       then = now - (elapsed % fpsInterval);
 
       /* Call our update/render functions, pass along the time delta to
-      * our update function since it may be used for smooth animation.
-      */
+       * our update function since it may be used for smooth animation.
+       */
       updateEntities();
       checkCollisions();
       render();
@@ -231,6 +247,7 @@ const engine = (function IIFE() {
     player.render();
   }
 
+
   /* Go ahead and load all of the images we know we're going to need to
    * draw our game level. Then set init as the callback method, so that when
    * all of these images are properly loaded our game will start.
@@ -260,6 +277,16 @@ const engine = (function IIFE() {
   return {
     get ctx() {
       return ctx;
+    },
+
+    // This method prints player scores
+    print(type, number) {
+      console.log(type, number);
+    },
+
+    // This method stops the game and shows winning screen
+    win(scores, lives) {
+      console.log(scores, lives);
     },
   };
 }());

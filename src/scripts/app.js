@@ -320,6 +320,30 @@ Player.prototype = {
     }
   },
 
+  addScores(object) {
+    switch (object) {
+      case 'gem-blue':
+        this.scores += 50;
+        break;
+      case 'gem-green':
+        this.scores += 75;
+        break;
+      case 'gem-orange':
+        this.scores += 100;
+        break;
+      case 'Star':
+        this.scores += 200;
+        engine.win(this.scores, this.lives);
+        break;
+      default:
+        this.lives += 1;
+        break;
+    }
+
+    engine.print('scores', this.scores);
+    engine.print('lives', this.lives);
+  },
+
   reset() {
     this.x = 350;
     this.y = 480;
@@ -490,20 +514,20 @@ const player = new Player();
   // Create heart and star
   createObject(1, 3, 1, 5);
   createObject(1, 4, 0, 0, 7, 0);
+
+
+  // This listens for key presses and sends the keys to your
+  // Player.handleInput() method. You don't need to modify this.
+  document.addEventListener('keyup', (e) => {
+    const allowedKeys = {
+      37: 'left',
+      38: 'up',
+      39: 'right',
+      40: 'down',
+    };
+
+    if (allowedKeys[e.keyCode]) {
+      player.handleInput(allowedKeys[e.keyCode]);
+    }
+  });
 }());
-
-
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', (e) => {
-  const allowedKeys = {
-    37: 'left',
-    38: 'up',
-    39: 'right',
-    40: 'down',
-  };
-
-  if (allowedKeys[e.keyCode]) {
-    player.handleInput(allowedKeys[e.keyCode]);
-  }
-});

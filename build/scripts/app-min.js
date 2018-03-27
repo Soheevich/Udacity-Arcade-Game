@@ -398,6 +398,29 @@ Player.prototype = {
         break;
     }
   },
+  addScores: function addScores(object) {
+    switch (object) {
+      case 'gem-blue':
+        this.scores += 50;
+        break;
+      case 'gem-green':
+        this.scores += 75;
+        break;
+      case 'gem-orange':
+        this.scores += 100;
+        break;
+      case 'Star':
+        this.scores += 200;
+        engine.win(this.scores, this.lives);
+        break;
+      default:
+        this.lives += 1;
+        break;
+    }
+
+    engine.print('scores', this.scores);
+    engine.print('lives', this.lives);
+  },
   reset: function reset() {
     this.x = 350;
     this.y = 480;
@@ -541,22 +564,23 @@ var player = new Player();
   // Create heart and star
   createObject(1, 3, 1, 5);
   createObject(1, 4, 0, 0, 7, 0);
+
+  // This listens for key presses and sends the keys to your
+  // Player.handleInput() method. You don't need to modify this.
+  document.addEventListener('keyup', function (e) {
+    var allowedKeys = {
+      37: 'left',
+      38: 'up',
+      39: 'right',
+      40: 'down'
+    };
+
+    if (allowedKeys[e.keyCode]) {
+      player.handleInput(allowedKeys[e.keyCode]);
+    }
+  });
 })();
 
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function (e) {
-  var allowedKeys = {
-    37: 'left',
-    38: 'up',
-    39: 'right',
-    40: 'down'
-  };
-
-  if (allowedKeys[e.keyCode]) {
-    player.handleInput(allowedKeys[e.keyCode]);
-  }
-});
 /* eslint-env browser */
 
 /* Engine.js
@@ -597,20 +621,20 @@ var engine = function IIFE() {
   document.querySelector('main').appendChild(canvas);
 
   /* This function does nothing but it could have been a good place to
-  * handle game reset states - maybe a new game menu or a game over screen
-  * those sorts of things. It's only called once by the init() method.
-  */
+   * handle game reset states - maybe a new game menu or a game over screen
+   * those sorts of things. It's only called once by the init() method.
+   */
   function reset() {}
 
   /* This function is called by main (our game loop) and itself calls all
-  * of the functions which may need to update entity's data. Based on how
-  * you implement your collision detection (when two entities occupy the
-  * same space, for instance when your character should die), you may find
-  * the need to add an additional function call here. For now, we've left
-  * it commented out - you may or may not want to implement this
-  * functionality this way (you could just implement collision detection
-  * on the entities themselves within your app.js file).
-  */
+   * of the functions which may need to update entity's data. Based on how
+   * you implement your collision detection (when two entities occupy the
+   * same space, for instance when your character should die), you may find
+   * the need to add an additional function call here. For now, we've left
+   * it commented out - you may or may not want to implement this
+   * functionality this way (you could just implement collision detection
+   * on the entities themselves within your app.js file).
+   */
   function checkCollisions() {
     var playerX = player.x;
     var playerY = player.y;
@@ -618,6 +642,10 @@ var engine = function IIFE() {
     // Reset every iteration floating on logs
     playerIsOnLog = false;
     logWithPlayer = null;
+
+    // Index of taken interactive object
+    var index = null;
+    var objectName = null;
 
     if (playerY >= 280 && playerY <= 440) {
       allEnemies.forEach(function (enemy) {
@@ -637,6 +665,17 @@ var engine = function IIFE() {
       if (!playerIsOnLog) {
         player.reset();
       }
+    }
+
+    allStaticObjects.forEach(function (staticObject, i) {
+      if (staticObject.y === playerY && playerX < staticObject.x + 50 && playerX + 50 > staticObject.x) {
+        index = i;
+        objectName = staticObject.name;
+      }
+    });
+
+    if (index !== null) {
+      allStaticObjects.splice(index, 1);
     }
   }
 
@@ -665,8 +704,8 @@ var engine = function IIFE() {
       then = now - elapsed % fpsInterval;
 
       /* Call our update/render functions, pass along the time delta to
-      * our update function since it may be used for smooth animation.
-      */
+       * our update function since it may be used for smooth animation.
+       */
       updateEntities();
       checkCollisions();
       render();
@@ -794,6 +833,17 @@ var engine = function IIFE() {
   return {
     get ctx() {
       return ctx;
+    },
+
+    // This method prints player scores
+    print: function print(type, number) {
+      console.log(type, number);
+    },
+
+
+    // This method stops the game and shows winning screen
+    win: function win(scores, lives) {
+      console.log(scores, lives);
     }
   };
 }();

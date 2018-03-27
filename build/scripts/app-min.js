@@ -412,6 +412,13 @@ function StaticObj(x, y, sprite, name) {
   this.name = name;
 }
 
+StaticObj.prototype = {
+  // Draw the player on the screen, required method for game
+  render: function render() {
+    engine.ctx.drawImage(resources.get(this.sprite), this.x, this.y);
+  }
+};
+
 // Instantiation of all objects
 var rowsWithEnemies = 5;
 var allEnemies = [];
@@ -483,7 +490,9 @@ var player = new Player();
 (function createStaticObjects() {
   var tempArray = [];
 
-  var staticObjects = ['build/images/gem-blue.png', 'build/images/gem-green.png', 'build/images/gem-orange.png', 'build/images/Heart.png', 'build/images/Selector.png', 'build/images/Star.png'];
+  var urls = ['build/images/gem-blue.png', 'build/images/gem-green.png', 'build/images/gem-orange.png', 'build/images/Heart.png', 'build/images/Selector.png', 'build/images/Star.png'];
+
+  var names = ['gem-blue', 'gem-green', 'gem-orange', 'Heart', 'Selector', 'Star'];
 
   // Function to create random rows and columns
   var randomFunction = function randomFunction(max, min, type) {
@@ -492,7 +501,10 @@ var player = new Player();
     return (Math.floor(Math.random() * (max - min)) + min) * size;
   };
 
-  var createObject = function createObject(numberOfObjects, object, minRow, maxRow) {
+  var createObject = function createObject(numberOfObjects, objectIndex, minRow, maxRow) {
+    var name = names[objectIndex];
+    var sprite = urls[objectIndex];
+
     for (var _i2 = 0; _i2 < numberOfObjects; _i2 += 1) {
       var x = randomFunction(0, 16, 'row');
       var y = randomFunction(minRow, maxRow, 'column');
@@ -504,11 +516,13 @@ var player = new Player();
 
       tempArray.push(x + '-' + y);
 
-      // new StaticObj(x, y, sprite, name);
+      var obj = new StaticObj(x, y, sprite, name);
+      allStaticObjects.push(obj);
     }
   };
 
   // Create gems and randomize their locations
+  createObject(3, 0, 7, 11);
 })();
 
 // This listens for key presses and sends the keys to your

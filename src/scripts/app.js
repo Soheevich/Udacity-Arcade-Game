@@ -337,6 +337,13 @@ function StaticObj(x, y, sprite, name) {
   this.name = name;
 }
 
+StaticObj.prototype = {
+  // Draw the player on the screen, required method for game
+  render() {
+    engine.ctx.drawImage(resources.get(this.sprite), this.x, this.y);
+  },
+};
+
 
 // Instantiation of all objects
 const rowsWithEnemies = 5;
@@ -420,13 +427,22 @@ const player = new Player();
 (function createStaticObjects() {
   const tempArray = [];
 
-  const staticObjects = [
+  const urls = [
     'build/images/gem-blue.png',
     'build/images/gem-green.png',
     'build/images/gem-orange.png',
     'build/images/Heart.png',
     'build/images/Selector.png',
     'build/images/Star.png',
+  ];
+
+  const names = [
+    'gem-blue',
+    'gem-green',
+    'gem-orange',
+    'Heart',
+    'Selector',
+    'Star',
   ];
 
   // Function to create random rows and columns
@@ -436,7 +452,10 @@ const player = new Player();
     return (Math.floor(Math.random() * (max - min)) + min) * size;
   };
 
-  const createObject = (numberOfObjects, object, minRow, maxRow) => {
+  const createObject = (numberOfObjects, objectIndex, minRow, maxRow) => {
+    const name = names[objectIndex];
+    const sprite = urls[objectIndex];
+
     for (let i = 0; i < numberOfObjects; i += 1) {
       let x = randomFunction(0, 16, 'row');
       let y = randomFunction(minRow, maxRow, 'column');
@@ -448,11 +467,13 @@ const player = new Player();
 
       tempArray.push(`${x}-${y}`);
 
-      // new StaticObj(x, y, sprite, name);
+      const obj = new StaticObj(x, y, sprite, name);
+      allStaticObjects.push(obj);
     }
   };
 
   // Create gems and randomize their locations
+  createObject(3, 0, 7, 11);
 }());
 
 

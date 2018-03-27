@@ -88,11 +88,6 @@ var resources = function IIFE() {
 
 /* eslint-env browser */
 
-/* TODO:
-  добавить мерцание перса при контакте с врагом, перед тем как он переместится
-
-*/
-
 // The super class for every moving object
 function MovingObject(y, place, objectType) {
   this.y = [280, 320, 360, 400, 440][y];
@@ -395,7 +390,6 @@ Player.prototype = {
           this.cardFlipAudio();
         }
         break;
-      default:
     }
   },
   reset: function reset() {
@@ -411,22 +405,18 @@ Player.prototype = {
 };
 
 // Static objects
-function Static(x, y, sprite) {
+function StaticObj(x, y, sprite, name) {
   this.x = x;
   this.y = y;
   this.sprite = sprite;
+  this.name = name;
 }
-
-Static.prototype = {
-  random: function random(max, min) {
-    return Math.ceil(Math.random() * (max - min)) + min;
-  }
-};
 
 // Instantiation of all objects
 var rowsWithEnemies = 5;
 var allEnemies = [];
 var allLogs = [];
+var allStaticObjects = [];
 var firstPositionsOfObjects = {};
 
 // Create three enemies per row
@@ -461,31 +451,65 @@ for (var _i = 0; _i < rowsWithEnemies; _i += 1) {
 // Create player
 var player = new Player();
 
-var playerSelectMenu = document.createElement('section');
-var characters = ['build/images/char-boy.png', 'build/images/char-cat-girl.png', 'build/images/char-horn-girl.png', 'build/images/char-pink-girl.png', 'build/images/char-princess-girl.png'];
+// Create menu to choose player type
+(function createMenuToChoosePlayer() {
+  var playerSelectMenu = document.createElement('section');
+  var characters = ['build/images/char-boy.png', 'build/images/char-cat-girl.png', 'build/images/char-horn-girl.png', 'build/images/char-pink-girl.png', 'build/images/char-princess-girl.png'];
 
-characters.forEach(function (character) {
-  var image = document.createElement('img');
-  var name = character.match(/char-.+(?=.png)/)[0];
+  characters.forEach(function (character) {
+    var image = document.createElement('img');
+    var name = character.match(/char-.+(?=.png)/)[0];
 
-  image.className = name;
-  image.src = character;
-  playerSelectMenu.appendChild(image);
-});
-
-document.body.appendChild(playerSelectMenu);
-
-playerSelectMenu.addEventListener('click', function (e) {
-  var name = e.target.className;
-  characters.forEach(function (character, i) {
-    var match = character.search(name);
-
-    if (match > -1) {
-      console.log(i);
-      player.updateSprite(characters[i]);
-    }
+    image.className = name;
+    image.src = character;
+    playerSelectMenu.appendChild(image);
   });
-});
+
+  document.body.appendChild(playerSelectMenu);
+
+  playerSelectMenu.addEventListener('click', function (e) {
+    var name = e.target.className;
+    characters.forEach(function (character, i) {
+      var match = character.search(name);
+
+      if (match > -1) {
+        player.updateSprite(characters[i]);
+      }
+    });
+  });
+})();
+
+// Create all static objects
+(function createStaticObjects() {
+  var tempArray = [];
+
+  var staticObjects = ['build/images/gem-blue.png', 'build/images/gem-green.png', 'build/images/gem-orange.png', 'build/images/Heart.png', 'build/images/Selector.png', 'build/images/Star.png'];
+
+  // Function to create random rows and columns
+  var randomFunction = function randomFunction(max, min, type) {
+    var size = type === 'row' ? 40 : 50;
+
+    return (Math.floor(Math.random() * (max - min)) + min) * size;
+  };
+
+  var createObject = function createObject(numberOfObjects, object, minRow, maxRow) {
+    for (var _i2 = 0; _i2 < numberOfObjects; _i2 += 1) {
+      var x = randomFunction(0, 16, 'row');
+      var y = randomFunction(minRow, maxRow, 'column');
+
+      while (tempArray.includes(x + '-' + y)) {
+        x = randomFunction(0, 16, 'row');
+        y = randomFunction(minRow, maxRow, 'column');
+      }
+
+      tempArray.push(x + '-' + y);
+
+      // new StaticObj(x, y, sprite, name);
+    }
+  };
+
+  // Create gems and randomize their locations
+})();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -676,7 +700,7 @@ var engine = function IIFE() {
      * for that particular row of the game level.
      */
     var rowImages = ['build/images/grass-block.png', 'build/images/water-block.png', 'build/images/water-block.png', 'build/images/water-block.png', 'build/images/water-block.png', 'build/images/water-block.png', 'build/images/grass-block.png', 'build/images/stone-block.png', 'build/images/stone-block.png', 'build/images/stone-block.png', 'build/images/stone-block.png', 'build/images/stone-block.png', 'build/images/grass-block.png'];
-    var numRows = rowImages.length;
+    var numRows = rowImages.length; // 13
     var numCols = 15;
 
     // Before drawing, clear existing canvas
@@ -727,7 +751,7 @@ var engine = function IIFE() {
    * draw our game level. Then set init as the callback method, so that when
    * all of these images are properly loaded our game will start.
    */
-  resources.load.apply(resources, ['build/images/stone-block.png', 'build/images/water-block.png', 'build/images/grass-block.png', 'build/images/enemy-bug.png', 'build/images/char-boy.png', 'build/images/char-cat-girl.png', 'build/images/char-horn-girl.png', 'build/images/char-pink-girl.png', 'build/images/char-princess-girl.png', 'build/images/log.png', 'build/images/gem-blue.png', 'build/images/gem-green.png', 'build/images/gem-orange.png', 'build/images/Heart.png', 'build/images/Rock.png', 'build/images/Selector.png', 'build/images/Star.png']);
+  resources.load.apply(resources, ['build/images/stone-block.png', 'build/images/water-block.png', 'build/images/grass-block.png', 'build/images/enemy-bug.png', 'build/images/char-boy.png', 'build/images/char-cat-girl.png', 'build/images/char-horn-girl.png', 'build/images/char-pink-girl.png', 'build/images/char-princess-girl.png', 'build/images/log.png', 'build/images/gem-blue.png', 'build/images/gem-green.png', 'build/images/gem-orange.png', 'build/images/Heart.png', 'build/images/Selector.png', 'build/images/Star.png']);
 
   resources.onReady(init);
 

@@ -187,7 +187,7 @@ const engine = (function IIFE() {
       'build/images/stone-block.png',
       'build/images/grass-block.png',
     ];
-    const numRows = rowImages.length;
+    const numRows = rowImages.length; // 13
     const numCols = 15;
 
     // Before drawing, clear existing canvas
@@ -249,7 +249,6 @@ const engine = (function IIFE() {
     'build/images/gem-green.png',
     'build/images/gem-orange.png',
     'build/images/Heart.png',
-    'build/images/Rock.png',
     'build/images/Selector.png',
     'build/images/Star.png',
   ]);

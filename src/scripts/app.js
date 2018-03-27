@@ -1,10 +1,5 @@
 /* eslint-env browser */
 
-/* TODO:
-  добавить мерцание перса при контакте с врагом, перед тем как он переместится
-
-*/
-
 // The super class for every moving object
 function MovingObject(y, place, objectType) {
   this.y = [280, 320, 360, 400, 440][y];
@@ -316,7 +311,6 @@ Player.prototype = {
           this.cardFlipAudio();
         }
         break;
-      default:
     }
   },
 
@@ -336,23 +330,21 @@ Player.prototype = {
 
 
 // Static objects
-function Static(x, y, sprite) {
+function StaticObj(x, y, sprite, name) {
   this.x = x;
   this.y = y;
   this.sprite = sprite;
+  this.name = name;
 }
 
-Static.prototype = {
-  random(max, min) {
-    return Math.ceil(Math.random() * (max - min)) + min;
-  },
-};
 
 // Instantiation of all objects
 const rowsWithEnemies = 5;
 const allEnemies = [];
 const allLogs = [];
+const allStaticObjects = [];
 const firstPositionsOfObjects = {};
+
 
 // Create three enemies per row
 for (let i = 0; i < rowsWithEnemies; i += 1) {
@@ -366,6 +358,7 @@ for (let i = 0; i < rowsWithEnemies; i += 1) {
     allEnemies.push(new EnemyToLeft(i, 'third', 'EnemyToLeft'));
   }
 }
+
 
 // Create three enemies per row
 for (let i = 0; i < rowsWithEnemies; i += 1) {
@@ -383,40 +376,85 @@ for (let i = 0; i < rowsWithEnemies; i += 1) {
   }
 }
 
+
 // Create player
 const player = new Player();
 
-const playerSelectMenu = document.createElement('section');
-const characters = [
-  'build/images/char-boy.png',
-  'build/images/char-cat-girl.png',
-  'build/images/char-horn-girl.png',
-  'build/images/char-pink-girl.png',
-  'build/images/char-princess-girl.png',
-];
 
-characters.forEach((character) => {
-  const image = document.createElement('img');
-  const name = character.match(/char-.+(?=.png)/)[0];
+// Create menu to choose player type
+(function createMenuToChoosePlayer() {
+  const playerSelectMenu = document.createElement('section');
+  const characters = [
+    'build/images/char-boy.png',
+    'build/images/char-cat-girl.png',
+    'build/images/char-horn-girl.png',
+    'build/images/char-pink-girl.png',
+    'build/images/char-princess-girl.png',
+  ];
 
-  image.className = name;
-  image.src = character;
-  playerSelectMenu.appendChild(image);
-});
+  characters.forEach((character) => {
+    const image = document.createElement('img');
+    const name = character.match(/char-.+(?=.png)/)[0];
 
-document.body.appendChild(playerSelectMenu);
-
-playerSelectMenu.addEventListener('click', (e) => {
-  const name = e.target.className;
-  characters.forEach((character, i) => {
-    const match = character.search(name);
-
-    if (match > -1) {
-      console.log(i);
-      player.updateSprite(characters[i]);
-    }
+    image.className = name;
+    image.src = character;
+    playerSelectMenu.appendChild(image);
   });
-});
+
+  document.body.appendChild(playerSelectMenu);
+
+  playerSelectMenu.addEventListener('click', (e) => {
+    const name = e.target.className;
+    characters.forEach((character, i) => {
+      const match = character.search(name);
+
+      if (match > -1) {
+        player.updateSprite(characters[i]);
+      }
+    });
+  });
+}());
+
+
+// Create all static objects
+(function createStaticObjects() {
+  const tempArray = [];
+
+  const staticObjects = [
+    'build/images/gem-blue.png',
+    'build/images/gem-green.png',
+    'build/images/gem-orange.png',
+    'build/images/Heart.png',
+    'build/images/Selector.png',
+    'build/images/Star.png',
+  ];
+
+  // Function to create random rows and columns
+  const randomFunction = (max, min, type) => {
+    const size = type === 'row' ? 40 : 50;
+
+    return (Math.floor(Math.random() * (max - min)) + min) * size;
+  };
+
+  const createObject = (numberOfObjects, object, minRow, maxRow) => {
+    for (let i = 0; i < numberOfObjects; i += 1) {
+      let x = randomFunction(0, 16, 'row');
+      let y = randomFunction(minRow, maxRow, 'column');
+
+      while (tempArray.includes(`${x}-${y}`)) {
+        x = randomFunction(0, 16, 'row');
+        y = randomFunction(minRow, maxRow, 'column');
+      }
+
+      tempArray.push(`${x}-${y}`);
+
+      // new StaticObj(x, y, sprite, name);
+    }
+  };
+
+  // Create gems and randomize their locations
+}());
+
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

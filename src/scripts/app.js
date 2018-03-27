@@ -103,6 +103,7 @@ Log.prototype.update = function update(player) {
   }
 };
 
+
 // Constructor for enemies moving from right to left (opposite direction)
 function LogToLeft(y, place, objectType) {
   MovingObject.apply(this, [y, place, objectType]);
@@ -252,6 +253,7 @@ function Player() {
   this.y = 240;
   this.sprite = 'build/images/char-boy.png';
   this.lives = 3;
+  this.scores = 0;
 }
 
 Player.prototype = {
@@ -329,6 +331,20 @@ Player.prototype = {
     }
 
 
+  },
+};
+
+
+// Static objects
+function Static(x, y, sprite) {
+  this.x = x;
+  this.y = y;
+  this.sprite = sprite;
+}
+
+Static.prototype = {
+  random(max, min) {
+    return Math.ceil(Math.random() * (max - min)) + min;
   },
 };
 

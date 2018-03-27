@@ -331,6 +331,7 @@ function Player() {
   this.y = 240;
   this.sprite = 'build/images/char-boy.png';
   this.lives = 3;
+  this.scores = 0;
 }
 
 Player.prototype = {
@@ -406,6 +407,19 @@ Player.prototype = {
     if (this.lives < 1) {
       alert('Game over!');
     }
+  }
+};
+
+// Static objects
+function Static(x, y, sprite) {
+  this.x = x;
+  this.y = y;
+  this.sprite = sprite;
+}
+
+Static.prototype = {
+  random: function random(max, min) {
+    return Math.ceil(Math.random() * (max - min)) + min;
   }
 };
 
@@ -713,7 +727,7 @@ var engine = function IIFE() {
    * draw our game level. Then set init as the callback method, so that when
    * all of these images are properly loaded our game will start.
    */
-  resources.load.apply(resources, ['build/images/stone-block.png', 'build/images/water-block.png', 'build/images/grass-block.png', 'build/images/enemy-bug.png', 'build/images/char-boy.png', 'build/images/char-cat-girl.png', 'build/images/char-horn-girl.png', 'build/images/char-pink-girl.png', 'build/images/char-princess-girl.png', 'build/images/log.png', 'build/images/gem-blue.png', 'build/images/gem-green.png', 'build/images/gem-orange.png', 'build/images/Heart.png', 'build/images/Key.png', 'build/images/Rock.png', 'build/images/Selector.png', 'build/images/Star.png']);
+  resources.load.apply(resources, ['build/images/stone-block.png', 'build/images/water-block.png', 'build/images/grass-block.png', 'build/images/enemy-bug.png', 'build/images/char-boy.png', 'build/images/char-cat-girl.png', 'build/images/char-horn-girl.png', 'build/images/char-pink-girl.png', 'build/images/char-princess-girl.png', 'build/images/log.png', 'build/images/gem-blue.png', 'build/images/gem-green.png', 'build/images/gem-orange.png', 'build/images/Heart.png', 'build/images/Rock.png', 'build/images/Selector.png', 'build/images/Star.png']);
 
   resources.onReady(init);
 

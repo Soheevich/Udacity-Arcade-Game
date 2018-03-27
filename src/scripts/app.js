@@ -242,27 +242,22 @@ EnemyToLeft.prototype.render = function render() {
   engine.ctx.restore();
 };
 
-// Logs on water
-
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 function Player(index = 0) {
-  const characters = [
-    'build/images/char-boy.png',
-    'build/images/char-cat-girl.png',
-    'build/images/char-horn-girl.png',
-    'build/images/char-pink-girl.png',
-    'build/images/char-princess-girl.png',
-  ];
   this.x = 350;
   // this.y = 480;
   this.y = 240;
-  this.sprite = characters[index];
+  this.sprite = 'build/images/char-boy.png';
 }
 
 Player.prototype = {
+  updateSprite(name) {
+    this.sprite = name;
+  },
+
   update(x) {
     this.x += x;
   },
@@ -354,6 +349,38 @@ for (let i = 0; i < rowsWithEnemies; i += 1) {
 
 // Create player
 const player = new Player();
+
+const playerSelectMenu = document.createElement('section');
+const characters = [
+  'build/images/char-boy.png',
+  'build/images/char-cat-girl.png',
+  'build/images/char-horn-girl.png',
+  'build/images/char-pink-girl.png',
+  'build/images/char-princess-girl.png',
+];
+
+characters.forEach((character) => {
+  const image = document.createElement('img');
+  const name = character.match(/char-.+(?=.png)/)[0];
+
+  image.className = name;
+  image.src = character;
+  playerSelectMenu.appendChild(image);
+});
+
+document.body.appendChild(playerSelectMenu);
+
+playerSelectMenu.addEventListener('click', (e) => {
+  const name = e.target.className;
+  characters.forEach((character, i) => {
+    const match = character.search(name);
+
+    if (match > -1) {
+      console.log(i);
+      player.updateSprite(characters[i]);
+    }
+  });
+});
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

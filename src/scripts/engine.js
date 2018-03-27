@@ -42,7 +42,7 @@ const engine = (function IIFE() {
   * those sorts of things. It's only called once by the init() method.
   */
   function reset() {
-    // noop
+
   }
 
   /* This function is called by main (our game loop) and itself calls all

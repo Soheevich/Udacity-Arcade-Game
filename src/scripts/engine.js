@@ -227,6 +227,7 @@ const engine = (function IIFE() {
      */
     allEnemies.forEach(enemy => enemy.render());
     allLogs.forEach(log => log.render());
+    allStaticObjects.forEach(staticObject => staticObject.render());
     player.render();
   }
 

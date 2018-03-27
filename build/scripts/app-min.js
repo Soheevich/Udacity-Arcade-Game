@@ -506,12 +506,12 @@ var player = new Player();
     var sprite = urls[objectIndex];
 
     for (var _i2 = 0; _i2 < numberOfObjects; _i2 += 1) {
-      var x = randomFunction(0, 16, 'row');
-      var y = randomFunction(minRow, maxRow, 'column');
+      var x = randomFunction(0, 15, 'column');
+      var y = randomFunction(minRow, maxRow, 'row');
 
       while (tempArray.includes(x + '-' + y)) {
-        x = randomFunction(0, 16, 'row');
-        y = randomFunction(minRow, maxRow, 'column');
+        x = randomFunction(0, 15, 'column');
+        y = randomFunction(minRow, maxRow, 'row');
       }
 
       tempArray.push(x + '-' + y);
@@ -522,7 +522,7 @@ var player = new Player();
   };
 
   // Create gems and randomize their locations
-  createObject(3, 0, 7, 11);
+  createObject(3, 0, 7, 12);
 })();
 
 // This listens for key presses and sends the keys to your
@@ -757,6 +757,9 @@ var engine = function IIFE() {
     });
     allLogs.forEach(function (log) {
       return log.render();
+    });
+    allStaticObjects.forEach(function (staticObject) {
+      return staticObject.render();
     });
     player.render();
   }

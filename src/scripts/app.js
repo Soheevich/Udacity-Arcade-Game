@@ -457,12 +457,12 @@ const player = new Player();
     const sprite = urls[objectIndex];
 
     for (let i = 0; i < numberOfObjects; i += 1) {
-      let x = randomFunction(0, 16, 'row');
-      let y = randomFunction(minRow, maxRow, 'column');
+      let x = randomFunction(0, 15, 'column');
+      let y = randomFunction(minRow, maxRow, 'row');
 
       while (tempArray.includes(`${x}-${y}`)) {
-        x = randomFunction(0, 16, 'row');
-        y = randomFunction(minRow, maxRow, 'column');
+        x = randomFunction(0, 15, 'column');
+        y = randomFunction(minRow, maxRow, 'row');
       }
 
       tempArray.push(`${x}-${y}`);
@@ -473,7 +473,7 @@ const player = new Player();
   };
 
   // Create gems and randomize their locations
-  createObject(3, 0, 7, 11);
+  createObject(3, 0, 7, 12);
 }());
 
 

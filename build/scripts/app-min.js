@@ -684,7 +684,7 @@ var engine = function IIFE() {
 
   canvas.width = 750;
   canvas.height = 570;
-  document.querySelector('.canvas-board').appendChild(canvas);
+  document.querySelector('.canvas__board').appendChild(canvas);
 
   /* This function does nothing but it could have been a good place to
    * handle game reset states - maybe a new game menu or a game over screen
@@ -921,25 +921,31 @@ var engine = function IIFE() {
   (function createMenuToChoosePlayer() {
     var charactersDiv = document.querySelector('.characters');
     var characters = ['build/images/char-boy.png', 'build/images/char-cat-girl.png', 'build/images/char-horn-girl.png', 'build/images/char-pink-girl.png', 'build/images/char-princess-girl.png'];
+    var images = [];
 
-    characters.forEach(function (character) {
+    characters.forEach(function (character, i) {
       var image = document.createElement('img');
-      var name = character.match(/char-.+(?=.png)/)[0];
+      var name = characters[i];
+
+      images.push(image);
 
       image.className = name;
       image.src = character;
       charactersDiv.appendChild(image);
-    });
 
-    charactersDiv.addEventListener('click', function (e) {
-      var name = e.target.className;
-      characters.forEach(function (character, i) {
-        var match = character.search(name);
+      image.addEventListener('click', function (e) {
+        var name = e.target.className;
+        player.updateSprite(name);
+        player.render();
+        render();
 
-        if (match > -1) {
-          player.updateSprite(characters[i]);
-          player.render();
-        }
+        images.forEach(function (img) {
+          if (img !== e.target) {
+            img.style.background = '';
+          } else {
+            img.style.background = '#afa';
+          }
+        });
       });
     });
   })();

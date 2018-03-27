@@ -35,7 +35,7 @@ const engine = (function IIFE() {
 
   canvas.width = 750;
   canvas.height = 570;
-  document.querySelector('.canvas-board').appendChild(canvas);
+  document.querySelector('.canvas__board').appendChild(canvas);
 
   /* This function does nothing but it could have been a good place to
    * handle game reset states - maybe a new game menu or a game over screen
@@ -279,25 +279,31 @@ const engine = (function IIFE() {
       'build/images/char-pink-girl.png',
       'build/images/char-princess-girl.png',
     ];
+    const images = [];
 
-    characters.forEach((character) => {
+    characters.forEach((character, i) => {
       const image = document.createElement('img');
-      const name = character.match(/char-.+(?=.png)/)[0];
+      const name = characters[i];
+
+      images.push(image);
 
       image.className = name;
       image.src = character;
       charactersDiv.appendChild(image);
-    });
 
-    charactersDiv.addEventListener('click', (e) => {
-      const name = e.target.className;
-      characters.forEach((character, i) => {
-        const match = character.search(name);
+      image.addEventListener('click', (e) => {
+        const name = e.target.className;
+        player.updateSprite(name);
+        player.render();
+        render();
 
-        if (match > -1) {
-          player.updateSprite(characters[i]);
-          player.render();
-        }
+        images.forEach((img) => {
+          if (img !== e.target) {
+            img.style.background = '';
+          } else {
+            img.style.background = '#afa';
+          }
+        });
       });
     });
   }());

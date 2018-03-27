@@ -184,7 +184,7 @@ Log.prototype.update = function update(player) {
 
   // If player is on the log, move this player with the log
   if (player && player.x <= 700) {
-    player.update(this.speed);
+    player.update(this.x);
   }
 };
 
@@ -244,7 +244,7 @@ LogToLeft.prototype.update = function update(player) {
 
   // If player is on the log, move this player with the log
   if (player && player.x >= 0) {
-    player.update(-this.speed);
+    player.update(this.x);
   }
 };
 
@@ -326,12 +326,11 @@ EnemyToLeft.prototype.render = function render() {
 // This class requires an update(), render() and
 // a handleInput() method.
 function Player() {
-  var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-
   this.x = 350;
   // this.y = 480;
   this.y = 240;
   this.sprite = 'build/images/char-boy.png';
+  this.lives = 3;
 }
 
 Player.prototype = {
@@ -339,7 +338,7 @@ Player.prototype = {
     this.sprite = name;
   },
   update: function update(x) {
-    this.x += x;
+    this.x = x;
   },
 
 
@@ -391,6 +390,11 @@ Player.prototype = {
     this.x = 350;
     // this.y = 480;
     this.y = 240;
+    this.lives -= 1;
+
+    if (this.lives < 1) {
+      alert('Game over!');
+    }
   }
 };
 
@@ -618,6 +622,7 @@ var engine = function IIFE() {
    * player object. These update methods should focus purely on updating
    * the data/properties related to the object. Do your drawing in your
    * render methods.
+   * Allows player to float on logs
    */
   function updateEntities() {
     allEnemies.forEach(function (enemy) {

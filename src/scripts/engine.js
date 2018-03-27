@@ -146,6 +146,7 @@ const engine = (function IIFE() {
    * player object. These update methods should focus purely on updating
    * the data/properties related to the object. Do your drawing in your
    * render methods.
+   * Allows player to float on logs
    */
   function updateEntities() {
     allEnemies.forEach(enemy => enemy.update());

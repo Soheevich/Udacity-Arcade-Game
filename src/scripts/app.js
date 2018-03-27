@@ -99,7 +99,7 @@ Log.prototype.update = function update(player) {
 
   // If player is on the log, move this player with the log
   if (player && player.x <= 700) {
-    player.update(this.speed);
+    player.update(this.x);
   }
 };
 
@@ -161,7 +161,7 @@ LogToLeft.prototype.update = function update(player) {
 
   // If player is on the log, move this player with the log
   if (player && player.x >= 0) {
-    player.update(-this.speed);
+    player.update(this.x);
   }
 };
 
@@ -246,11 +246,12 @@ EnemyToLeft.prototype.render = function render() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-function Player(index = 0) {
+function Player() {
   this.x = 350;
   // this.y = 480;
   this.y = 240;
   this.sprite = 'build/images/char-boy.png';
+  this.lives = 3;
 }
 
 Player.prototype = {
@@ -259,7 +260,7 @@ Player.prototype = {
   },
 
   update(x) {
-    this.x += x;
+    this.x = x;
   },
 
   // Draw the player on the screen, required method for game
@@ -309,6 +310,13 @@ Player.prototype = {
     this.x = 350;
     // this.y = 480;
     this.y = 240;
+    this.lives -= 1;
+
+    if (this.lives < 1) {
+      alert('Game over!');
+    }
+
+
   },
 };
 

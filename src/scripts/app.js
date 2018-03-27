@@ -56,14 +56,15 @@ function Log(y, place, objectType) {
   MovingObject.apply(this, [y, place, objectType]);
   this.y = [40, 80, 120, 160, 200][y];
   this.sprite = 'build/images/log.png';
+  this.place = place;
 
-  if (place === 'first') {
+  if (this.place === 'first') {
     this.x = -50;
-  } else if (place === 'second') {
+  } else if (this.place === 'second') {
     this.x = -100;
-  } else if (place === 'third') {
+  } else if (this.place === 'third') {
     this.x = -150;
-  } else if (place === 'fourth') {
+  } else if (this.place === 'fourth') {
     this.x = -200;
   }
 }
@@ -104,22 +105,35 @@ Log.prototype.update = function update(player) {
   }
 };
 
+Log.prototype.reset = function reset() {
+  if (this.place === 'first') {
+    this.x = -50;
+  } else if (this.place === 'second') {
+    this.x = -100;
+  } else if (this.place === 'third') {
+    this.x = -150;
+  } else if (this.place === 'fourth') {
+    this.x = -200;
+  }
+};
+
 
 // Constructor for enemies moving from right to left (opposite direction)
 function LogToLeft(y, place, objectType) {
   MovingObject.apply(this, [y, place, objectType]);
   this.y = [40, 80, 120, 160, 200][y];
   this.sprite = 'build/images/log.png';
+  this.place = place;
 
-  if (place === 'first') {
+  if (this.place === 'first') {
     this.x = 750;
-  } else if (place === 'second') {
+  } else if (this.place === 'second') {
     this.x = 800;
-  } else if (place === 'third') {
+  } else if (this.place === 'third') {
     this.x = 850;
-  } else if (place === 'fourth') {
+  } else if (this.place === 'fourth') {
     this.x = 900;
-  } else if (place === 'fifth') {
+  } else if (this.place === 'fifth') {
     this.x = 950;
   }
 }
@@ -167,34 +181,60 @@ LogToLeft.prototype.update = function update(player) {
   }
 };
 
+LogToLeft.prototype.reset = function reset() {
+  if (this.place === 'first') {
+    this.x = 750;
+  } else if (this.place === 'second') {
+    this.x = 800;
+  } else if (this.place === 'third') {
+    this.x = 850;
+  } else if (this.place === 'fourth') {
+    this.x = 900;
+  } else if (this.place === 'fifth') {
+    this.x = 950;
+  }
+};
+
 
 // Enemies our player must avoid
 function Enemy(y, place, objectType) {
   MovingObject.apply(this, [y, place, objectType]);
   this.sprite = 'build/images/enemy-bug.png';
+  this.place = place;
 
-  if (place === 'first') {
+  if (this.place === 'first') {
     this.x = -50;
-  } else if (place === 'second') {
+  } else if (this.place === 'second') {
     this.x = -250;
-  } else if (place === 'third') {
+  } else if (this.place === 'third') {
     this.x = -450;
   }
 }
 
 Enemy.prototype = Object.create(MovingObject.prototype);
 Enemy.prototype.constructor = Enemy;
+Enemy.prototype.reset = function reset() {
+  if (this.place === 'first') {
+    this.x = -50;
+  } else if (this.place === 'second') {
+    this.x = -250;
+  } else if (this.place === 'third') {
+    this.x = -450;
+  }
+};
+
 
 // Constructor for enemies moving from right to left (opposite direction)
 function EnemyToLeft(y, place, objectType) {
   MovingObject.apply(this, [y, place, objectType]);
   this.sprite = 'build/images/enemy-bug.png';
+  this.place = place;
 
-  if (place === 'first') {
+  if (this.place === 'first') {
     this.x = 750;
-  } else if (place === 'second') {
+  } else if (this.place === 'second') {
     this.x = 950;
-  } else if (place === 'third') {
+  } else if (this.place === 'third') {
     this.x = 1150;
   }
 }
@@ -244,6 +284,15 @@ EnemyToLeft.prototype.render = function render() {
   engine.ctx.restore();
 };
 
+EnemyToLeft.prototype.reset = function reset() {
+  if (this.place === 'first') {
+    this.x = 750;
+  } else if (this.place === 'second') {
+    this.x = 950;
+  } else if (this.place === 'third') {
+    this.x = 1150;
+  }
+};
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -251,7 +300,6 @@ EnemyToLeft.prototype.render = function render() {
 function Player() {
   this.x = 350;
   this.y = 480;
-  // this.y = 240;
   this.sprite = 'build/images/char-boy.png';
   this.lives = 3;
   this.scores = 0;
@@ -343,17 +391,17 @@ Player.prototype = {
   },
 
   // Reset player's position on death
-  reset() {
+  reset(newGame = false) {
     this.x = 350;
     this.y = 480;
-    // this.y = 240;
-    this.lives -= 1;
 
-    if (this.lives < 1) {
-      alert('Game over!');
+    if (!newGame) {
+      this.lives -= 1;
+
+      if (this.lives < 1) {
+        alert('Game over!');
+      }
     }
-
-
   },
 };
 
@@ -371,6 +419,40 @@ StaticObj.prototype = {
   render() {
     engine.ctx.drawImage(resources.get(this.sprite), this.x, this.y);
   },
+
+  reset() {
+    let minRow;
+    let maxRow;
+
+    if (/gem/.test(this.name)) {
+      minRow = 7;
+      maxRow = 12;
+    } else if (/Heart/.test(this.name)) {
+      minRow = 1;
+      maxRow = 5;
+    } else {
+      this.x = 350;
+      this.y = 0;
+      return;
+    }
+
+    // Function to create random rows and columns
+    const randomFunction = (min, max, type) => {
+      const size = type === 'row' ? 40 : 50;
+
+      return (Math.floor(Math.random() * (max - min)) + min) * size;
+    };
+
+    this.x = randomFunction(1, 14, 'column');
+    this.y = randomFunction(minRow, maxRow, 'row');
+
+    while (staticObjectsCoordinates.includes(`${this.x}-${this.y}`)) {
+      this.x = randomFunction(1, 14, 'column');
+      this.y = randomFunction(minRow, maxRow, 'row');
+    }
+
+    staticObjectsCoordinates.push(`${this.x}-${this.y}`);
+  },
 };
 
 
@@ -379,6 +461,7 @@ const rowsWithEnemies = 5;
 const allEnemies = [];
 const allLogs = [];
 const allStaticObjects = [];
+const staticObjectsCoordinates = [];
 const firstPositionsOfObjects = {};
 
 
@@ -438,7 +521,7 @@ const player = new Player();
   ];
 
   // Function to create random rows and columns
-  const randomFunction = (max, min, type) => {
+  const randomFunction = (min, max, type) => {
     const size = type === 'row' ? 40 : 50;
 
     return (Math.floor(Math.random() * (max - min)) + min) * size;

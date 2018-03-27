@@ -42,7 +42,12 @@ const engine = (function IIFE() {
    * those sorts of things. It's only called once by the init() method.
    */
   function reset() {
+    staticObjectsCoordinates.length = 0;
 
+    allEnemies.forEach(enemy => enemy.reset());
+    allLogs.forEach(log => log.reset());
+    allStaticObjects.forEach(staticObject => staticObject.reset());
+    player.reset(true);
   }
 
   /* This function is called by main (our game loop) and itself calls all
@@ -133,6 +138,7 @@ const engine = (function IIFE() {
   }
 
   function startAnimating(fps) {
+    stop = false;
     fpsInterval = 1000 / fps;
     then = window.performance.now();
     animate();
@@ -154,12 +160,16 @@ const engine = (function IIFE() {
     startGame.addEventListener('click', () => {
       overlay.classList.toggle('overlay__opened');
       modal.classList.toggle('modal__opened');
+
+      reset();
       startAnimating(60);
     });
 
     openModal.addEventListener('click', () => {
       overlay.classList.toggle('overlay__opened');
       modal.classList.toggle('modal__opened');
+
+      stop = true;
     });
   }
 

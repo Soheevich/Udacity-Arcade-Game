@@ -461,6 +461,7 @@ const rowsWithEnemies = 5;
 const allEnemies = [];
 const allLogs = [];
 const allStaticObjects = [];
+const deletedStaticObjects = [];
 const staticObjectsCoordinates = [];
 const firstPositionsOfObjects = {};
 

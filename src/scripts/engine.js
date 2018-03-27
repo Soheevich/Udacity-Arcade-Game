@@ -42,8 +42,13 @@ const engine = (function IIFE() {
    * those sorts of things. It's only called once by the init() method.
    */
   function reset() {
-    staticObjectsCoordinates.length = 0;
+    // Delete coordinates array, to fill it again with new values
+    staticObjectsCoordinates.splice(0, staticObjectsCoordinates.length);
 
+    // Refill all static objects array with deleted objects
+    allStaticObjects.push(...deletedStaticObjects.splice(0, deletedStaticObjects.length));
+
+    // Initialize reset method on all objects
     allEnemies.forEach(enemy => enemy.reset());
     allLogs.forEach(log => log.reset());
     allStaticObjects.forEach(staticObject => staticObject.reset());
@@ -99,7 +104,8 @@ const engine = (function IIFE() {
     });
 
     if (index !== null) {
-      allStaticObjects.splice(index, 1);
+      const deletedElement = allStaticObjects.splice(index, 1)[0];
+      deletedStaticObjects.push(deletedElement);
       player.addScores(objectName);
     }
   }
@@ -154,7 +160,6 @@ const engine = (function IIFE() {
     const overlay = document.querySelector('.overlay');
     const modal = document.querySelector('.modal');
 
-    reset();
     render();
 
     startGame.addEventListener('click', () => {

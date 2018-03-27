@@ -1,5 +1,7 @@
 'use strict';
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 /* eslint-env browser */
 
 /* Resources.js
@@ -542,6 +544,7 @@ var rowsWithEnemies = 5;
 var allEnemies = [];
 var allLogs = [];
 var allStaticObjects = [];
+var deletedStaticObjects = [];
 var staticObjectsCoordinates = [];
 var firstPositionsOfObjects = {};
 
@@ -688,8 +691,13 @@ var engine = function IIFE() {
    * those sorts of things. It's only called once by the init() method.
    */
   function reset() {
-    staticObjectsCoordinates.length = 0;
+    // Delete coordinates array, to fill it again with new values
+    staticObjectsCoordinates.splice(0, staticObjectsCoordinates.length);
 
+    // Refill all static objects array with deleted objects
+    allStaticObjects.push.apply(allStaticObjects, _toConsumableArray(deletedStaticObjects.splice(0, deletedStaticObjects.length)));
+
+    // Initialize reset method on all objects
     allEnemies.forEach(function (enemy) {
       return enemy.reset();
     });
@@ -750,7 +758,8 @@ var engine = function IIFE() {
     });
 
     if (index !== null) {
-      allStaticObjects.splice(index, 1);
+      var deletedElement = allStaticObjects.splice(index, 1)[0];
+      deletedStaticObjects.push(deletedElement);
       player.addScores(objectName);
     }
   }
@@ -805,7 +814,6 @@ var engine = function IIFE() {
     var overlay = document.querySelector('.overlay');
     var modal = document.querySelector('.modal');
 
-    reset();
     render();
 
     startGame.addEventListener('click', function () {

@@ -6,11 +6,11 @@ function MovingObject(y, place, objectType) {
   this.place = place;
   this.objectType = objectType;
   if (y === 1 || y === 4) {
-    this.speed = 4;
+    this.speed = 3;
   } else if (y === 0) {
-    this.speed = 1.5;
+    this.speed = 1;
   } else {
-    this.speed = 2;
+    this.speed = 1.5;
   }
 }
 

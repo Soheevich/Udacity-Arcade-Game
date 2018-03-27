@@ -649,12 +649,11 @@ var engine = function IIFE() {
 
     if (playerY >= 280 && playerY <= 440) {
       allEnemies.forEach(function (enemy) {
-        if (enemy.y === playerY && playerX < enemy.x + 50 && playerX + 50 > enemy.x) {
+        if (enemy.y === playerY && playerX < enemy.x + 40 && playerX + 40 > enemy.x) {
           player.reset();
         }
       });
     } else if (playerY >= 40 && playerY <= 200) {
-
       allLogs.forEach(function (log) {
         if (log.y === playerY && playerX < log.x + 50 && playerX + 50 > log.x) {
           playerIsOnLog = true;

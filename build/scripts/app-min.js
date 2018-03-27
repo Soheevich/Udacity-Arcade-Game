@@ -336,12 +336,13 @@ function Player() {
 }
 
 Player.prototype = {
+  // Changes player's skin
   updateSprite: function updateSprite(name) {
     this.sprite = name;
   },
-  setPosition: function setPosition(x) {
-    this.x = x;
-  },
+
+
+  // If player is on log, it will move him
   update: function update() {
     var x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 
@@ -421,6 +422,9 @@ Player.prototype = {
     engine.print('scores', this.scores);
     engine.print('lives', this.lives);
   },
+
+
+  // Reset player's position on death
   reset: function reset() {
     this.x = 350;
     this.y = 480;
@@ -530,6 +534,7 @@ var player = new Player();
     return (Math.floor(Math.random() * (max - min)) + min) * size;
   };
 
+  // Helper function to create any number of any static object (gems, hearts etc)
   var createObject = function createObject(numberOfObjects, objectIndex, minRow, maxRow, coordinateX, coordinateY) {
     var name = names[objectIndex];
     var sprite = urls[objectIndex];
@@ -618,7 +623,7 @@ var engine = function IIFE() {
 
   canvas.width = 750;
   canvas.height = 570;
-  document.querySelector('main').appendChild(canvas);
+  document.querySelector('.canvas-board').appendChild(canvas);
 
   /* This function does nothing but it could have been a good place to
    * handle game reset states - maybe a new game menu or a game over screen
@@ -715,8 +720,6 @@ var engine = function IIFE() {
   function startAnimating(fps) {
     fpsInterval = 1000 / fps;
     then = window.performance.now();
-    // startTime = then;
-    // console.log(startTime);
     animate();
   }
 
@@ -725,15 +728,24 @@ var engine = function IIFE() {
    * game loop.
    */
   function init() {
-    var button = document.querySelector('button');
+    var openModal = document.querySelector('.open__modal');
+    var startGame = document.querySelector('.new__game');
+    var overlay = document.querySelector('.overlay');
+    var modal = document.querySelector('.modal');
+
     reset();
     render();
-    startAnimating(60);
 
-    // button.addEventListener('click', () => {
-    //   alert('works');
-    //   startAnimating(60);
-    // }, { once: true });
+    startGame.addEventListener('click', function () {
+      overlay.classList.toggle('overlay__opened');
+      modal.classList.toggle('modal__opened');
+      startAnimating(60);
+    });
+
+    openModal.addEventListener('click', function () {
+      overlay.classList.toggle('overlay__opened');
+      modal.classList.toggle('modal__opened');
+    });
   }
 
   /* This is called by the update function and loops through all of the

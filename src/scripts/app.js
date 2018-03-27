@@ -258,14 +258,12 @@ function Player() {
 }
 
 Player.prototype = {
+  // Changes player's skin
   updateSprite(name) {
     this.sprite = name;
   },
 
-  setPosition(x) {
-    this.x = x;
-  },
-
+  // If player is on log, it will move him
   update(x = 0) {
     this.x += x;
 
@@ -344,6 +342,7 @@ Player.prototype = {
     engine.print('lives', this.lives);
   },
 
+  // Reset player's position on death
   reset() {
     this.x = 350;
     this.y = 480;
@@ -480,6 +479,7 @@ const player = new Player();
     return (Math.floor(Math.random() * (max - min)) + min) * size;
   };
 
+  // Helper function to create any number of any static object (gems, hearts etc)
   const createObject = (numberOfObjects, objectIndex, minRow, maxRow, coordinateX, coordinateY) => {
     const name = names[objectIndex];
     const sprite = urls[objectIndex];

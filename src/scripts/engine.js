@@ -35,7 +35,7 @@ const engine = (function IIFE() {
 
   canvas.width = 750;
   canvas.height = 570;
-  document.querySelector('main').appendChild(canvas);
+  document.querySelector('.canvas-board').appendChild(canvas);
 
   /* This function does nothing but it could have been a good place to
    * handle game reset states - maybe a new game menu or a game over screen
@@ -135,8 +135,6 @@ const engine = (function IIFE() {
   function startAnimating(fps) {
     fpsInterval = 1000 / fps;
     then = window.performance.now();
-    // startTime = then;
-    // console.log(startTime);
     animate();
   }
 
@@ -145,15 +143,24 @@ const engine = (function IIFE() {
    * game loop.
    */
   function init() {
-    const button = document.querySelector('button');
+    const openModal = document.querySelector('.open__modal');
+    const startGame = document.querySelector('.new__game');
+    const overlay = document.querySelector('.overlay');
+    const modal = document.querySelector('.modal');
+
     reset();
     render();
-    startAnimating(60);
 
-    // button.addEventListener('click', () => {
-    //   alert('works');
-    //   startAnimating(60);
-    // }, { once: true });
+    startGame.addEventListener('click', () => {
+      overlay.classList.toggle('overlay__opened');
+      modal.classList.toggle('modal__opened');
+      startAnimating(60);
+    });
+
+    openModal.addEventListener('click', () => {
+      overlay.classList.toggle('overlay__opened');
+      modal.classList.toggle('modal__opened');
+    });
   }
 
   /* This is called by the update function and loops through all of the

@@ -491,11 +491,11 @@ const player = new Player();
     }
 
     for (let i = 0; i < numberOfObjects; i += 1) {
-      let x = randomFunction(0, 15, 'column');
+      let x = randomFunction(1, 14, 'column');
       let y = randomFunction(minRow, maxRow, 'row');
 
       while (tempArray.includes(`${x}-${y}`)) {
-        x = randomFunction(0, 15, 'column');
+        x = randomFunction(1, 14, 'column');
         y = randomFunction(minRow, maxRow, 'row');
       }
 

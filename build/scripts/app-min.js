@@ -541,11 +541,11 @@ var player = new Player();
     }
 
     for (var _i2 = 0; _i2 < numberOfObjects; _i2 += 1) {
-      var x = randomFunction(0, 15, 'column');
+      var x = randomFunction(1, 14, 'column');
       var y = randomFunction(minRow, maxRow, 'row');
 
       while (tempArray.includes(x + '-' + y)) {
-        x = randomFunction(0, 15, 'column');
+        x = randomFunction(1, 14, 'column');
         y = randomFunction(minRow, maxRow, 'row');
       }
 

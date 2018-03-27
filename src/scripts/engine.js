@@ -96,6 +96,7 @@ const engine = (function IIFE() {
 
     if (index !== null) {
       allStaticObjects.splice(index, 1);
+      player.addScores(objectName);
     }
   }
 

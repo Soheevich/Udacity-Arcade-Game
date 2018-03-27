@@ -491,34 +491,6 @@ for (var _i = 0; _i < rowsWithEnemies; _i += 1) {
 // Create player
 var player = new Player();
 
-// Create menu to choose player type
-(function createMenuToChoosePlayer() {
-  var playerSelectMenu = document.createElement('section');
-  var characters = ['build/images/char-boy.png', 'build/images/char-cat-girl.png', 'build/images/char-horn-girl.png', 'build/images/char-pink-girl.png', 'build/images/char-princess-girl.png'];
-
-  characters.forEach(function (character) {
-    var image = document.createElement('img');
-    var name = character.match(/char-.+(?=.png)/)[0];
-
-    image.className = name;
-    image.src = character;
-    playerSelectMenu.appendChild(image);
-  });
-
-  document.body.appendChild(playerSelectMenu);
-
-  playerSelectMenu.addEventListener('click', function (e) {
-    var name = e.target.className;
-    characters.forEach(function (character, i) {
-      var match = character.search(name);
-
-      if (match > -1) {
-        player.updateSprite(characters[i]);
-      }
-    });
-  });
-})();
-
 // Create all static objects
 (function createStaticObjects() {
   var tempArray = [];
@@ -832,6 +804,33 @@ var engine = function IIFE() {
     });
     player.render();
   }
+
+  // Create menu to choose player type
+  (function createMenuToChoosePlayer() {
+    var charactersDiv = document.querySelector('.characters');
+    var characters = ['build/images/char-boy.png', 'build/images/char-cat-girl.png', 'build/images/char-horn-girl.png', 'build/images/char-pink-girl.png', 'build/images/char-princess-girl.png'];
+
+    characters.forEach(function (character) {
+      var image = document.createElement('img');
+      var name = character.match(/char-.+(?=.png)/)[0];
+
+      image.className = name;
+      image.src = character;
+      charactersDiv.appendChild(image);
+    });
+
+    charactersDiv.addEventListener('click', function (e) {
+      var name = e.target.className;
+      characters.forEach(function (character, i) {
+        var match = character.search(name);
+
+        if (match > -1) {
+          player.updateSprite(characters[i]);
+          player.render();
+        }
+      });
+    });
+  })();
 
   /* Go ahead and load all of the images we know we're going to need to
    * draw our game level. Then set init as the callback method, so that when

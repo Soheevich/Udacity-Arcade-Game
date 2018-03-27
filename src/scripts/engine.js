@@ -254,6 +254,38 @@ const engine = (function IIFE() {
     player.render();
   }
 
+  // Create menu to choose player type
+  (function createMenuToChoosePlayer() {
+    const charactersDiv = document.querySelector('.characters');
+    const characters = [
+      'build/images/char-boy.png',
+      'build/images/char-cat-girl.png',
+      'build/images/char-horn-girl.png',
+      'build/images/char-pink-girl.png',
+      'build/images/char-princess-girl.png',
+    ];
+
+    characters.forEach((character) => {
+      const image = document.createElement('img');
+      const name = character.match(/char-.+(?=.png)/)[0];
+
+      image.className = name;
+      image.src = character;
+      charactersDiv.appendChild(image);
+    });
+
+    charactersDiv.addEventListener('click', (e) => {
+      const name = e.target.className;
+      characters.forEach((character, i) => {
+        const match = character.search(name);
+
+        if (match > -1) {
+          player.updateSprite(characters[i]);
+          player.render();
+        }
+      });
+    });
+  }());
 
   /* Go ahead and load all of the images we know we're going to need to
    * draw our game level. Then set init as the callback method, so that when

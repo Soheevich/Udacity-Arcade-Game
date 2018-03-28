@@ -21,7 +21,7 @@ const engine = (function IIFE() {
    * set the canvas elements height/width and add it to the DOM.
    */
   const canvas = document.createElement('canvas');
-  canvas.className = 'canvas';
+  canvas.className = 'canvas__main';
   const ctx = canvas.getContext('2d');
   let stop = false;
   let fpsInterval;

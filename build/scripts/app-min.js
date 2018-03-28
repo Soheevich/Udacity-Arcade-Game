@@ -680,7 +680,7 @@ var engine = function IIFE() {
    * set the canvas elements height/width and add it to the DOM.
    */
   var canvas = document.createElement('canvas');
-  canvas.className = 'canvas';
+  canvas.className = 'canvas__main';
   var ctx = canvas.getContext('2d');
   var stop = false;
   var fpsInterval = void 0;

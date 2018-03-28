@@ -13,13 +13,24 @@ body {
 }
 
 .canvas__board {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template: min-content 570px / auto 750px auto;
+  grid-template-areas:
+              ". h ."
+              ". c .";
+  margin-top: 20px;
 }
 
-.canvas {
+.canvas__header {
+  grid-area: h;
+  display: flex;
+  justify-content: space-between;
+}
+
+.canvas__main {
   display: block;
   margin: 0 auto;
+  grid-area: c;
 }
 
 .overlay {
@@ -94,4 +105,8 @@ body {
 
 .opened {
   display: block;
+}
+
+.main__footer {
+  text-align: center;
 }

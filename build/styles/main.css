@@ -11,18 +11,27 @@ body {
 }
 
 .canvas__board {
+  display: grid;
+  grid-template: -webkit-min-content 570px / auto 750px auto;
+  grid-template: min-content 570px / auto 750px auto;
+  grid-template-areas: ". h ." ". c .";
+  margin-top: 20px;
+}
+
+.canvas__header {
+  grid-area: h;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: column;
-  flex-direction: column;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
 }
 
-.canvas {
+.canvas__main {
   display: block;
   margin: 0 auto;
+  grid-area: c;
 }
 
 .overlay {
@@ -112,4 +121,8 @@ body {
 
 .opened {
   display: block;
+}
+
+.main__footer {
+  text-align: center;
 }

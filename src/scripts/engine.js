@@ -289,8 +289,7 @@ const engine = (function IIFE() {
 
       image.dataset.url = name;
       image.src = character;
-      image.alt = /(char.+)(?=\.png)/.exec(character);
-      console.log(/(char.+)(?=\.png)/.exec(character));
+      [image.alt,] = /(char.+)(?=\.png)/.exec(character);
       if (i === 0) image.style.background = '#afa';
 
       charactersDiv.appendChild(image);

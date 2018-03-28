@@ -361,13 +361,24 @@ const engine = (function IIFE() {
 
     // This method prints player scores
     print(type, number) {
-      console.log(type, number);
+      if (type === 'scores') {
+        const scoresList = document.querySelectorAll('.scores');
+
+        scoresList.forEach((elem) => {
+          elem.textContent = number;
+        });
+      } else {
+        const livesList = document.querySelectorAll('.lives');
+
+        livesList.forEach((elem) => {
+          elem.textContent = number;
+        });
+      }
     },
 
     // This method stops the game and shows winning screen
     endGame(scores, lives) {
       toggleEndingModal();
-      console.log(scores, lives);
 
       const openModal = document.querySelector('.open__modal');
       openModal.dispatchEvent(new Event('click'));

@@ -485,11 +485,18 @@ Player.prototype = {
 
     if (!newGame) {
       this.lives -= 1;
+      engine.print('scores', this.scores);
+      engine.print('lives', this.lives);
 
       if (this.lives < 1) {
-        this.lives = 3;
         engine.endGame(this.scores, this.lives);
+
+        this.lives = 3;
+        this.scores = 0;
       }
+    } else {
+      engine.print('scores', this.scores);
+      engine.print('lives', this.lives);
     }
   }
 };
@@ -993,14 +1000,25 @@ var engine = function IIFE() {
 
     // This method prints player scores
     print: function print(type, number) {
-      console.log(type, number);
+      if (type === 'scores') {
+        var scoresList = document.querySelectorAll('.scores');
+
+        scoresList.forEach(function (elem) {
+          elem.textContent = number;
+        });
+      } else {
+        var livesList = document.querySelectorAll('.lives');
+
+        livesList.forEach(function (elem) {
+          elem.textContent = number;
+        });
+      }
     },
 
 
     // This method stops the game and shows winning screen
     endGame: function endGame(scores, lives) {
       toggleEndingModal();
-      console.log(scores, lives);
 
       var openModal = document.querySelector('.open__modal');
       openModal.dispatchEvent(new Event('click'));

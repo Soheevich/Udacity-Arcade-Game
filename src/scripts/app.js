@@ -397,11 +397,18 @@ Player.prototype = {
 
     if (!newGame) {
       this.lives -= 1;
+      engine.print('scores', this.scores);
+      engine.print('lives', this.lives);
 
       if (this.lives < 1) {
-        this.lives = 3;
         engine.endGame(this.scores, this.lives);
+
+        this.lives = 3;
+        this.scores = 0;
       }
+    } else {
+      engine.print('scores', this.scores);
+      engine.print('lives', this.lives);
     }
   },
 };

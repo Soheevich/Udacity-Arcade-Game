@@ -86,3 +86,12 @@ body {
 .character__selected {
   background: #afa;
 }
+
+.start__game,
+.end__game {
+  display: none;
+}
+
+.opened {
+  display: block;
+}

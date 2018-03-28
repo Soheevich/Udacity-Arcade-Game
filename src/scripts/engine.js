@@ -163,6 +163,12 @@ const engine = (function IIFE() {
     render();
 
     startGame.addEventListener('click', () => {
+      const endingModal = document.querySelector('.end__game');
+
+      if (endingModal.classList.contains('opened')) {
+        toggleEndingModal();
+      }
+
       overlay.classList.toggle('overlay__opened');
       modal.classList.toggle('modal__opened');
 
@@ -311,6 +317,17 @@ const engine = (function IIFE() {
     });
   }());
 
+
+  // Show ending modal window
+  function toggleEndingModal() {
+    const startingModal = document.querySelector('.start__game');
+    const endingModal = document.querySelector('.end__game');
+
+    startingModal.classList.toggle('opened');
+    endingModal.classList.toggle('opened');
+  }
+
+
   /* Go ahead and load all of the images we know we're going to need to
    * draw our game level. Then set init as the callback method, so that when
    * all of these images are properly loaded our game will start.
@@ -348,8 +365,12 @@ const engine = (function IIFE() {
     },
 
     // This method stops the game and shows winning screen
-    win(scores, lives) {
+    endGame(scores, lives) {
+      toggleEndingModal();
       console.log(scores, lives);
+
+      const openModal = document.querySelector('.open__modal');
+      openModal.dispatchEvent(new Event('click'));
     },
   };
 }());

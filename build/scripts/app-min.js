@@ -464,7 +464,7 @@ Player.prototype = {
         break;
       case 'Star':
         this.scores += 200;
-        engine.win(this.scores, this.lives);
+        engine.endGame(this.scores, this.lives);
         break;
       default:
         this.lives += 1;
@@ -487,7 +487,8 @@ Player.prototype = {
       this.lives -= 1;
 
       if (this.lives < 1) {
-        alert('Game over!');
+        this.lives = 3;
+        engine.endGame(this.scores, this.lives);
       }
     }
   }
@@ -819,6 +820,12 @@ var engine = function IIFE() {
     render();
 
     startGame.addEventListener('click', function () {
+      var endingModal = document.querySelector('.end__game');
+
+      if (endingModal.classList.contains('opened')) {
+        toggleEndingModal();
+      }
+
       overlay.classList.toggle('overlay__opened');
       modal.classList.toggle('modal__opened');
 
@@ -961,6 +968,15 @@ var engine = function IIFE() {
     });
   })();
 
+  // Show ending modal window
+  function toggleEndingModal() {
+    var startingModal = document.querySelector('.start__game');
+    var endingModal = document.querySelector('.end__game');
+
+    startingModal.classList.toggle('opened');
+    endingModal.classList.toggle('opened');
+  }
+
   /* Go ahead and load all of the images we know we're going to need to
    * draw our game level. Then set init as the callback method, so that when
    * all of these images are properly loaded our game will start.
@@ -982,8 +998,12 @@ var engine = function IIFE() {
 
 
     // This method stops the game and shows winning screen
-    win: function win(scores, lives) {
+    endGame: function endGame(scores, lives) {
+      toggleEndingModal();
       console.log(scores, lives);
+
+      var openModal = document.querySelector('.open__modal');
+      openModal.dispatchEvent(new Event('click'));
     }
   };
 }();

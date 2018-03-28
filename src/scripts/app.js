@@ -407,6 +407,9 @@ Player.prototype = {
         this.scores = 0;
       }
     } else {
+      this.lives = 3;
+      this.scores = 0;
+
       engine.print('scores', this.scores);
       engine.print('lives', this.lives);
     }

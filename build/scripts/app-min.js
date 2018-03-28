@@ -929,12 +929,16 @@ var engine = function IIFE() {
 
       images.push(image);
 
-      image.className = name;
+      image.dataset.url = name;
       image.src = character;
+      image.alt = /(char.+)(?=\.png)/.exec(character);
+      console.log(/(char.+)(?=\.png)/.exec(character));
+      if (i === 0) image.style.background = '#afa';
+
       charactersDiv.appendChild(image);
 
       image.addEventListener('click', function (e) {
-        var name = e.target.className;
+        var name = e.target.dataset.url;
         player.updateSprite(name);
         player.render();
         render();

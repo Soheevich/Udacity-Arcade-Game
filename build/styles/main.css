@@ -10,6 +10,10 @@ body {
   max-height: 100%;
 }
 
+main {
+  font-family: "Roboto", sans-serif;
+}
+
 .canvas__board {
   display: grid;
   grid-template: -webkit-min-content 570px / auto 750px auto;

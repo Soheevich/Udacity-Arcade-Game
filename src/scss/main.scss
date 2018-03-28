@@ -13,6 +13,10 @@ body {
   max-height: 100%;
 }
 
+main {
+  font-family: $font-main;
+}
+
 .canvas__board {
   display: grid;
   grid-template: min-content 570px / auto 750px auto;

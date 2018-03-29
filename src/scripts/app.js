@@ -5,6 +5,8 @@ function MovingObject(y, place, objectType) {
   this.y = [280, 320, 360, 400, 440][y];
   this.place = place;
   this.objectType = objectType;
+
+  // Speed depends on the row
   if (y === 1 || y === 4) {
     this.speed = 3;
   } else if (y === 0) {
@@ -14,6 +16,7 @@ function MovingObject(y, place, objectType) {
   }
 }
 
+// The main class for all enemies and logs
 MovingObject.prototype = {
   // Translate current position of the object, it will be used by objects behind
   savePosition(x) {
@@ -58,6 +61,7 @@ function Log(y, place, objectType) {
   this.sprite = 'build/images/log.png';
   this.place = place;
 
+  // Set distance between instances
   if (this.place === 'first') {
     this.x = -50;
   } else if (this.place === 'second') {
@@ -71,6 +75,9 @@ function Log(y, place, objectType) {
 
 Log.prototype = Object.create(MovingObject.prototype);
 Log.prototype.constructor = Log;
+
+// This method keeps distance between instances.
+// Every instance counts its position from the first element.
 Log.prototype.update = function update(player) {
   const firstObjectPosition = firstPositionsOfObjects[this.objectType];
   if (this.place === 'first') {
@@ -105,6 +112,7 @@ Log.prototype.update = function update(player) {
   }
 };
 
+// Resets position on a new game.
 Log.prototype.reset = function reset() {
   if (this.place === 'first') {
     this.x = -50;
@@ -125,6 +133,7 @@ function LogToLeft(y, place, objectType) {
   this.sprite = 'build/images/log.png';
   this.place = place;
 
+  // Set distance between instances
   if (this.place === 'first') {
     this.x = 750;
   } else if (this.place === 'second') {
@@ -140,6 +149,9 @@ function LogToLeft(y, place, objectType) {
 
 LogToLeft.prototype = Object.create(MovingObject.prototype);
 LogToLeft.prototype.constructor = LogToLeft;
+
+// This method keeps distance between instances.
+// Every instance counts its position from the first element.
 LogToLeft.prototype.update = function update(player) {
   const firstObjectPosition = firstPositionsOfObjects[this.objectType];
   // Update the enemy's position, required method for game
@@ -181,6 +193,7 @@ LogToLeft.prototype.update = function update(player) {
   }
 };
 
+// Resets position on a new game.
 LogToLeft.prototype.reset = function reset() {
   if (this.place === 'first') {
     this.x = 750;
@@ -202,6 +215,7 @@ function Enemy(y, place, objectType) {
   this.sprite = 'build/images/enemy-bug.png';
   this.place = place;
 
+  // Set distance between instances
   if (this.place === 'first') {
     this.x = -50;
   } else if (this.place === 'second') {
@@ -213,6 +227,8 @@ function Enemy(y, place, objectType) {
 
 Enemy.prototype = Object.create(MovingObject.prototype);
 Enemy.prototype.constructor = Enemy;
+
+// Resets position on a new game.
 Enemy.prototype.reset = function reset() {
   if (this.place === 'first') {
     this.x = -50;
@@ -241,6 +257,9 @@ function EnemyToLeft(y, place, objectType) {
 
 EnemyToLeft.prototype = Object.create(MovingObject.prototype);
 EnemyToLeft.prototype.constructor = EnemyToLeft;
+
+// This method keeps distance between instances.
+// Every instance counts its position from the first element.
 EnemyToLeft.prototype.update = function update() {
   const firstObjectPosition = firstPositionsOfObjects[this.objectType];
   // Update the enemy's position, required method for game
@@ -265,6 +284,7 @@ EnemyToLeft.prototype.update = function update() {
   }
 };
 
+// Render new position on the canvas
 EnemyToLeft.prototype.render = function render() {
   // this function was taken from
   // https://stackoverflow.com/questions/3129099/how-to-flip-images-horizontally-with-html5
@@ -284,6 +304,7 @@ EnemyToLeft.prototype.render = function render() {
   engine.ctx.restore();
 };
 
+// Resets position on a new game.
 EnemyToLeft.prototype.reset = function reset() {
   if (this.place === 'first') {
     this.x = 750;
@@ -366,6 +387,7 @@ Player.prototype = {
     }
   },
 
+  // Add scores when the Player stands on gems or on the star.
   addScores(object) {
     switch (object) {
       case 'gem-blue':
@@ -417,7 +439,7 @@ Player.prototype = {
 };
 
 
-// Static objects
+// Static objects: gems, heart, star
 function StaticObj(x, y, sprite, name) {
   this.x = x;
   this.y = y;
@@ -431,6 +453,7 @@ StaticObj.prototype = {
     engine.ctx.drawImage(resources.get(this.sprite), this.x, this.y);
   },
 
+  // Resets position on a new game.
   reset() {
     let minRow;
     let maxRow;

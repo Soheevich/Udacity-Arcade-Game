@@ -97,6 +97,8 @@ function MovingObject(y, place, objectType) {
   this.y = [280, 320, 360, 400, 440][y];
   this.place = place;
   this.objectType = objectType;
+
+  // Speed depends on the row
   if (y === 1 || y === 4) {
     this.speed = 3;
   } else if (y === 0) {
@@ -106,6 +108,7 @@ function MovingObject(y, place, objectType) {
   }
 }
 
+// The main class for all enemies and logs
 MovingObject.prototype = {
   // Translate current position of the object, it will be used by objects behind
   savePosition: function savePosition(x) {
@@ -149,6 +152,7 @@ function Log(y, place, objectType) {
   this.sprite = 'build/images/log.png';
   this.place = place;
 
+  // Set distance between instances
   if (this.place === 'first') {
     this.x = -50;
   } else if (this.place === 'second') {
@@ -162,6 +166,9 @@ function Log(y, place, objectType) {
 
 Log.prototype = Object.create(MovingObject.prototype);
 Log.prototype.constructor = Log;
+
+// This method keeps distance between instances.
+// Every instance counts its position from the first element.
 Log.prototype.update = function update(player) {
   var firstObjectPosition = firstPositionsOfObjects[this.objectType];
   if (this.place === 'first') {
@@ -194,6 +201,7 @@ Log.prototype.update = function update(player) {
   }
 };
 
+// Resets position on a new game.
 Log.prototype.reset = function reset() {
   if (this.place === 'first') {
     this.x = -50;
@@ -213,6 +221,7 @@ function LogToLeft(y, place, objectType) {
   this.sprite = 'build/images/log.png';
   this.place = place;
 
+  // Set distance between instances
   if (this.place === 'first') {
     this.x = 750;
   } else if (this.place === 'second') {
@@ -228,6 +237,9 @@ function LogToLeft(y, place, objectType) {
 
 LogToLeft.prototype = Object.create(MovingObject.prototype);
 LogToLeft.prototype.constructor = LogToLeft;
+
+// This method keeps distance between instances.
+// Every instance counts its position from the first element.
 LogToLeft.prototype.update = function update(player) {
   var firstObjectPosition = firstPositionsOfObjects[this.objectType];
   // Update the enemy's position, required method for game
@@ -267,6 +279,7 @@ LogToLeft.prototype.update = function update(player) {
   }
 };
 
+// Resets position on a new game.
 LogToLeft.prototype.reset = function reset() {
   if (this.place === 'first') {
     this.x = 750;
@@ -287,6 +300,7 @@ function Enemy(y, place, objectType) {
   this.sprite = 'build/images/enemy-bug.png';
   this.place = place;
 
+  // Set distance between instances
   if (this.place === 'first') {
     this.x = -50;
   } else if (this.place === 'second') {
@@ -298,6 +312,8 @@ function Enemy(y, place, objectType) {
 
 Enemy.prototype = Object.create(MovingObject.prototype);
 Enemy.prototype.constructor = Enemy;
+
+// Resets position on a new game.
 Enemy.prototype.reset = function reset() {
   if (this.place === 'first') {
     this.x = -50;
@@ -325,6 +341,9 @@ function EnemyToLeft(y, place, objectType) {
 
 EnemyToLeft.prototype = Object.create(MovingObject.prototype);
 EnemyToLeft.prototype.constructor = EnemyToLeft;
+
+// This method keeps distance between instances.
+// Every instance counts its position from the first element.
 EnemyToLeft.prototype.update = function update() {
   var firstObjectPosition = firstPositionsOfObjects[this.objectType];
   // Update the enemy's position, required method for game
@@ -347,6 +366,7 @@ EnemyToLeft.prototype.update = function update() {
   }
 };
 
+// Render new position on the canvas
 EnemyToLeft.prototype.render = function render() {
   // this function was taken from
   // https://stackoverflow.com/questions/3129099/how-to-flip-images-horizontally-with-html5
@@ -366,6 +386,7 @@ EnemyToLeft.prototype.render = function render() {
   engine.ctx.restore();
 };
 
+// Resets position on a new game.
 EnemyToLeft.prototype.reset = function reset() {
   if (this.place === 'first') {
     this.x = 750;
@@ -451,6 +472,9 @@ Player.prototype = {
         break;
     }
   },
+
+
+  // Add scores when the Player stands on gems or on the star.
   addScores: function addScores(object) {
     switch (object) {
       case 'gem-blue':
@@ -504,7 +528,7 @@ Player.prototype = {
   }
 };
 
-// Static objects
+// Static objects: gems, heart, star
 function StaticObj(x, y, sprite, name) {
   this.x = x;
   this.y = y;
@@ -517,6 +541,9 @@ StaticObj.prototype = {
   render: function render() {
     engine.ctx.drawImage(resources.get(this.sprite), this.x, this.y);
   },
+
+
+  // Resets position on a new game.
   reset: function reset() {
     var minRow = void 0;
     var maxRow = void 0;
@@ -745,12 +772,15 @@ var engine = function IIFE() {
     var objectName = null;
 
     if (playerY >= 280 && playerY <= 440) {
+      // Cheking collisions with enemies
       allEnemies.forEach(function (enemy) {
         if (enemy.y === playerY && playerX < enemy.x + 40 && playerX + 40 > enemy.x) {
           player.reset();
         }
       });
     } else if (playerY >= 40 && playerY <= 200) {
+      // Checking collisions with logs. If Player is on water tiles and don't stand on logs,
+      // he'll lost one life and reset his position.
       allLogs.forEach(function (log) {
         if (log.y === playerY && playerX < log.x + 50 && playerX + 50 > log.x) {
           playerIsOnLog = true;
@@ -763,6 +793,7 @@ var engine = function IIFE() {
       }
     }
 
+    // Checking collisions with gems, heart and star
     allStaticObjects.forEach(function (staticObject, i) {
       if (staticObject.y === playerY && playerX < staticObject.x + 50 && playerX + 50 > staticObject.x) {
         index = i;
@@ -770,6 +801,8 @@ var engine = function IIFE() {
       }
     });
 
+    // This code will remove static object, if Player will stand on the same tile.
+    // It's needed to prevent rendering this object.
     if (index !== null) {
       var deletedElement = allStaticObjects.splice(index, 1)[0];
       deletedStaticObjects.push(deletedElement);
@@ -810,6 +843,7 @@ var engine = function IIFE() {
     }
   }
 
+  // Begin all animations
   function startAnimating(fps) {
     stop = false;
     fpsInterval = 1000 / fps;
@@ -829,6 +863,8 @@ var engine = function IIFE() {
 
     render();
 
+    // Add eventListener to start a new game button.
+    // It will close the modal window and start the game.
     startGame.addEventListener('click', function () {
       var endingModal = document.querySelector('.end__game');
 
@@ -843,6 +879,7 @@ var engine = function IIFE() {
       startAnimating(60);
     });
 
+    // Add event listener to reset button. Opens the modal window and stops the game.
     openModal.addEventListener('click', function () {
       overlay.classList.toggle('overlay__opened');
       modal.classList.toggle('modal__opened');
@@ -942,6 +979,7 @@ var engine = function IIFE() {
     var characters = ['build/images/char-boy.png', 'build/images/char-cat-girl.png', 'build/images/char-horn-girl.png', 'build/images/char-pink-girl.png', 'build/images/char-princess-girl.png'];
     var images = [];
 
+    // Creating images for player selection section
     characters.forEach(function (character, i) {
       var image = document.createElement('img');
       var name = characters[i];
@@ -961,12 +999,14 @@ var engine = function IIFE() {
 
       charactersDiv.appendChild(image);
 
+      // Event listener for change player's skin
       image.addEventListener('click', function (e) {
         var name = e.target.dataset.url;
         player.updateSprite(name);
         player.render();
         render();
 
+        // Add green background to selected skin, remove background from other images.
         images.forEach(function (img) {
           if (img !== e.target) {
             img.style.background = '';

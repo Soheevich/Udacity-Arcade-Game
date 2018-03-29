@@ -37,6 +37,7 @@ const engine = (function IIFE() {
   canvas.height = 570;
   document.querySelector('.canvas__board').appendChild(canvas);
 
+
   /* This function does nothing but it could have been a good place to
    * handle game reset states - maybe a new game menu or a game over screen
    * those sorts of things. It's only called once by the init() method.
@@ -54,6 +55,7 @@ const engine = (function IIFE() {
     allStaticObjects.forEach(staticObject => staticObject.reset());
     player.reset(true);
   }
+
 
   /* This function is called by main (our game loop) and itself calls all
    * of the functions which may need to update entity's data. Based on how
@@ -77,12 +79,15 @@ const engine = (function IIFE() {
     let objectName = null;
 
     if (playerY >= 280 && playerY <= 440) {
+      // Cheking collisions with enemies
       allEnemies.forEach((enemy) => {
         if (enemy.y === playerY && (playerX < (enemy.x + 40) && (playerX + 40) > enemy.x)) {
           player.reset();
         }
       });
     } else if (playerY >= 40 && playerY <= 200) {
+      // Checking collisions with logs. If Player is on water tiles and don't stand on logs,
+      // he'll lost one life and reset his position.
       allLogs.forEach((log) => {
         if (log.y === playerY && (playerX < (log.x + 50) && (playerX + 50) > log.x)) {
           playerIsOnLog = true;
@@ -95,6 +100,7 @@ const engine = (function IIFE() {
       }
     }
 
+    // Checking collisions with gems, heart and star
     allStaticObjects.forEach((staticObject, i) => {
       if (staticObject.y === playerY &&
         (playerX < (staticObject.x + 50) && (playerX + 50) > staticObject.x)) {
@@ -103,12 +109,15 @@ const engine = (function IIFE() {
       }
     });
 
+    // This code will remove static object, if Player will stand on the same tile.
+    // It's needed to prevent rendering this object.
     if (index !== null) {
       const deletedElement = allStaticObjects.splice(index, 1)[0];
       deletedStaticObjects.push(deletedElement);
       player.addScores(objectName);
     }
   }
+
 
   /* This function serves as the kickoff point for the game loop itself
    * and handles properly calling the update and render methods.
@@ -143,12 +152,15 @@ const engine = (function IIFE() {
     }
   }
 
+
+  // Begin all animations
   function startAnimating(fps) {
     stop = false;
     fpsInterval = 1000 / fps;
     then = window.performance.now();
     animate();
   }
+
 
   /* This function does some initial setup that should only occur once,
    * particularly setting the lastTime variable that is required for the
@@ -162,6 +174,8 @@ const engine = (function IIFE() {
 
     render();
 
+    // Add eventListener to start a new game button.
+    // It will close the modal window and start the game.
     startGame.addEventListener('click', () => {
       const endingModal = document.querySelector('.end__game');
 
@@ -176,6 +190,7 @@ const engine = (function IIFE() {
       startAnimating(60);
     });
 
+    // Add event listener to reset button. Opens the modal window and stops the game.
     openModal.addEventListener('click', () => {
       overlay.classList.toggle('overlay__opened');
       modal.classList.toggle('modal__opened');
@@ -183,6 +198,7 @@ const engine = (function IIFE() {
       stop = true;
     });
   }
+
 
   /* This is called by the update function and loops through all of the
    * objects within your allEnemies array as defined in app.js and calls
@@ -205,6 +221,7 @@ const engine = (function IIFE() {
 
     player.update();
   }
+
 
   /* This function initially draws the "game level", it will then call
    * the renderEntities function. Remember, this function is called every
@@ -261,6 +278,7 @@ const engine = (function IIFE() {
     renderEntities();
   }
 
+
   /* This function is called by the render function and is called on each game
    * tick. Its purpose is to then call the render functions you have defined
    * on your enemy and player entities within app.js
@@ -287,6 +305,7 @@ const engine = (function IIFE() {
     ];
     const images = [];
 
+    // Creating images for player selection section
     characters.forEach((character, i) => {
       const image = document.createElement('img');
       const name = characters[i];
@@ -300,12 +319,14 @@ const engine = (function IIFE() {
 
       charactersDiv.appendChild(image);
 
+      // Event listener for change player's skin
       image.addEventListener('click', (e) => {
         const name = e.target.dataset.url;
         player.updateSprite(name);
         player.render();
         render();
 
+        // Add green background to selected skin, remove background from other images.
         images.forEach((img) => {
           if (img !== e.target) {
             img.style.background = '';
@@ -352,6 +373,7 @@ const engine = (function IIFE() {
   ]);
 
   resources.onReady(init);
+
 
   // Return the canvas' context object to use it by app module
   return {

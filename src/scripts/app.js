@@ -379,7 +379,7 @@ Player.prototype = {
         break;
       case 'Star':
         this.scores += 200;
-        engine.endGame(this.scores, this.lives);
+        engine.endGame(this.scores, this.lives, 'victory');
         break;
       default:
         this.lives += 1;
@@ -401,7 +401,7 @@ Player.prototype = {
       engine.print('lives', this.lives);
 
       if (this.lives < 1) {
-        engine.endGame(this.scores, this.lives);
+        engine.endGame(this.scores, this.lives, 'defeat');
 
         this.lives = 3;
         this.scores = 0;

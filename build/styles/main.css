@@ -11,55 +11,6 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
-.canvas__board {
-  display: grid;
-  grid-template: -webkit-min-content 570px / auto 750px auto;
-  grid-template: min-content 570px / auto 750px auto;
-  grid-template-areas: ". h ." ". c .";
-  margin-top: 20px;
-}
-
-.canvas__header {
-  grid-area: h;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-}
-
-.canvas__main {
-  display: block;
-  margin: 0 auto;
-  grid-area: c;
-}
-
-.overlay {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 99;
-  background: #000;
-  pointer-events: none;
-  opacity: 0;
-  -webkit-transform: scale(0.5);
-  transform: scale(0.5);
-  -webkit-transition: opacity 0.5s ease, -webkit-transform 0.5s ease;
-  transition: opacity 0.5s ease, -webkit-transform 0.5s ease;
-  transition: transform 0.5s ease, opacity 0.5s ease;
-  transition: transform 0.5s ease, opacity 0.5s ease, -webkit-transform 0.5s ease;
-}
-
-.overlay__opened {
-  pointer-events: auto;
-  opacity: 0.9;
-  -webkit-transform: scale(1);
-  transform: scale(1);
-}
-
 .modal {
   position: fixed;
   top: 50%;
@@ -92,6 +43,50 @@ body {
   background: #fff;
 }
 
+.overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 99;
+  background: #000;
+  pointer-events: none;
+  opacity: 0;
+  -webkit-transform: scale(0.5);
+  transform: scale(0.5);
+  -webkit-transition: opacity 0.5s ease, -webkit-transform 0.5s ease;
+  transition: opacity 0.5s ease, -webkit-transform 0.5s ease;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  transition: transform 0.5s ease, opacity 0.5s ease, -webkit-transform 0.5s ease;
+}
+
+.overlay__opened {
+  pointer-events: auto;
+  opacity: 0.9;
+  -webkit-transform: scale(1);
+  transform: scale(1);
+}
+
+.start__game,
+.end__game {
+  display: none;
+}
+
+.start__game p,
+.end__game p {
+  margin: 10px 0;
+}
+
+.start__title,
+.end__title {
+  text-align: center;
+}
+
+.opened {
+  display: block;
+}
+
 .characters {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -115,20 +110,6 @@ body {
 
 .character__selected {
   background: #afa;
-}
-
-.start__game,
-.end__game {
-  display: none;
-}
-
-.opened {
-  display: block;
-}
-
-.main__footer {
-  text-align: center;
-  font-size: 0.8em;
 }
 
 .button {
@@ -159,6 +140,35 @@ body {
   transform: translateY(1px);
 }
 
+.canvas__board {
+  display: grid;
+  grid-template: -webkit-min-content 570px / auto 750px auto;
+  grid-template: min-content 570px / auto 750px auto;
+  grid-template-areas: ". h ." ". c .";
+  margin-top: 20px;
+}
+
+.canvas__header {
+  grid-area: h;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
 .stats {
   padding: 5px 0;
+}
+
+.canvas__main {
+  display: block;
+  margin: 0 auto;
+  grid-area: c;
+}
+
+.main__footer {
+  text-align: center;
+  font-size: 0.8em;
 }

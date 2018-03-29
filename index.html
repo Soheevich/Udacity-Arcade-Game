@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Arcade Game</title>
-  <link rel="shortcut icon" href="build/favicons/favicon.ico" type="image/x-icon">
+  <!-- <link rel="shortcut icon" href="build/favicons/favicon.ico" type="image/x-icon"> -->
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
   <link rel="stylesheet" href="build/styles/main.css">
 </head>
@@ -17,23 +17,20 @@
       <div class="modal modal__opened">
         <div class="modal__content">
           <div class="start__game opened">
-            <h1>Heading Title</h1>
-            <p>↑</p>
-            <p>← →</p>
-            <p>↓</p>
-            <img src="" alt="">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis nemo obcaecati voluptatibus corporis modi similique
-              adipisci consequuntur, dignissimos possimus quos culpa iste, quaerat earum, repellat doloremque ab tempore
-              ipsam non perferendis impedit sit veritatis. Eius commodi voluptate dicta aliquid alias!</p>
+            <h1 class="start__title">Start a new game</h1>
+            <p>In this game you have a Player and Enemies (Bugs). The goal of the player is to reach the water, without colliding into any one of the enemies. The player can move left, right, up and down using arrow keys:  ← ↑ → ↓. The enemies move in varying speeds on the paved block portion of the scene. Once a the player collides with an enemy, the game is reset and the player moves back to the start square.</p>
+            <p>
+              You can collect gems and heart. Blue gem will add 50 points, Green gem will add 75 points, and orange gem will add 100 points. To cross the river you need to use logs. Falling to water also will reset the game. The heart will add an extra life. Once the player reaches the star the game is won and the player will be rewarded with 200 points.
+            </p>
           </div>
 
           <div class="end__game">
-            <h2>Heading Title</h2>
-            <p class="stats">Total score:
+            <h2 class="end__title"></h2>
+            <p class="stats">Total scores:
               <span class="scores"></span> Lives:
               <span class="lives"></span>
             </p>
-            <p>Lorem ipsum dolor sit amet.</p>
+            <p>You can start a new game</p>
           </div>
 
           <h3>Choose Your Character</h3>

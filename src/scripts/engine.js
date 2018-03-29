@@ -377,8 +377,15 @@ const engine = (function IIFE() {
     },
 
     // This method stops the game and shows winning screen
-    endGame(scores, lives) {
+    endGame(scores, lives, state) {
+      const title = document.querySelector('.end__title');
       toggleEndingModal();
+
+      if (state === 'victory') {
+        title.textContent = 'Congratulations! You have won.';
+      } else {
+        title.textContent = 'Game over';
+      }
 
       const openModal = document.querySelector('.open__modal');
       openModal.dispatchEvent(new Event('click'));

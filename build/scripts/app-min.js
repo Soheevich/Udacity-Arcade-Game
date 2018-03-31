@@ -305,8 +305,8 @@ function Enemy(y, place, objectType) {
     this.x = -50;
   } else if (this.place === 'second') {
     this.x = -250;
-  } else if (this.place === 'third') {
-    this.x = -450;
+    // } else if (this.place === 'third') {
+    //   this.x = -450;
   }
 }
 
@@ -319,8 +319,8 @@ Enemy.prototype.reset = function reset() {
     this.x = -50;
   } else if (this.place === 'second') {
     this.x = -250;
-  } else if (this.place === 'third') {
-    this.x = -450;
+    // } else if (this.place === 'third') {
+    //   this.x = -450;
   }
 };
 
@@ -334,8 +334,8 @@ function EnemyToLeft(y, place, objectType) {
     this.x = 750;
   } else if (this.place === 'second') {
     this.x = 950;
-  } else if (this.place === 'third') {
-    this.x = 1150;
+    // } else if (this.place === 'third') {
+    //   this.x = 1150;
   }
 }
 
@@ -357,12 +357,12 @@ EnemyToLeft.prototype.update = function update() {
     } else {
       this.x -= this.speed;
     }
-  } else if (this.place === 'third') {
-    if (firstObjectPosition < this.x || this.x < -50) {
-      this.x = firstObjectPosition + 400;
-    } else {
-      this.x -= this.speed;
-    }
+    // } else if (this.place === 'third') {
+    //   if (firstObjectPosition < this.x || this.x < -50) {
+    //     this.x = firstObjectPosition + 400;
+    //   } else {
+    //     this.x -= this.speed;
+    //   }
   }
 };
 
@@ -392,8 +392,8 @@ EnemyToLeft.prototype.reset = function reset() {
     this.x = 750;
   } else if (this.place === 'second') {
     this.x = 950;
-  } else if (this.place === 'third') {
-    this.x = 1150;
+    // } else if (this.place === 'third') {
+    //   this.x = 1150;
   }
 };
 
@@ -593,11 +593,11 @@ for (var i = 0; i < rowsWithEnemies; i += 1) {
   if (i % 2 !== 0) {
     allEnemies.push(new Enemy(i, 'first', 'Enemy'));
     allEnemies.push(new Enemy(i, 'second', 'Enemy'));
-    allEnemies.push(new Enemy(i, 'third', 'Enemy'));
+    // allEnemies.push(new Enemy(i, 'third', 'Enemy'));
   } else {
     allEnemies.push(new EnemyToLeft(i, 'first', 'EnemyToLeft'));
     allEnemies.push(new EnemyToLeft(i, 'second', 'EnemyToLeft'));
-    allEnemies.push(new EnemyToLeft(i, 'third', 'EnemyToLeft'));
+    // allEnemies.push(new EnemyToLeft(i, 'third', 'EnemyToLeft'));
   }
 }
 
